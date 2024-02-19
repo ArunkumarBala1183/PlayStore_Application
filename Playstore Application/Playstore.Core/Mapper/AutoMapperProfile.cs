@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.DTO;
+using Playstore.Contracts.DTO.AppInfo;
+using Playstore.Contracts.DTO.Category;
 
 namespace Playstore.Core.Mapper
 {
@@ -10,6 +12,9 @@ namespace Playstore.Core.Mapper
         {
             CreateMap<App, AppDTO>();
             CreateMap<User, UserDTO>();
+            CreateMap<AppInfo , AppInfoDto>().ReverseMap();
+            CreateMap<Category , CategoryDto>().ReverseMap();
+            CreateMap<Category , CategoryUpdateDto>().ReverseMap();
         }
     }
 }

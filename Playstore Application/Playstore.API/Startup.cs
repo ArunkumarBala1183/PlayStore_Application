@@ -10,6 +10,8 @@ using Playstore.Core;
 using Microsoft.AspNetCore.Mvc;
 using Playstore.Core.Security;
 using Playstore.Migrations;
+using Serilog;
+using Playstore.JsonSerialize;
 
 namespace Playstore
 {
@@ -33,7 +35,15 @@ namespace Playstore
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(option => {
+                option.JsonSerializerOptions.Converters.Add(new JsonConvertor());
+            });
+            
+            //Configuring Serilog 
+            Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.Console()
+            .CreateLogger();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
