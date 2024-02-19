@@ -85,8 +85,7 @@ namespace Playstore.Migrations.Migrations
 
                     b.HasIndex("AppId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("AppDownloads");
                 });
@@ -332,8 +331,8 @@ namespace Playstore.Migrations.Migrations
                         .IsRequired();
 
                     b.HasOne("Playstore.Contracts.Data.Entities.Users", "Users")
-                        .WithOne("AppDownloads")
-                        .HasForeignKey("Playstore.Contracts.Data.Entities.AppDownloads", "UserId")
+                        .WithMany("AppDownloads")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
