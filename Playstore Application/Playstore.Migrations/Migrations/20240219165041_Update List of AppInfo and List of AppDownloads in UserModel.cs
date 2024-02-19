@@ -4,7 +4,7 @@
 
 namespace Playstore.Migrations.Migrations
 {
-    public partial class Updated_List_of_AppInfo_to_Users : Migration
+    public partial class UpdateListofAppInfoandListofAppDownloadsinUserModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,9 +12,18 @@ namespace Playstore.Migrations.Migrations
                 name: "IX_AppInfo_UserId",
                 table: "AppInfo");
 
+            migrationBuilder.DropIndex(
+                name: "IX_AppDownloads_UserId",
+                table: "AppDownloads");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AppInfo_UserId",
                 table: "AppInfo",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppDownloads_UserId",
+                table: "AppDownloads",
                 column: "UserId");
         }
 
@@ -24,9 +33,19 @@ namespace Playstore.Migrations.Migrations
                 name: "IX_AppInfo_UserId",
                 table: "AppInfo");
 
+            migrationBuilder.DropIndex(
+                name: "IX_AppDownloads_UserId",
+                table: "AppDownloads");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AppInfo_UserId",
                 table: "AppInfo",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppDownloads_UserId",
+                table: "AppDownloads",
                 column: "UserId",
                 unique: true);
         }
