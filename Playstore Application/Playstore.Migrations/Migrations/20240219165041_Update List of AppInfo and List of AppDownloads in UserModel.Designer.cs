@@ -11,8 +11,8 @@ using Playstore.Migrations;
 namespace Playstore.Migrations.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240219131016_Updated_List_of_AppInfo_to_Users")]
-    partial class Updated_List_of_AppInfo_to_Users
+    [Migration("20240219165041_Update List of AppInfo and List of AppDownloads in UserModel")]
+    partial class UpdateListofAppInfoandListofAppDownloadsinUserModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,8 +87,7 @@ namespace Playstore.Migrations.Migrations
 
                     b.HasIndex("AppId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("AppDownloads");
                 });
@@ -334,8 +333,8 @@ namespace Playstore.Migrations.Migrations
                         .IsRequired();
 
                     b.HasOne("Playstore.Contracts.Data.Entities.Users", "Users")
-                        .WithOne("AppDownloads")
-                        .HasForeignKey("Playstore.Contracts.Data.Entities.AppDownloads", "UserId")
+                        .WithMany("AppDownloads")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
