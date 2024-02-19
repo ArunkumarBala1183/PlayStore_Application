@@ -15,7 +15,7 @@ namespace Playstore.Contracts.Data.Entities
 
         public UserCredentials userCredentials { get; set; }
 
-        public AppInfo AppInfo { get; set; }
+        public List<AppInfo> AppInfo { get; set; } = new List<AppInfo>();
         public AppReview AppReview { get; set; }
         public AppDownloads AppDownloads { get; set; }
         public RefreshToken RefreshToken { get; set; }
