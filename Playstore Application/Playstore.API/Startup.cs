@@ -37,6 +37,9 @@ namespace Playstore
 
             services.AddControllers().AddJsonOptions(option => {
                 option.JsonSerializerOptions.Converters.Add(new JsonConvertor());
+            })
+            .AddNewtonsoftJson(option => {
+                option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
             
             //Configuring Serilog 

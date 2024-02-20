@@ -1,3 +1,5 @@
+using Playstore.Contracts.DTO.AppReview;
+
 namespace Playstore.Contracts.DTO.AppInfo
 {
     public record struct AppInfoDto
@@ -5,7 +7,7 @@ namespace Playstore.Contracts.DTO.AppInfo
       Guid AppId,
       string Name,
       byte[] Logo,
-      Guid CategoryId  
-      //Review Should be add
+      Guid CategoryId,
+      AppReviewDto AppReview
     );
 }
