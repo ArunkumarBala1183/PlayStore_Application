@@ -3,6 +3,3 @@ obj/
 build/
 .vs/
 .vscode/
-PlaystoreDb.db
-PlaystoreDb.db-shm
-PlaystoreDb.db-wal
