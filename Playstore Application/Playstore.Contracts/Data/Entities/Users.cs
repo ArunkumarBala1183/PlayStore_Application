@@ -15,6 +15,8 @@ namespace Playstore.Contracts.Data.Entities
 
         public UserCredentials userCredentials { get; set; }
 
+        public List<AdminRequests> AdminRequests { get; set; } = new List<AdminRequests>();
+
         public List<AppInfo> AppInfo { get; set; } = new List<AppInfo>();
         public AppReview AppReview { get; set; }
         public List<AppDownloads> AppDownloads { get; set; } = new List<AppDownloads>();
