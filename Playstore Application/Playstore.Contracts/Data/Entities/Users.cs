@@ -18,7 +18,7 @@ namespace Playstore.Contracts.Data.Entities
         public List<AdminRequests> AdminRequests { get; set; } = new List<AdminRequests>();
 
         public List<AppInfo> AppInfo { get; set; } = new List<AppInfo>();
-        public AppReview AppReview { get; set; }
+        public List<AppReview> AppReview { get; set; } = new List<AppReview>();
         public List<AppDownloads> AppDownloads { get; set; } = new List<AppDownloads>();
         public RefreshToken RefreshToken { get; set; }
 
