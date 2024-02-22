@@ -7,7 +7,7 @@ namespace Playstore.Contracts.Data.Entities
     {
         [Key]
         public Guid Id { get; set; }
-        public string RefreshId { get; set; }
+        public string RefreshKey { get; set; }
         public Guid UserId { get; set; }
         [ForeignKey("UserId")]
         public Users Users { get; set; }
