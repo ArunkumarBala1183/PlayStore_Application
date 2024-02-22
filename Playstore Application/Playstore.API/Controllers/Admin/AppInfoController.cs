@@ -3,11 +3,13 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Playstore.Contracts.DTO.AppDownloads;
+using Playstore.Contracts.DTO.AppReview;
 using Playstore.Providers.Handlers.Commands;
 using Playstore.Providers.Handlers.Queries;
 using Playstore.Providers.Handlers.Queries.Admin;
 
-namespace Playstore.Controllers
+namespace Playstore.Controllers.Admin
 {
     [ApiController]
     [Route("[controller]")]
@@ -39,10 +41,10 @@ namespace Playstore.Controllers
             return StatusCode((int) response);
         }
 
-        [HttpGet("AllAppDownloads")]
-        public async Task<IActionResult> AllAppDownloads()
+        [HttpPost("GetAppLogs")]
+        public async Task<IActionResult> GetAppLogs(AppLogsDto appLogsDto)
         {
-            var response = await this._mediator.Send(new GetAllAppsDownloadsQuery());
+            var response = await this._mediator.Send(new GetAppLogsQuery(appLogsDto));
             
             if(response.GetType() != typeof(HttpStatusCode))
             {
@@ -50,6 +52,14 @@ namespace Playstore.Controllers
             }
 
             return StatusCode((int) response);
+        }
+
+        [HttpPost("AddAppReview")]
+        public async Task<IActionResult> AddAppReview(Guid appId)
+        {
+            var response = await this._mediator.Send(new AddAppReviewCommand(appId));
+
+            return StatusCode((int) HttpStatusCode.OK , response);
         }
     }
 }

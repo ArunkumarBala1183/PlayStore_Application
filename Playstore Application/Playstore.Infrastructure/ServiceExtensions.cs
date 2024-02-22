@@ -20,7 +20,9 @@ namespace Playstore.Infrastructure
             .AddTransient<ICategoryRepository , CategoryRepository>()
             .AddTransient<IAppInfoRepository , AppInfoRespository>()
             .AddTransient<IUserInfoRepository , UserInfoRepository>()
-            .AddTransient<IAppDownloadsRepository , AppDownloadsRepository>();
+            .AddTransient<IAppDownloadsRepository , AppDownloadsRepository>()
+            .AddTransient<IAppReviewRepository , AppReviewRepository>()
+            .AddTransient<IAppRequestsRepository , AppRequestsRepository>();
         }
 
         private static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)

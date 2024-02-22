@@ -1,8 +1,14 @@
+using System.Text.Json.Serialization;
+using Playstore.Contracts.DTO.AppReview;
+
 namespace Playstore.Contracts.DTO.UserInfo
 {
     public record struct UserInfoDto
     (
-        Guid UserId,
-        string Name
+        string Name,
+        DateOnly DateOfBirth,
+        string EmailId,
+        string  MobileNumber,
+        ICollection<UserRoleDto> UserRoles
     );
 }

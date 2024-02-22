@@ -16,9 +16,11 @@ namespace Playstore.Core.Data.Repositories.Admin
             this.database = context;
             this.mapper = mapper;
         }
-        public async Task<object> GetAllAppDownloads()
+        public async Task<object> GetAppLogs(AppLogsDto appSearch)
         {
-            var appDownloads = await this.database.AppDownloads.ToListAsync();
+            var appDownloads = await this.database.AppDownloads
+            .Where(date => date.DownloadedDate.Date == DateTime.UtcNow.Date)
+            .ToListAsync();
             
             if(appDownloads != null && appDownloads.Count > 0)
             {

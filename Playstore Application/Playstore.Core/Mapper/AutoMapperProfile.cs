@@ -16,6 +16,7 @@ namespace Playstore.Core.Mapper
             CreateMap<App, AppDTO>();
             CreateMap<User, UserDTO>();
             CreateMap<Users , UserInfoDto>().ReverseMap();
+            CreateMap<UserRole , UserRoleDto>().ReverseMap();
             CreateMap<AppInfo , AppInfoDto>().ReverseMap();
             CreateMap<AppReview , AppReviewDto>().ReverseMap();
             CreateMap<Category , CategoryDto>().ReverseMap();

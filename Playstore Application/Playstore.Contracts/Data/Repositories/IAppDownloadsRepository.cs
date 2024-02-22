@@ -1,7 +1,9 @@
+using Playstore.Contracts.DTO.AppDownloads;
+
 namespace Playstore.Contracts.Data.Repositories
 {
     public interface IAppDownloadsRepository
     {
-        Task<object> GetAllAppDownloads();
+        Task<object> GetAppLogs(AppLogsDto appSearch);
     }
 }
