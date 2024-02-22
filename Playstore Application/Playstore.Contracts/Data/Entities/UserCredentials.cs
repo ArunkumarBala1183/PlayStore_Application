@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Playstore.Contracts.Data.Entities
 {
@@ -10,6 +11,8 @@ namespace Playstore.Contracts.Data.Entities
         public string Password { get; set; }
 
         public Guid UserId { get; set; }
+
+        [ForeignKey("UserId")]
         public Users User { get; set; }
     }
 }
