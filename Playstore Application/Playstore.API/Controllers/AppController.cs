@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -23,20 +22,22 @@ namespace Playstore.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
+        [HttpGet]       
         [ProducesResponseType(typeof(IEnumerable<AppDTO>), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         [Authorize]
+        [NonAction]
         public async Task<IActionResult> Get()
         {
             var query = new GetAllAppQuery();
             var response = await _mediator.Send(query);
             return Ok(response);
-        }
+        }       
 
         [HttpPost]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        [NonAction]
         public async Task<IActionResult> Post([FromBody] CreateAppDTO model)
         {
             try
@@ -59,6 +60,7 @@ namespace Playstore.Controllers
         [Route("{id}")]
         [ProducesResponseType(typeof(AppDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        [NonAction]
         public async Task<IActionResult> GetById(int id)
         {
             try

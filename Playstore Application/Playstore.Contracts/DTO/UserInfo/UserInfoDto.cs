@@ -6,7 +6,7 @@ namespace Playstore.Contracts.DTO.UserInfo
     public record struct UserInfoDto
     (
         string Name,
-        DateOnly DateOfBirth,
+        string DateOfBirth,
         string EmailId,
         string  MobileNumber,
         ICollection<UserRoleDto> UserRoles

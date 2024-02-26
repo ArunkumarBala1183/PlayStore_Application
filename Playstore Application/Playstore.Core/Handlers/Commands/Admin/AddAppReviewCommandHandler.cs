@@ -6,8 +6,8 @@ namespace Playstore.Providers.Handlers.Commands
 {
     public class AddAppReviewCommand : IRequest<object>
     {
-        public Guid appReviewDto { get; set; }
-        public AddAppReviewCommand(Guid appReview)
+        public AppReviewDto appReviewDto { get; set; }
+        public AddAppReviewCommand(AppReviewDto appReview)
         {
             this.appReviewDto = appReview;
         }

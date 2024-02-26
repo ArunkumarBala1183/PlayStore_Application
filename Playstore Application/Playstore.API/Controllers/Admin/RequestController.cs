@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
@@ -28,6 +29,19 @@ namespace Playstore.Controllers.Admin
             }
             
             return StatusCode((int) response);
+        }
+
+        [HttpGet("GetRequestedAppDetails/{appId}")]
+        public async Task<IActionResult> GetRequestedAppDetails(Guid appId)
+        {
+            var appDetails = await this.mediator.Send(new GetRequestedAppDetailsQuery(appId));
+            
+            if(appDetails.GetType() != typeof(HttpStatusCode))
+            {
+                return Ok(appDetails);
+            }
+
+            return StatusCode((int) appDetails);
         }
         
     }

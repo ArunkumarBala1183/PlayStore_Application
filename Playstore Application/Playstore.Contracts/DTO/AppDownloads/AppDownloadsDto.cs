@@ -5,10 +5,8 @@ namespace Playstore.Contracts.DTO.AppDownloads
 {
     public record struct AppDownloadsDto
     (
-        DateTime DownloadedDate,
-        Guid AppId ,
-        Guid UserId
-        // AppInfoDto AppInfo,
-        // UserInfoDto UserInfo
+        string DownloadedDate,
+        ListAppInfoDto AppInfo,
+        UserInfoDto Users
     );
 }

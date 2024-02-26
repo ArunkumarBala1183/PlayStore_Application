@@ -4,6 +4,6 @@ namespace Playstore.Contracts.Data.Repositories
 {
     public interface IAppReviewRepository
     {
-        Task<object> AddReview(Guid appReviewDetails);
+        Task<object> AddReview(AppReviewDto appReviewDetails);
     }
 }

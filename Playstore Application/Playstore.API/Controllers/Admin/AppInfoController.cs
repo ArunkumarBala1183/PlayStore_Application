@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Playstore.Contracts.DTO.AppDownloads;
-using Playstore.Contracts.DTO.AppReview;
 using Playstore.Providers.Handlers.Commands;
 using Playstore.Providers.Handlers.Queries;
 using Playstore.Providers.Handlers.Queries.Admin;
@@ -33,7 +32,7 @@ namespace Playstore.Controllers.Admin
             return StatusCode((int)(HttpStatusCode)response);
         }
 
-        [HttpDelete("RemoveApp")]
+        [HttpDelete("RemoveApp/{id}")]
         public async Task<IActionResult> RemoveApp(Guid id)
         {
             var response = await this._mediator.Send(new RemoveAppInfoCommand(id));
@@ -54,12 +53,12 @@ namespace Playstore.Controllers.Admin
             return StatusCode((int) response);
         }
 
-        [HttpPost("AddAppReview")]
-        public async Task<IActionResult> AddAppReview(Guid appId)
-        {
-            var response = await this._mediator.Send(new AddAppReviewCommand(appId));
+        // [HttpPost("AddAppReview")]
+        // public async Task<IActionResult> AddAppReview(AppReviewDto appDto)
+        // {
+        //     var response = await this._mediator.Send(new AddAppReviewCommand(appDto));
 
-            return StatusCode((int) HttpStatusCode.OK , response);
-        }
+        //     return StatusCode((int) response);
+        // }
     }
 }

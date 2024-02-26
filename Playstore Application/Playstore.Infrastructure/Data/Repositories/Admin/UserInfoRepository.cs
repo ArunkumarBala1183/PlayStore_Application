@@ -18,7 +18,10 @@ namespace Playstore.Core.Data.Repositories.Admin
         }
         public async Task<object> ViewAllUsers()
         {
-            var existedData = await this.database.Users.Include(userrole => userrole.UserRoles).ToListAsync();
+            var existedData = await this.database.Users.
+            Include(userrole => userrole.UserRoles)
+            .ThenInclude(role => role.Role)
+            .ToListAsync();
 
             if(existedData != null && existedData.Count > 0)
             {

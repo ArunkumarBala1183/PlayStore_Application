@@ -34,9 +34,14 @@ namespace Playstore.Core.Data.Repositories.Admin
 
         private async Task<bool> IsAlreadyExistedCategory(CategoryDto category)
         {
-            var existedData = await this.database.Categories.Select(searchOption => searchOption.CategoryName.Equals(category.CategoryName , StringComparison.InvariantCultureIgnoreCase)).FirstOrDefaultAsync();
+            var existedData = await this.database.Categories.Where(options => options.CategoryName.ToLower() == category.CategoryName.ToLower()).FirstOrDefaultAsync();
 
-            return existedData;
+            if(existedData != null)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<object> SearchCategory(CategoryDto category)

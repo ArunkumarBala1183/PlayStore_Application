@@ -39,7 +39,7 @@ namespace Playstore.Controllers.Admin
 
             return StatusCode((int)(HttpStatusCode)response);
         }
-
+        //returning response type
         [HttpPost("SearchCategory")]
         public async Task<IActionResult> SearchCategory([FromBody] CategoryDto category)
         {
@@ -53,7 +53,7 @@ namespace Playstore.Controllers.Admin
             return StatusCode((int)(HttpStatusCode)response);
         }
 
-        [HttpPost("GetCategory")]
+        [HttpGet("GetCategory/{id}")]
         public async Task<IActionResult> GetCategory(Guid id)
         {
             var response = await this._mediator.Send(new GetCategoryQuery(id));
