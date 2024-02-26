@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  apiBaseAddress:'https://localhost:44339/'
+  apiBaseAddress:'https://localhost:44339/',
+  registerRedirect:'/login/register',
+  forgotPasswordRedirect:'/login/forgotpassword',
 };
 
 /*

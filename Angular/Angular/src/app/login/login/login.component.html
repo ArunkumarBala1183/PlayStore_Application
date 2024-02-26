@@ -1,29 +1,42 @@
-<mat-card class="example-card">
-  <mat-card-header>
-    <mat-card-title>Login</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <form class="example-form">
-      <table class="example-full-width" cellspacing="0">
-        <tr>
-          <td>
-            <mat-form-field class="example-full-width">
-              <input matInput placeholder="Username" [(ngModel)]="userName" name="username" required>
-            </mat-form-field>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <mat-form-field class="example-full-width">
-              <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" required>
-            </mat-form-field>
-          </td>
-        </tr>
-      </table>
+
+<div class=" h-[100vh]  bg-gray-100 flex flex-col justify-center items-center">
+    
+    <form class="w-[75%] h-[76%]  rounded-2xl shadow-md border  border-gray-300 hover:bg-gray-200 md:w-[25%] md:h-[55%] md:mt-7 flex flex-col items-center bg-white" 
+        [formGroup]="loginData" [ngClass]="{ ' md:h-[60%]':loginData.invalid }"  (ngSubmit)="onSubmit()">
+        <h1 class="login text-center pt-4 text-black">Login</h1>
+        <div class="mt-0 md:mt-1"> 
+            <input class="mt-2  h-7 rounded-md px-3 bg-gray-100 placeholder-red-400" type="email" id="emailId" formControlName="emailId" placeholder="Email Id *">
+            
+          </div>
+           <!-- <span class="text-center mt-3 text-red-400" *ngIf="loginData.get('emailId').hasError('email') && (loginData.get('emailId').dirty )">
+            {{ validationMessages.emailId.email }}
+          </span>
+          <span class="text-center mt-3 text-red-400" *ngIf="loginData.get('emailId').hasError('required') && loginData.get('emailId').touched ">{{validationMessages.emailId.required}}</span> -->
+          <div class="mt-1"> 
+            <input class="mt-3 h-7 rounded-md px-3 bg-gray-100 placeholder-red-400" type="password" id="password" formControlName="password" placeholder="Password *"><br>
+             
+          </div>
+          <!-- <span class="text-center text-red-400 mt-3" *ngIf="loginData.get('password').hasError('required') &&  loginData.get('password').touched">
+            {{ validationMessages.password.required }}
+          </span>
+          
+          <span class="text-center text-red-400 mt-3" *ngIf="loginData.get('password').hasError('minlength') && (loginData.get('password').dirty || loginData.get('password').touched)">
+            {{ validationMessages.password.minlength }}
+          </span>  -->
+        <br>
+        <div>
+            <button type="submit"  [disabled]="loginData.invalid" class="hover:bg-black bg-gray-700 rounded-[0.4rem] mt-0 md:mt-2 w-14 p-1 text-white ">Submit</button>
+        </div>
+        <!-- <span *ngIf="!loginData.valid" class="mt-3 text-red-400">Please Fill all details</span> -->
+
+        <div class="pt-5">
+            <span class="">Are you a New User ? </span> <br>
+            <a class="font-bold underline text-center" routerLink="{{registerRedirect}}">Click Here to Register</a>
+        </div>
+        <div class="mt-5" [ngClass]="{'mt-8 md:mt-6':loginData.invalid}">
+          <button  class="px-2 h-7 rounded-2xl hover:outline-white hover:bg-blue-800 bg-blue-500 text-white"><a routerLink="{{forgotPasswordRedirect}}">Forgot Password</a></button>
+        </div>
+        <!-- <a routerLink="/">Home</a> -->
     </form>
-    <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button (click)="login()" color="primary">Login</button>
-  </mat-card-actions>
-</mat-card>
+
+</div>

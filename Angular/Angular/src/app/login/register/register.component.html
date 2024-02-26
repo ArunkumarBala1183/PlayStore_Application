@@ -1,0 +1,92 @@
+
+<div class=" h-[100vh] bg-gray-100 flex flex-col  justify-center items-center">
+  <form
+    class="w-[75%] h-[90%] rounded-2xl border border-gray-200 hover:bg-gray-200  md:w-[25%] md:h-[73%] md:mt-10  flex flex-col items-center bg-white"
+    [formGroup]="register" [ngClass]="{'h-[80%] md:h-[66%]':register.valid}" (ngSubmit)="onSubmit()">
+    <div class="mt-1 md:mt-2">
+      <h1 class="register  text-center text-black font-normal md:pt-1">Register</h1>
+    </div>
+    <div class="mt-1">
+      <!-- <label for="Name">Name</label><br> -->
+      <input class="bg-gray-100 px-3  h-7 rounded-md  placeholder-red-400" type="text" placeholder="Name *" id="userName" name="userName"
+        formControlName="userName" required>
+    </div>
+    <span class="text-center mt-1 text-red-400"
+      *ngIf="register.get('userName').touched && (register.get('userName').hasError('required'))">
+      {{ validationMessages.userName.required }}
+    </span>
+
+
+    <div class="mt-3  md:mt-3">
+      <!-- <label for="Email">Email</label><br> -->
+      <input class="bg-gray-100 px-3   h-7 rounded-md placeholder-red-400" type="email" id="emailId" name="emailId"
+        placeholder="Email Id *" formControlName="emailId" required (change)="checkEmail($event)">
+    </div>
+    <span class="text-center mt-1 text-red-400"
+      *ngIf="register.get('emailId').hasError('pattern') && (register.get('emailId').dirty )">
+      {{ validationMessages.emailId.email }}
+    </span>
+    <span class="text-center mt-1 text-red-400"
+      *ngIf="register.get('emailId').hasError('required') && register.get('emailId').touched ">{{validationMessages.emailId.required}}</span>
+
+    <div class="mt-3  md:mt-3">
+      <!-- <label for="Mobile">Mobile</label><br> -->
+      <input class="bg-gray-100 px-3   h-7 rounded-md placeholder-red-400" type="text" id="mobile" name="mobile" 
+        placeholder="Mobile Number *" formControlName="mobile" required pattern="[6-9]\d{9}">
+    </div>
+     <span class="text-center text-red-400 mt-1"
+      *ngIf="register.get('mobile').hasError('maxlength') && register.get('mobile').dirty">
+      {{ validationMessages.mobile.valid }}
+    </span> 
+    <span *ngIf="register.get('mobile').hasError('required') && register.get('mobile').touched " class="text-red-400 text-center mt-1">{{validationMessages.mobile.required}}</span>
+
+
+    <div class="mt-3 md:mt-3">
+      <!-- <label for="Password">Password</label><br> -->
+      <input class="bg-gray-100 px-3   h-7 rounded-md placeholder-red-400" type="password" id="password" name="password"
+        placeholder="Password *" formControlName="password" required minlength="7" maxlength="12">
+    </div>
+    <span class="text-center text-red-400 mt-1"
+      *ngIf="register.get('password').hasError('required') &&  register.get('password').touched">
+      {{ validationMessages.password.required }}
+    </span>
+
+    <span class="text-center text-red-400 mt-1"
+      *ngIf="register.get('password').hasError('minlength') && (register.get('password').dirty)">
+      {{ validationMessages.password.minlength }}
+    </span>
+    <div class="mt-3 md:mt-3">
+      <!-- <label for="Password">Confirm Password</label><br> -->
+      <input class="bg-gray-100 px-3   h-7 rounded-md placeholder-red-400" type="password" id="confirmPassword" name="confirmPassword"
+        placeholder="Confirm Password *" formControlName="confirmPassword" required minlength="7" maxlength="10" >
+    </div>
+   
+    <span class="text-center text-red-400 mt-1" *ngIf="!passwordMatch() && register.get('confirmPassword').touched"> {{validationMessages.confirmPassword.required}}
+
+      <!-- *ngIf="register.get('confirmPassword').hasError('required') &&  register.get('confirmPassword').touched">
+      {{ validationMessages.confirmPassword.required }} -->
+    </span>
+ 
+
+    <span class="text-center text-red-400 mt-1"
+      *ngIf="register.get('confirmPassword').hasError('minlength') && (register.get('confirmPassword').dirty )">
+      {{ validationMessages.confirmPassword.required }}
+    </span>
+    <div class="date mt-3 md:mt-3">
+      <label class="pl-1 text-red-400" for="Date">Date of Birth *</label><br>
+      <input class="bg-gray-100 px-3   h-7 rounded-md" id="dob" name="dob" formControlName="dob" type="date"
+        placeholder="Date of Birth" required>
+    </div>
+    <span class="text-center text-red-400 mt-1"
+      *ngIf="register.get('dob').hasError('required') &&  register.get('dob').touched">
+      {{ validationMessages.dob.required }}
+    </span>
+
+
+    <div class="mt-6 md:mt-10 " [ngClass]="{'mt-14 md:mt-6 ':register.valid}" >
+      <button type="submit" 
+        class="bg-blue-400 h-7 rounded-md w-16 text-white">Register</button>
+    </div>
+    <span class="mt-3 text-center text-red-400" *ngIf="!register.valid">Please fill all  details</span> 
+  </form>
+</div>
