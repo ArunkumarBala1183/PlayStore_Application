@@ -1,3 +1,6 @@
+using System.Net;
+using Playstore.Contracts.DTO.AppPublishRequest;
+
 namespace Playstore.Contracts.Data.Repositories
 {
     public interface IAppRequestsRepository

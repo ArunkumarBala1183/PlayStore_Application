@@ -1,9 +1,12 @@
 using System.Net;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.Data.RoleConfig;
 using Playstore.Contracts.DTO.AppInfo;
+using Playstore.Contracts.DTO.AppPublishRequest;
 using Playstore.Contracts.DTO.AppRequests;
 using Playstore.Migrations;
 
@@ -13,11 +16,77 @@ namespace Playstore.Core.Data.Repositories.Admin
     {
         private readonly DatabaseContext database;
         private readonly IMapper mapper;
-        public AppRequestsRepository(DatabaseContext context , IMapper mapper)
+
+        private readonly RoleConfig roleConfig;
+        public AppRequestsRepository(DatabaseContext context , IMapper mapper, IOptions<RoleConfig> options)
         {
             this.database = context;
             this.mapper = mapper;
+            this.roleConfig = options.Value;
         }
+
+        public async Task<object> ApproveApp(AppPublishDto appPublishDto)
+        {
+            if(appPublishDto.Approve)
+            {
+                return await this.RoleUpdate(appPublishDto.AppId);
+            }
+            else
+            {
+                return await this.RemoveAppInfo(appPublishDto.AppId);
+            }
+        }
+
+        private async Task<object> RoleUpdate(Guid appId)
+        {
+            var userDetails = await this.database.Users
+            .Include(app => app.AppInfo)
+            .Include(roles => roles.UserRoles)
+            .FirstOrDefaultAsync(id => id.AppInfo.Any(id => id.AppId == appId));
+
+            if (userDetails != null)
+            {
+                try
+                {
+                    var userRoles = new UserRole()
+                    {
+                        RoleId = this.roleConfig.DeveloperId,
+                        UserId = userDetails.UserId
+                    };
+    
+                    userDetails.UserRoles.Add(userRoles);
+    
+                    await this.database.SaveChangesAsync();
+    
+                    return HttpStatusCode.Created;
+                }
+                catch (Exception)
+                {
+                    
+                    throw;
+                }
+            }
+
+            return HttpStatusCode.NotFound;
+        }
+
+        private async Task<HttpStatusCode> RemoveAppInfo(Guid appId)
+        {
+            var appDetails = await this.database.AppInfo.FindAsync(appId);
+
+            if(appDetails != null)
+            {
+                this.database.AppInfo.Remove(appDetails);
+                
+                await this.database.SaveChangesAsync();
+
+                return HttpStatusCode.Created;
+            }
+
+            return HttpStatusCode.NotFound;
+        }
+        
+
         public async Task<object> GetAllRequests()
         {
             var requests = await this.database.AdminRequests

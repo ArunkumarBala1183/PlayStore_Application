@@ -9,6 +9,7 @@ using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Core.Data.Repositories;
 using Playstore.Core.Data.Repositories.Admin;
+using Playstore.Contracts.Data.RoleConfig;
 
 namespace Playstore.Infrastructure
 {
@@ -31,7 +32,8 @@ namespace Playstore.Infrastructure
             return services.AddSqlServer<DatabaseContext>(configuration.GetConnectionString("SqlServerConnection"), (options) =>
             {
                 options.MigrationsAssembly("Playstore.Migrations");
-            });
+            })
+            .Configure<RoleConfig>(configuration.GetSection("RoleConfig"));
         }
 
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
