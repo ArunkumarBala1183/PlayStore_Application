@@ -5,6 +5,7 @@ import { LoginRoutingModule } from './login-routing.module';
 import { LoginComponent } from './login/login.component';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AdminModule } from '../admin/admin.module';
 
 
 @NgModule({
@@ -16,7 +17,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     LoginRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule    
+    MaterialModule,
   ]
 })
 export class LoginModule { }

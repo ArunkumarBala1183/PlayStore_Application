@@ -7,6 +7,7 @@ import { AppCreateComponent } from './app-create/app-create.component';
 import { AppViewComponent } from './app-view/app-view.component';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule } from '@angular/forms';
+import { AdminModule } from '../admin/admin.module';
 
 
 @NgModule({
@@ -19,7 +20,7 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     ApplicationRoutingModule,
     MaterialModule,
-    FormsModule
+    FormsModule,
   ]
 })
 export class ApplicationModule { }

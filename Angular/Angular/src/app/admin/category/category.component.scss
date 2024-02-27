@@ -1,0 +1,39 @@
+::ng-deep .p-paginator {
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    margin-top: 1rem; /* Adjust as needed */
+}
+
+::ng-deep .p-paginator .p-paginator-pages {
+    margin-top: 0.5rem; /* Adjust as needed */
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page-links .p-paginator-page {
+    color: #3b82f6;
+    background-color: transparent;
+    border: 1px solid #d1d5db;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page-links .p-paginator-page.p-highlight {
+    background-color: #3b82f6;
+    color: #fff;
+    border-color: #3b82f6;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page-links .p-paginator-page:hover {
+    background-color: #dbeafe;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page-links .p-paginator-page.p-disabled {
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page-links .p-paginator-page.p-disabled:hover {
+    background-color: transparent;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page-links .p-paginator-page.p-disabled .p-paginator-page-icon {
+    color: #6b7280;
+}

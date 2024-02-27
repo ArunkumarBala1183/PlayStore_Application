@@ -14,9 +14,12 @@ export class LoginComponent implements OnInit {
   public showSpinner: boolean = false;
 
   ngOnInit(): void {
+    console.log("Login component came")
   }
 
   login() {
-    this.router.navigate(['app']);
+    // alert("Login triggered")
+
+    this.router.navigate(["admin/dashboard"])
   }
 }

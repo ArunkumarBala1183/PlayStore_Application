@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'angular-boilerplate';
+  menu=false;
+  show()
+  {
+    this.menu=!this.menu;
+  }
 }

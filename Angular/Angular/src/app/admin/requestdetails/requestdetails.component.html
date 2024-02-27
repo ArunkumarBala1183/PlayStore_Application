@@ -1,0 +1,57 @@
+<div class="flex w-full"><div class="underline"><h3>APP DETAILS</h3></div>
+<div class="ml-64"><button class="bg-black text-white px-2 py-2 rounded-md hover:bg-blue-600 ml-5">Download</button></div></div>
+
+<div class="overflow-x-auto mt-4 shadow-xl  bg-gray-100 rounded-lg w-fit">    
+    <div>
+        <p-table [value]="appdetails">
+            <ng-template pTemplate="header" class="bg-black">
+                <tr>
+                    <th *ngIf="appidShow">Appid </th>
+                    <th class="py-2 px-8">App Name</th>
+                    <th class="py-2 px-8">Description</th>
+                    <th class="py-2 px-8">App Logo</th>
+                    <th class="py-2 px-8">App Status</th>
+                    <th class="py-2 px-8">Category</th>
+                    <th class="py-2 px-8">Publisher Name</th>
+                    <th class="py-2 px-8">User Details</th>
+                   
+                </tr>
+            </ng-template>
+            <ng-template let-requests pTemplate="body" class="bg-gray-200" >
+                <tr class="text-black">
+                    <td *ngIf="appidShow">{{requests.appId}}</td>
+                    <td class="py-2 px-8">{{requests.Appname}}</td>
+                    <td class="py-2 px-8">{{requests.description}}</td>
+                    <td class="py-2 px-8">
+                        <img [src]="requests.logo" alt="logo" >
+                    </td>
+                    <td class="py-2 px-8">{{requests.status}}</td>
+                    <td class="py-2 px-8">{{requests.categoryName}}</td>
+                    <td class="py-2 px-8">{{requests.publisherName}}</td>
+                    <td class="py-2 px-8">
+                        Name:{{requests.name}} <br>
+                        Email id:{{requests.emailId}} <br>
+                        Ph Num:{{requests.mobileNumber}}
+                    </td>
+                    
+                </tr>
+            </ng-template>
+            
+        </p-table>
+    </div>
+</div>
+
+<!-- App Images -->
+<div class="mt-5 underline">
+<h3>APP IMAGES</h3>
+</div>
+<div class="mt-4 ml-36 flex justify-start w-fit">
+    <div *ngFor="let request of appdetails[0]?.appImages" class="" >
+        <img [src]="request" alt="logo" class=" mr-2 mb-2 h-72">
+    </div>  
+</div>
+
+<div class="flex justify-between ml-56 mr-0 mt-5 mb-10">
+    <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 ml-10">Accept</button>
+    <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 ">Decline</button>
+</div>

@@ -91,5 +91,11 @@ namespace Playstore.Controllers
                 });
             }
         }
+         [HttpPost("Image")]
+        public IActionResult imageupload([FromForm]Image image)
+        {
+           
+            return Ok(image);
+        }
     }
 }
