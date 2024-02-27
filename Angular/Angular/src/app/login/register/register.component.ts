@@ -9,8 +9,11 @@ import { LoginService } from 'src/app/services/login.service';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit  {
-
- constructor(public formbuilder:FormBuilder , public router:Router ,private loginService:LoginService){}
+minDate:Date | undefined;
+ constructor(public formbuilder:FormBuilder , public router:Router ,private loginService:LoginService){
+  this.minDate = new Date();
+ this.minDate.setFullYear(this.minDate.getFullYear() - 18);
+ }
  public register:FormGroup | any;
   ngOnInit(): void {
     this.initForm();
@@ -67,6 +70,22 @@ export class RegisterComponent implements OnInit  {
     this.loginService.checkUser(email);
     
    }
+   validDob = false;
+
+checkDob(event: any): void {
+  const dobString: string = event.target.value;
+  const dob: Date = new Date(dobString);
+  
+  if (dob > this.minDate!) {
+    console.log(this.minDate)
+    console.log(dob);
+    this.validDob = true;
+  } else {
+    console.log(this.minDate)
+    console.log(dob);
+    this.validDob = false;
+  }
+}
 onSubmit()
 {
  if(this.register.valid)

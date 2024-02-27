@@ -74,13 +74,14 @@
     </span>
     <div class="date mt-3 md:mt-3">
       <label class="pl-1 text-red-400" for="Date">Date of Birth *</label><br>
-      <input class="bg-gray-100 px-3   h-7 rounded-md" id="dob" name="dob" formControlName="dob" type="date"
+      <input class="bg-gray-100 px-3   h-7 rounded-md" id="dob" name="dob" formControlName="dob" type="date" (change)="checkDob($event)"
         placeholder="Date of Birth" required>
     </div>
     <span class="text-center text-red-400 mt-1"
       *ngIf="register.get('dob').hasError('required') &&  register.get('dob').touched">
       {{ validationMessages.dob.required }}
     </span>
+    <span *ngIf="validDob" class="mt-1 text-center text-red-400">Date of Birth must be greater than 18 years</span>
 
 
     <div class="mt-6 md:mt-10 " [ngClass]="{'mt-14 md:mt-6 ':register.valid}" >
