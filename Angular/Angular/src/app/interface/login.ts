@@ -4,12 +4,13 @@ export interface Login{
 }
 export interface Register
 {
-      userName:string,
+      name:string,
       emailId:string,
-      mobile:string,
+      mobileNumber:string,
       password:string,
       confirmPassword:string,
-      dob:string
+      dateOfBirth:string
+      
 }
 
 export interface Email{

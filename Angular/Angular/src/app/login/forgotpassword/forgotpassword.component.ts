@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgForm, NgModel } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-forgotpassword',
@@ -9,21 +10,21 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./forgotpassword.component.scss']
 })
 export class ForgotpasswordComponent {
-  constructor(private router:Router){
+  constructor(private router:Router , private loginService:LoginService){
 
   }
   forgotPassword:NgForm|any;
   emailId:string='';
   otp:string='';
-  password:string='';
+  newPassword:string='';
   confirmPassword:string='';
   emailVerify=false;
   otpVerify=false;
-  newPassword=false;
+  password=false;
   showOtp=false;
   public passwordCheck()
   {
-    if(this.password.length>8)
+    if(this.newPassword.length>8)
     {
       return true;
     }
@@ -31,7 +32,7 @@ export class ForgotpasswordComponent {
   }
   public passwordChange()
   {
-    if(this.password === this.confirmPassword)
+    if(this.newPassword === this.confirmPassword)
     {
       return false;
     }
@@ -52,7 +53,8 @@ export class ForgotpasswordComponent {
     {
       if (!this.emailVerify) {
         console.log(this.emailId);
-        
+        const email=this.emailId;
+        this.loginService.checkUser;
         this.emailVerify =true;
         this.showOtp=true;
       }
@@ -67,7 +69,7 @@ export class ForgotpasswordComponent {
         else{
           console.log('Email:', this.emailId);
           console.log('OTP:', this.otp);
-          console.log('Password:', this.password);
+          console.log('Password:', this.newPassword);
           this.router.navigate(['login']);
           alert('Password Changed');
           form.reset();
