@@ -1,11 +1,12 @@
 ﻿using Playstore.Contracts.Data;
-using Playstore.Core.Data;
+
 using Playstore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Playstore.Contracts.Data.Entities;
+using Playstore.Infrastructure.Data;
 
 namespace Playstore.Infrastructure
 {
@@ -18,7 +19,7 @@ namespace Playstore.Infrastructure
 
         private static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
         {
-            return services.AddSqlite<DatabaseContext>(configuration.GetConnectionString("DefaultConnection"), (options) =>
+            return services.AddSqlServer<DatabaseContext>(configuration.GetConnectionString("DefaultConnection"), (options) =>
             {
                 options.MigrationsAssembly("Playstore.Migrations");
             });

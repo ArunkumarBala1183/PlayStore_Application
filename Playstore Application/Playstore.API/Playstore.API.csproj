@@ -1,22 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
-	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Playstore.Core\Playstore.Core.csproj" />
-		<ProjectReference Include="..\Playstore.Infrastructure\Playstore.Infrastructure.csproj" />
-	</ItemGroup>
-
-
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Playstore.Core\Playstore.Core.csproj"/>
+    <ProjectReference Include="..\Playstore.Infrastructure\Playstore.Infrastructure.csproj"/>
+  </ItemGroup>
 </Project>

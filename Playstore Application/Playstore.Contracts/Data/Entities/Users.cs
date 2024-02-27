@@ -7,7 +7,7 @@ namespace Playstore.Contracts.Data.Entities
         [Key]
         public Guid UserId { get; set; }
         public string Name { get; set; }
-        public DateOnly DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string EmailId { get; set; }
         public string  MobileNumber { get; set; }
         
