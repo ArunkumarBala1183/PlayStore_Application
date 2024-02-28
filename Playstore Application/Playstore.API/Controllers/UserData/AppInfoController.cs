@@ -13,13 +13,7 @@ using Playstore.Contracts.DTO.AppReview;
 using Playstore.Core.Exceptions;
 using Playstore.Migrations;
 using Playstore.Providers.Handlers.Commands.UserData;
-
-
-
-
-// using Playstore.Providers.Handlers.Queries.User;
 using Playstore.Providers.Handlers.Queries.UserData;
-
 namespace Playstore.Controllers.UserData
 {
     [ApiController]
@@ -43,9 +37,19 @@ namespace Playstore.Controllers.UserData
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> Get()
         {
+            try{
             var query = new GetAllAppInfoQuery();
             var response=await _mediator.Send(query);
             return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(new BaseResponseDTO
+                {
+                    IsSuccess = false,
+                    Errors = new string[] { ex.Message }
+                });
+            }
         }
         [HttpPost("ReviewDetails")]
         [ProducesResponseType(typeof(IEnumerable<AppInfoDTO>), (int)HttpStatusCode.OK)]
@@ -81,7 +85,7 @@ namespace Playstore.Controllers.UserData
         }
       
         [HttpPost("AppDetails")]
-        [ProducesResponseType(typeof(int), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(CreateAppInfoDTO), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> Post([FromForm]CreateAppInfoDTO model)
         {
@@ -130,23 +134,42 @@ namespace Playstore.Controllers.UserData
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<object> GetDeveloperDetails(Guid id)
         {
-           
+            try{
                 var query = new GetDeveloperMyAppDetails(id);
                 var response = await _mediator.Send(query);
                  
                 return response;
+            }
+             catch (EntityNotFoundException ex)
+            {
+                return NotFound(new BaseResponseDTO
+                {
+                    IsSuccess = false,
+                    Errors = new string[] { ex.Message }
+                });
+            }
                 
             
         }
         [HttpGet("DownloadsDetails")]
-        [ProducesResponseType(typeof(AppDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(AppDownloadsDto), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> GetDownloadDetails(Guid Userid)
         {
-            
+             try{
                 var query = new GetAppInfoDownloadFile(Userid);
                 var response = await _mediator.Send(query);
                 return Ok(response);
+             }
+              catch (EntityNotFoundException ex)
+            {
+                return NotFound(new BaseResponseDTO
+                {
+                    IsSuccess = false,
+                    Errors = new string[] { ex.Message }
+                });
+            }
+             
         }
         
 
@@ -154,8 +177,8 @@ namespace Playstore.Controllers.UserData
 
         [HttpPost]
         [Route("DownloadFile")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(AppDownloadsDto),StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DownloadFile([FromForm]AppDownloadsDto appDownloadsDto)
         {
             try
@@ -204,8 +227,8 @@ namespace Playstore.Controllers.UserData
         
 
         [HttpPost("AddReview")]
-       [ProducesResponseType(StatusCodes.Status200OK)]
-       [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+       [ProducesResponseType(typeof(AppreviewDTO),StatusCodes.Status200OK)]
+       [ProducesResponseType(StatusCodes.Status400BadRequest)]
        public async Task<IActionResult> AddReview([FromForm]AppreviewDTO appreviewDTO)
        {
         try
