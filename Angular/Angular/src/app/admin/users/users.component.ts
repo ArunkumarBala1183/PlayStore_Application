@@ -1,6 +1,8 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+// import { error } from 'console';
+// import { MyApiService } from 'src/app/my-api.service';
 
 @Component({
   selector: 'app-users',
@@ -8,10 +10,16 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
-
+ /**
+  *
+  */
+//  constructor(private myService:MyApiService) {
+  
+//  }
   searchUsers: string = '';
   displayedColumns: string[] = ['Username', 'Email', 'Role'];
   dataSource = new MatTableDataSource<any>();
+  // data:any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -44,7 +52,20 @@ export class UsersComponent implements OnInit {
 
   ngOnInit() {
     // Initialize dataSource after users array is initialized
-    this.dataSource = new MatTableDataSource<any>(this.users);
+     this.dataSource = new MatTableDataSource<any>(this.users);
+    // this.myService.getAllUsers().subscribe(
+    //   {
+    //     next:response=>
+    //     {
+    //       console.log(response);
+    //       this.data=response;
+    //     },
+    //     error:error=>
+    //     {
+    //       console.log(error)
+    //     }
+    //   }
+    // )
   }
   
   ngAfterViewInit() {

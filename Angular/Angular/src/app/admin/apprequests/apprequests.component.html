@@ -1,7 +1,10 @@
+<div class="ml-24 md:ml-72 underline">
+    <h2>App Requests</h2>
+</div>
 <div *ngFor="let app of requestapps" class="mt-5 md:ml-40 mb-6  flex items-center p-4 rounded-lg hover:shadow-lg hover:scale-105 shadow-md bg-gray-100">
     <!-- Image -->
     <div class=" flex-none mr-4"> 
-        <img [src]="app.imageUrl" class="h-20">
+        <img [src]="app.imageUrl" class="md:h-20 h-10">
     </div>
 
     <!-- App Info -->
