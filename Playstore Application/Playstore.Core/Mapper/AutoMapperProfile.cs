@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.DTO;
+using Playstore.Contracts.DTO.AppDownloads;
 
 namespace Playstore.Core.Mapper
 {
@@ -10,6 +11,10 @@ namespace Playstore.Core.Mapper
         {
             CreateMap<App, AppDTO>();
             CreateMap<User, UserDTO>();
+            CreateMap<AppInfo,AppDownloadDataDto>();
+            CreateMap<AppData,AppDownloadDataDto>();
+            CreateMap<AppDownloads,AppDownloadDetailsDto>();
+            
         }
     }
 }

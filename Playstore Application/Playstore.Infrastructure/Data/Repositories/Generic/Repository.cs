@@ -2,7 +2,7 @@
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Migrations;
 
-namespace Playstore.Core.Data.Repositories
+namespace Playstore.Infrastructure.Data.Repositories.Generic
 {
     public class Repository<T> : IRepository<T> where T : class
     {

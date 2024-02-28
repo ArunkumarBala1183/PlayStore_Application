@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Playstore.Contracts.Data.Entities
 {
@@ -16,8 +17,13 @@ namespace Playstore.Contracts.Data.Entities
         public Guid CategoryId { get; set; }
         public Guid UserId { get; set; }
 
-        public ICollection<AppImages> AppImages { get; set; } = new List<AppImages>();
+        public Guid RequestId { get; set; }
 
+        public RequestStatus Status { get; set; }  
+        
+        
+        public ICollection<AppImages> AppImages { get; set; } = new List<AppImages>();
+        
         public AppData AppData { get; set; }
 
         public ICollection<AppReview> AppReview { get; set; } = new List<AppReview>();
@@ -29,6 +35,9 @@ namespace Playstore.Contracts.Data.Entities
 
         [ForeignKey("UserId")]
         public Users Users { get; set; }
+
+        [ForeignKey("RequestId")]
+        public AdminRequests AdminRequests { get; set; }
         
     }
 }
