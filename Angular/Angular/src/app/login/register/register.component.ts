@@ -11,6 +11,7 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class RegisterComponent implements OnInit {
   minDate: Date | undefined;
+  emailExists=false;
   constructor(public formbuilder: FormBuilder, public router: Router, private loginService: LoginService) {
     this.minDate = new Date();
     this.minDate.setFullYear(this.minDate.getFullYear() - 18);
@@ -81,6 +82,7 @@ export class RegisterComponent implements OnInit {
                 }
                 else{
                   alert('Email already existes')
+                  this.emailExists=true;
                 }
             },
             error: error => {
