@@ -1,27 +1,45 @@
+using System.Net;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Contracts.DTO.AppData;
+using Playstore.Core.Exceptions;
 
 namespace Playstore.Providers.Handlers.Commands
 {
-    public class AppUploadCommand : IRequest<object>
+    public class AppUploadCommand : IRequest<HttpStatusCode>
     {
         public Guid AppId { get; set; }
         public IFormFile? AppFile { get; set; }
     }
 
-    public class AppUploadCommandHandler : IRequestHandler<AppUploadCommand, object>
+    public class AppUploadCommandHandler : IRequestHandler<AppUploadCommand, HttpStatusCode>
     {
         private readonly IAppDataRepository repository;
+        private readonly IStatusCodeHandlerRepository statusCodeHandler;
 
-        public AppUploadCommandHandler(IAppDataRepository repository)
+        public AppUploadCommandHandler(IAppDataRepository repository , IStatusCodeHandlerRepository statusCodeHandler)
         {
             this.repository = repository;
+            this.statusCodeHandler = statusCodeHandler;
         }
-        public async Task<object> Handle(AppUploadCommand request, CancellationToken cancellationToken)
+        public async Task<HttpStatusCode> Handle(AppUploadCommand request, CancellationToken cancellationToken)
         {
-            return await this.repository.UploadApp(request.AppFile , request.AppId);
+            try
+            {
+                var response =  await this.repository.UploadApp(request.AppFile , request.AppId);
+    
+                if(response != HttpStatusCode.Created)
+                {
+                    statusCodeHandler.HandleStatusCode(response);
+                }
+    
+                return response;
+            }
+            catch (ApiResponseException)
+            {
+                
+                throw;
+            }
         }
     }
 }

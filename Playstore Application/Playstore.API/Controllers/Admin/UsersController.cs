@@ -2,6 +2,8 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Playstore.Contracts.DTO.UserInfo;
+using Playstore.Core.Exceptions;
 using Playstore.Providers.Handlers.Queries.Admin;
 
 namespace Playstore.Controllers.Admin
@@ -17,16 +19,20 @@ namespace Playstore.Controllers.Admin
         }
 
         [HttpGet("GetAllUsers")]
+        [ProducesResponseType(typeof(UserInfoDto), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetAllUsers()
         {
-            var response = await this.mediator.Send(new GetAllUsersInfoQuery());
-
-            if(response.GetType() != typeof(HttpStatusCode))
+            try
             {
+                var response = await mediator.Send(new GetAllUsersInfoQuery());
+
                 return Ok(response);
             }
-
-            return StatusCode((int)(HttpStatusCode)response);
+            catch (ApiResponseException error)
+            {
+                return NotFound(error.Message);
+            }
         }
     }
 }

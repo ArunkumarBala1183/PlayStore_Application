@@ -1,10 +1,12 @@
+using System.Net;
 using MediatR;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO.AppDownloads;
+using Playstore.Core.Exceptions;
 
 namespace Playstore.Providers.Handlers.Queries.Admin
 {
-    public class GetAppLogsQuery : IRequest<object>
+    public class GetAppLogsQuery : IRequest<IEnumerable<AppDownloadsDto>>
     {
         public AppLogsDto appSearch { get; set; }
         public GetAppLogsQuery(AppLogsDto appLogsDto)
@@ -13,16 +15,33 @@ namespace Playstore.Providers.Handlers.Queries.Admin
         }
     }
 
-    public class GetAppLogsQueryHandler : IRequestHandler<GetAppLogsQuery, object>
+    public class GetAppLogsQueryHandler : IRequestHandler<GetAppLogsQuery, IEnumerable<AppDownloadsDto>>
     {
         private readonly IAppDownloadsRepository repository;
-        public GetAppLogsQueryHandler(IAppDownloadsRepository repository)
+        private readonly IStatusCodeHandlerRepository statusCodeHandler;
+        public GetAppLogsQueryHandler(IAppDownloadsRepository repository , IStatusCodeHandlerRepository statusCodeHandler)
         {
             this.repository = repository;
+            this.statusCodeHandler = statusCodeHandler;
         }
-        public async Task<object> Handle(GetAppLogsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<AppDownloadsDto>> Handle(GetAppLogsQuery request, CancellationToken cancellationToken)
         {
-            return await this.repository.GetAppLogs(request.appSearch);
+            try
+            {
+                var response =  await this.repository.GetAppLogs(request.appSearch);
+    
+                if(response.GetType() == typeof(HttpStatusCode))
+                {
+                    statusCodeHandler.HandleStatusCode((HttpStatusCode) response);
+                }
+    
+                return (IEnumerable<AppDownloadsDto>) response;
+            }
+            catch (ApiResponseException)
+            {
+                
+                throw;
+            }
         }
     }
 }

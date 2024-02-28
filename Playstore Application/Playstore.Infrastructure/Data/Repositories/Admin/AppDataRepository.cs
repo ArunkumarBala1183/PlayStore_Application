@@ -1,6 +1,7 @@
 using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
@@ -23,41 +24,62 @@ namespace Playstore.Core.Data.Repositories.Admin
 
         public async Task<object> GetAppData(Guid appId)
         {
-            var appDetails = await this.database.AppDatas.FirstOrDefaultAsync(id => id.AppId == appId);
-
-            if (appDetails != null)
+            try
             {
-                return this.mapper.Map<RequestedAppDataDto>(appDetails);
+                var appDetails = await this.database.AppDatas.FirstOrDefaultAsync(id => id.AppId == appId);
+    
+                if (appDetails != null)
+                {
+                    return this.mapper.Map<RequestedAppDataDto>(appDetails);
+                }
+    
+                return HttpStatusCode.NotFound;
             }
-
-            return HttpStatusCode.NoContent;
+            catch (SqlException)
+            {
+                return HttpStatusCode.ServiceUnavailable;
+            }
+            catch (Exception)
+            {
+                return HttpStatusCode.InternalServerError;
+            }
         }
 
-        public async Task<object> UploadApp(IFormFile appFile, Guid appId)
+        public async Task<HttpStatusCode> UploadApp(IFormFile appFile, Guid appId)
         {
-            if (appFile != null && appId != Guid.Empty)
+            try
             {
-                var appData = new AppData();
-
-                using (var stream = new MemoryStream())
+                if (appFile != null && appId != Guid.Empty)
                 {
-                    await appFile.CopyToAsync(stream);
-                    appData.AppFile = stream.ToArray();
-                    stream.Close();
+                    var appData = new AppData();
+    
+                    using (var stream = new MemoryStream())
+                    {
+                        await appFile.CopyToAsync(stream);
+                        appData.AppFile = stream.ToArray();
+                        stream.Close();
+                    }
+    
+                    appData.AppId = appId;
+                    appData.ContentType = appFile.ContentType;
+    
+                    await this.database.AppDatas.AddAsync(appData);
+    
+                    await this.database.SaveChangesAsync();
+    
+                    return HttpStatusCode.Created;
                 }
-
-                appData.AppId = appId;
-                appData.ContentType = appFile.ContentType;
-
-                await this.database.AppDatas.AddAsync(appData);
-
-                await this.database.SaveChangesAsync();
-
-                return HttpStatusCode.Created;
+    
+                return HttpStatusCode.NotFound;
             }
-
-            return HttpStatusCode.NoContent;
-
+            catch (SqlException)
+            {
+                return HttpStatusCode.ServiceUnavailable;
+            }
+            catch (Exception)
+            {
+                return HttpStatusCode.InternalServerError;
+            }
         }
     }
 }

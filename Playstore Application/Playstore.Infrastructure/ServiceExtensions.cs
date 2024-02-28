@@ -10,6 +10,7 @@ using Playstore.Contracts.Data.Repositories;
 using Playstore.Core.Data.Repositories;
 using Playstore.Core.Data.Repositories.Admin;
 using Playstore.Contracts.Data.RoleConfig;
+using Playstore.Core.Data.Repositories.StatusCode;
 
 namespace Playstore.Infrastructure
 {
@@ -24,7 +25,8 @@ namespace Playstore.Infrastructure
             .AddTransient<IAppDownloadsRepository , AppDownloadsRepository>()
             .AddTransient<IAppReviewRepository , AppReviewRepository>()
             .AddTransient<IAppRequestsRepository , AppRequestsRepository>()
-            .AddTransient<IAppDataRepository , AppDataRepository>();
+            .AddTransient<IAppDataRepository , AppDataRepository>()
+            .AddScoped<IStatusCodeHandlerRepository , StatusCodeHandlerRepository>();
         }
 
         private static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)

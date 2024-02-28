@@ -1,5 +1,6 @@
 using System.Net;
 using AutoMapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
@@ -21,68 +22,73 @@ namespace Playstore.Core.Data.Repositories
 
         public async Task<HttpStatusCode> RemoveApp(Guid id)
         {
-            var existedData = await this._database.AppInfo.FindAsync(id);
-
-            if (existedData != null)
+            try
             {
-                this._database.AppInfo.Remove(existedData);
-
-                await this._database.SaveChangesAsync();
+                var existedData = await this._database.AppInfo.FindAsync(id);
+    
+                if (existedData != null)
+                {
+                    this._database.AppInfo.Remove(existedData);
+    
+                    await this._database.SaveChangesAsync();
+    
+                    return HttpStatusCode.NoContent;
+                }
+    
+                return HttpStatusCode.NotFound;
             }
-
-            return HttpStatusCode.NoContent;
+            catch (SqlException)
+            {
+                return HttpStatusCode.ServiceUnavailable;
+            }
+            catch (Exception)
+            {
+                return HttpStatusCode.InternalServerError;
+            }
         }
 
         public async Task<object> ViewAllApps()
         {
-            var appDetails = await this._database.AppInfo
-            .Include(category => category.Category)
-            .Include(review => review.AppReview)
-            .Include(downloads => downloads.AppDownloads)
-            .ToListAsync();
-
-            if (appDetails != null && appDetails.Count > 0)
+            try
             {
-                // var appDetailsDto = new List<ListAppInfoDto>();
-
-                // appDetails.ForEach(app =>
-                // {
-
-                //     var appDto = new ListAppInfoDto()
-                //     {
-                //         AppId = app.AppId,
-                //         Name = app.Name,
-                //         Logo = app.Logo,
-                //         Description = app.Description,
-                //         Rating = this.CalculateAverageRatings((List<AppReview>) app.AppReview),
-                //         Downloads = app.AppDownloads.Count
-                //     };
-
-                //     appDetailsDto.Add(appDto);
-                // });
-
-                // return appDetailsDto;
-
-                var appDetailsDto = this._mapper.Map<List<ListAppInfoDto>>(appDetails);
-
-                int appsCount = Math.Min(appDetails.Count , appDetailsDto.Count);
-
-                for(int i = 0; i < appsCount ; i++)
+                var appDetails = await this._database.AppInfo
+                .Include(category => category.Category)
+                .Include(review => review.AppReview)
+                .Include(downloads => downloads.AppDownloads)
+                .ToListAsync();
+    
+                if (appDetails != null && appDetails.Count > 0)
                 {
-                    AppInfo appInfo = appDetails[i];
-                    ListAppInfoDto appInfoDto = appDetailsDto[i];
-
-                    appInfoDto.Rating = this.CalculateAverageRatings((List<AppReview>)appInfo.AppReview);
-                    appInfoDto.Downloads = appInfo.AppDownloads.Count;
-
-                    appDetailsDto[i] = appInfoDto;
+    
+                    var appDetailsDto = this._mapper.Map<List<ListAppInfoDto>>(appDetails);
+    
+                    int appsCount = Math.Min(appDetails.Count , appDetailsDto.Count);
+    
+                    for(int i = 0; i < appsCount ; i++)
+                    {
+                        AppInfo appInfo = appDetails[i];
+                        ListAppInfoDto appInfoDto = appDetailsDto[i];
+    
+                        appInfoDto.Rating = this.CalculateAverageRatings((List<AppReview>)appInfo.AppReview);
+                        appInfoDto.Downloads = appInfo.AppDownloads.Count;
+    
+                        appDetailsDto[i] = appInfoDto;
+                    }
+    
+                    return appDetailsDto;
                 }
-
-                return appDetailsDto;
+                else
+                {
+                    return HttpStatusCode.NotFound;
+                }
             }
-            else
+            catch (SqlException)
             {
-                return HttpStatusCode.NoContent;
+                return HttpStatusCode.ServiceUnavailable;
+            }
+            catch (Exception)
+            {
+                return HttpStatusCode.InternalServerError;
             }
         }
 

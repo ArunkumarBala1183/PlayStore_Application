@@ -1,9 +1,11 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Playstore.Contracts.DTO.AppData;
+using Playstore.Core.Exceptions;
 using Playstore.Providers.Handlers.Commands;
 using Playstore.Providers.Handlers.Queries.Admin;
 
@@ -20,33 +22,37 @@ namespace Playstore.Controllers.Admin
         }
 
         [HttpGet("GetAppData/{appId}")]
+        [ProducesResponseType(typeof(FileStream) , (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetAppData(Guid appId)
         {
-            var response = await this.mediator.Send(new GetRequestedAppDataQuery(appId));
-
-            if(response.GetType() != typeof(HttpStatusCode))
+            try
             {
-                RequestedAppDataDto appDetails = (RequestedAppDataDto) response;
-
+                var appDetails = await this.mediator.Send(new GetRequestedAppDataQuery(appId));
+    
                 return File(appDetails.AppFile , appDetails.ContentType , "SampleFile");
             }
-
-            return StatusCode((int) response);
+            catch (ApiResponseException error)
+            {
+                return NotFound(error.Message);
+            }
         }
 
         [HttpPost("UploadApp")]
+        [ProducesResponseType(typeof(FileStream) , (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> UploadApp([FromForm] AppUploadCommand appData)
         {
-            var response = await this.mediator.Send(appData);
-
-            if(response.GetType() != typeof(HttpStatusCode))
+            try
             {
-                RequestedAppDataDto appDetails = (RequestedAppDataDto) response;
-
-                return File(appDetails.AppFile , appDetails.ContentType , "SampleFile");
+                var response = await this.mediator.Send(appData);
+    
+                return StatusCode((int) response);
             }
-
-            return StatusCode((int) response);
+            catch (ApiResponseException error)
+            {
+                return NotFound(error.Message);
+            }
         }
     }
 }

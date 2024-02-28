@@ -1,23 +1,42 @@
+using System.Net;
 using MediatR;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.DTO.Category;
+using Playstore.Core.Exceptions;
 
 namespace Playstore.Providers.Handlers.Queries.Admin
 {
-    public class GetAllCategoryQuery : IRequest<object>
+    public class GetAllCategoryQuery : IRequest<IEnumerable<CategoryUpdateDto>>
     {
     }
-    public class GetAllCategoryQueryHandler: IRequestHandler<GetAllCategoryQuery, object>
+    public class GetAllCategoryQueryHandler : IRequestHandler<GetAllCategoryQuery, IEnumerable<CategoryUpdateDto>>
     {
         private readonly ICategoryRepository repository;
-        public GetAllCategoryQueryHandler(ICategoryRepository repository)
+        private readonly IStatusCodeHandlerRepository statusCodeHandler;
+        public GetAllCategoryQueryHandler(ICategoryRepository repository , IStatusCodeHandlerRepository statusCodeHandler)
         {
             this.repository = repository;
+            this.statusCodeHandler= statusCodeHandler;
         }
 
-        public async Task<object> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CategoryUpdateDto>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
         {
-            var response = await this.repository.GetAllCategory();
-            return response;
+            try
+            {
+                var response = await this.repository.GetAllCategory();
+
+                if (response.GetType() == typeof(HttpStatusCode))
+                {
+                    statusCodeHandler.HandleStatusCode((HttpStatusCode) response);
+                }
+
+                return (IEnumerable<CategoryUpdateDto>)response;
+            }
+            catch (ApiResponseException)
+            {
+
+                throw;
+            }
         }
     }
 }

@@ -13,6 +13,6 @@ namespace Playstore.Controllers.Admin
             this.mediator = mediator;
         }
 
-        
+
     }
 }

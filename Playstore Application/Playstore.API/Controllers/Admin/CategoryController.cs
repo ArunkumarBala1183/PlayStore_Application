@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Playstore.Contracts.DTO.Category;
+using Playstore.Core.Exceptions;
 using Playstore.Providers.Handlers.Commands;
 using Playstore.Providers.Handlers.Queries.Admin;
 
@@ -22,56 +24,88 @@ namespace Playstore.Controllers.Admin
         [HttpPost("AddCategory")]
         public async Task<IActionResult> AddCategory([FromBody] CategoryDto category)
         {
-            var response = await this._mediator.Send(new AddCategoryCommand(category));
-            
-            return StatusCode((int) response);
+            try
+            {
+                var response = await this._mediator.Send(new AddCategoryCommand(category));
+
+                if (response == HttpStatusCode.AlreadyReported)
+                {
+                    return StatusCode((int)response, "Category Already Exists");
+                }
+
+                return StatusCode((int)response, "Category Added");
+            }
+            catch (ApiResponseException error)
+            {
+                return NotFound(error.Message);
+            }
         }
 
         [HttpGet("GetAllCategories")]
+        [ProducesResponseType(typeof(IEnumerable<CategoryUpdateDto>), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetAllCategories()
         {
-            var response = await this._mediator.Send(new GetAllCategoryQuery());
-
-            if(response.GetType() != typeof(HttpStatusCode))
+            try
             {
+                var response = await this._mediator.Send(new GetAllCategoryQuery());
+
                 return Ok(response);
             }
-
-            return StatusCode((int)(HttpStatusCode)response);
+            catch (ApiResponseException error)
+            {
+                return NotFound(error.Message);
+            }
         }
-        //returning response type
+
         [HttpPost("SearchCategory")]
+        [ProducesResponseType(typeof(IEnumerable<string>), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> SearchCategory([FromBody] CategoryDto category)
         {
-            var response = await this._mediator.Send(new SearchCategoryQuery(category));
-
-            if(response.GetType() != typeof(HttpStatusCode))
+            try
             {
+                var response = await this._mediator.Send(new SearchCategoryQuery(category));
+
                 return Ok(response);
             }
-
-            return StatusCode((int)(HttpStatusCode)response);
+            catch (ApiResponseException error)
+            {
+                return NotFound(error.Message);
+            }
         }
 
         [HttpGet("GetCategory/{id}")]
+        [ProducesResponseType(typeof(CategoryUpdateDto), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetCategory(Guid id)
         {
-            var response = await this._mediator.Send(new GetCategoryQuery(id));
-
-            if(response.GetType() != typeof(HttpStatusCode))
+            try
             {
+                var response = await this._mediator.Send(new GetCategoryQuery(id));
+
                 return Ok(response);
             }
+            catch (ApiResponseException error)
+            {
+                return NotFound(error.Message);
+            }
 
-            return StatusCode((int)(HttpStatusCode)response);
         }
 
         [HttpPatch("UpdateCategory")]
         public async Task<IActionResult> UpdateCategory(CategoryUpdateDto category)
         {
-            var response = await this._mediator.Send(new UpdateCategoryCommand(category));
+            try
+            {
+                var response = await this._mediator.Send(new UpdateCategoryCommand(category));
 
-            return StatusCode((int) response);
+                return StatusCode((int)response, new { message = "Updated Successfully" });
+            }
+            catch (ApiResponseException error)
+            {
+                return NotFound(error.Message);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data.Entities;
@@ -20,29 +21,40 @@ namespace Playstore.Core.Data.Repositories.Admin
             role = options.Value;
         }
 
-        public async Task<object> ApproveApp(AppPublishDto appPublishDto)
+        public async Task<HttpStatusCode> ApproveApp(AppPublishDto appPublishDto)
         {
-            var userDetails = await database.Users
-            .Include(app => app.AppInfo)
-            .Include(roles => roles.UserRoles)
-            .FirstOrDefaultAsync(id => id.AppInfo.Any(id => id.AppId == appPublishDto.AppId));
-
-            if (userDetails != null)
+            try
             {
-                if (appPublishDto.Approve)
+                var userDetails = await database.Users
+                .Include(app => app.AppInfo)
+                .Include(roles => roles.UserRoles)
+                .FirstOrDefaultAsync(id => id.AppInfo.Any(id => id.AppId == appPublishDto.AppId));
+    
+                if (userDetails != null)
                 {
-                    return await RoleUpdate(userDetails.UserId , appPublishDto.AppId);
+                    if (appPublishDto.Approve)
+                    {
+                        return await RoleUpdate(userDetails.UserId , appPublishDto.AppId);
+                    }
+                    else
+                    {
+                        return await RemoveRequest(userDetails.UserId);
+                    }
                 }
-                else
-                {
-                    return await RemoveRequest(userDetails.UserId);
-                }
+    
+                return HttpStatusCode.NotFound;
             }
-
-            return HttpStatusCode.NotFound;
+            catch (SqlException)
+            {
+                return HttpStatusCode.ServiceUnavailable;
+            }
+            catch (Exception)
+            {
+                return HttpStatusCode.InternalServerError;
+            }
         }
 
-        private async Task<object> RoleUpdate(Guid userId , Guid appId)
+        private async Task<HttpStatusCode> RoleUpdate(Guid userId , Guid appId)
         {
             var userRoles = new UserRole()
             {

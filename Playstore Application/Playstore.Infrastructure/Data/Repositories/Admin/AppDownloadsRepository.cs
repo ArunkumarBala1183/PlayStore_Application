@@ -1,5 +1,6 @@
 using System.Net;
 using AutoMapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
@@ -19,26 +20,36 @@ namespace Playstore.Core.Data.Repositories.Admin
         }
         public async Task<object> GetAppLogs(AppLogsDto appSearch)
         {
-
-            if (appSearch.DownloadedDate is null && appSearch.AppId is null && appSearch.UserId is null)
+            try
             {
-                return HttpStatusCode.BadRequest;
+                if (appSearch.DownloadedDate is null && appSearch.AppId is null && appSearch.UserId is null)
+                {
+                    return HttpStatusCode.BadRequest;
+                }
+    
+                var appLogs = await this.CheckValues(appSearch)
+                .Include(app => app.AppInfo)
+                .ThenInclude(category => category.Category)
+                .Include(user => user.Users)
+                .ThenInclude(roleUser => roleUser.UserRoles)
+                .ThenInclude(role => role.Role)
+                .ToListAsync();
+    
+                if (appLogs != null && appLogs.Count > 0)
+                {
+                    return this.mapper.Map<IEnumerable<AppDownloadsDto>>(appLogs);
+                }
+    
+                return HttpStatusCode.NotFound;
             }
-
-            var appLogs = await this.CheckValues(appSearch)
-            .Include(app => app.AppInfo)
-            .ThenInclude(category => category.Category)
-            .Include(user => user.Users)
-            .ThenInclude(roleUser => roleUser.UserRoles)
-            .ThenInclude(role => role.Role)
-            .ToListAsync();
-
-            if (appLogs != null && appLogs.Count > 0)
+            catch (SqlException)
             {
-                return this.mapper.Map<IEnumerable<AppDownloadsDto>>(appLogs);
+                return HttpStatusCode.ServiceUnavailable;
             }
-
-            return HttpStatusCode.NoContent;
+            catch (Exception)
+            {
+                return HttpStatusCode.InternalServerError;
+            }
         }
 
         private IQueryable<AppDownloads> CheckValues(AppLogsDto appSearch)

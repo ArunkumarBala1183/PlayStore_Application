@@ -1,25 +1,42 @@
+using System.Net;
 using MediatR;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.DTO.UserInfo;
+using Playstore.Core.Exceptions;
 
 namespace Playstore.Providers.Handlers.Queries.Admin
 {
-    public class GetAllUsersInfoQuery : IRequest<object>
+    public class GetAllUsersInfoQuery : IRequest<IEnumerable<UserInfoDto>>
     {
         
     }
 
-    public class GetAllUsersInfoQueryHandler : IRequestHandler<GetAllUsersInfoQuery, object>
+    public class GetAllUsersInfoQueryHandler : IRequestHandler<GetAllUsersInfoQuery, IEnumerable<UserInfoDto>>
     {
         private readonly IUserInfoRepository repository;
-        public GetAllUsersInfoQueryHandler(IUserInfoRepository users)
+        private readonly IStatusCodeHandlerRepository statusCodeHandler;
+        public GetAllUsersInfoQueryHandler(IUserInfoRepository users , IStatusCodeHandlerRepository statusCodeHandler)
         {
             this.repository = users;
+            this.statusCodeHandler = statusCodeHandler;
         }
-        public async Task<object> Handle(GetAllUsersInfoQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<UserInfoDto>> Handle(GetAllUsersInfoQuery request, CancellationToken cancellationToken)
         {
-            var response = await this.repository.ViewAllUsers();
+            try
+            {
+                var response = await this.repository.ViewAllUsers();
 
-            return response;
+                if (response.GetType() == typeof(HttpStatusCode))
+                {
+                    statusCodeHandler.HandleStatusCode((HttpStatusCode)response);
+                }
+
+                return (IEnumerable<UserInfoDto>)response;
+            }
+            catch (ApiResponseException)
+            {
+                throw;
+            }
         }
     }
 }
