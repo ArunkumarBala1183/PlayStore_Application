@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user',
@@ -8,7 +9,22 @@ import { Route, Router } from '@angular/router';
 })
 export class UserComponent {
 
+  
+  homePage = environment.homeRoute;
+  downloadsPage = environment.downloadsRoute;
+  aboutUsPage = environment.aboutUsRoute;
+  myAppsPage = environment.myAppsRoute;
+  newAppPage = environment.newAppRoute;
+  userProfilePage = environment.userProfileRoute;
+  specificAppPage = environment.specificAppRoute;
+  resetPasswordPage = environment.resetPasswordRoute;
   constructor(private router : Router) {
+  }
+
+  isHighlightComponent: string = this.homePage;
+  highlightSelectedComponent(component: string) 
+  {
+      this.isHighlightComponent = component;
   }
 
 logout() {

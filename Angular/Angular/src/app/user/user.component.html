@@ -1,5 +1,5 @@
-<div class="main-container bg-gray-100">
-    <div class="h-[10vh] bg-white flex flex-row fixed top-0 left-0 right-0 items-center pl-2 md:pl-9">
+<div class="main-container h-full overflow-y-scroll bg-gray-100">
+    <div class="h-[10vh] bg-white flex flex-row fixed top-0 left-0 right-0 items-center pl-2 md:pl-9 ">
         <div class="flex flex-row">
             <img class="h-8 rounded-md" src="https://www.svgrepo.com/show/354797/apple-app-store.svg"
                 alt="store icon">&nbsp;
@@ -19,7 +19,9 @@
     <div class="flex flex-row">
         <div class="hidden h-[90vh] fixed top-[10vh] left-0 bg-white rounded-rt-md pt-3 justify-between md:w-[25%] lg:w-1/5 sm:w-[30%] sm:flex sm:flex-col">
             <div class="mt-4">
-                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500">
+                <button class="w-full" routerLink={{homePage}}>
+                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500" (click)="highlightSelectedComponent(homePage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === homePage}">
+                    <div *ngIf="isHighlightComponent===homePage" class="w-1 h-full bg-red-500"></div>
                     <div class="pl-10">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                             <path fill-rule="evenodd"
@@ -28,10 +30,13 @@
                         </svg>
                     </div>
                     <div class="pl-1">
-                        <a routerLink="home">Home</a>
+                        <span>Home</span>
                     </div>
                 </div>
-                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500">
+            </button>
+            <button class="w-full" routerLink={{downloadsPage}}>
+                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500" (click)="highlightSelectedComponent(downloadsPage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === downloadsPage}">
+                    <div *ngIf="isHighlightComponent===downloadsPage" class="w-1 h-full bg-green-500"></div>
                     <div class="pl-10">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                             <path fill-rule="evenodd"
@@ -40,10 +45,13 @@
                         </svg>
                     </div>
                     <div class="pl-1">
-                        <a routerLink="downloads">Downloads</a>
+                        <span>Downloads</span>
                     </div>
                 </div>
-                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500">
+                </button>
+                <button class="w-full" routerLink={{aboutUsPage}}>
+                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500" (click)="highlightSelectedComponent(aboutUsPage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === aboutUsPage}">
+                    <div *ngIf="isHighlightComponent===aboutUsPage" class="w-1 h-full bg-violet-500"></div>
                     <div class="pl-10">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                             <path
@@ -51,10 +59,13 @@
                         </svg>
                     </div>
                     <div class="pl-1">
-                        <a routerLink="aboutUs">About Us</a>
+                        <span>About Us</span>
                     </div>
                 </div>
-                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500">
+                </button>
+                <button class="w-full" routerLink={{myAppsPage}}>
+                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500" (click)="highlightSelectedComponent(myAppsPage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === myAppsPage}">
+                    <div *ngIf="isHighlightComponent===myAppsPage" class="w-1 h-full bg-yellow-500"></div>
                     <div class="pl-10">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                             <path fill-rule="evenodd"
@@ -63,10 +74,13 @@
                         </svg>
                     </div>
                     <div class="pl-1">
-                        <a routerLink="myApps">My Apps</a>
+                        <span>My Apps</span>
                     </div>
                 </div>
-                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500">
+                </button>
+                <button class="w-full" routerLink={{newAppPage}}>
+                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500" (click)="highlightSelectedComponent(newAppPage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === newAppPage}">
+                    <div *ngIf="isHighlightComponent===newAppPage" class="w-1 h-full bg-orange-500"></div>
                     <div class="pl-10">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                             <path fill-rule="evenodd"
@@ -75,12 +89,15 @@
                         </svg>
                     </div>
                     <div class="pl-1">
-                        <a routerLink="newApp">New App</a>
+                        <span>New App</span>
                     </div>
                 </div>
+                </button>
             </div>
             <div class="">
-                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500">
+                <button class="w-full" routerLink={{userProfilePage}}>
+                <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500" (click)="highlightSelectedComponent(userProfilePage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === userProfilePage}">
+                    <div *ngIf="isHighlightComponent===userProfilePage" class="w-1 h-full bg-red-500"></div>
                     <div class="pl-10">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                             <path
@@ -88,9 +105,11 @@
                         </svg>
                     </div>
                     <div class="pl-1">
-                        <a routerLink="userProfile">Profile</a>
+                        <span>Profile</span>
                     </div>
                 </div>
+                </button>
+                <button class="w-full">
                 <div class="flex mb-1 h-10 items-center hover:bg-gray-200 transition duration-500">
                     <div class="pl-10">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
@@ -103,14 +122,15 @@
                         </svg>
                     </div>
                     <div class="pl-1">
-                        <a routerLink="home" (click)="logout()">Logout</a>
+                        <button (click)="logout()">Logout</button>
                     </div>
                 </div>
+                </button>
             </div>
         </div>
     <div *ngIf="navbar" class=" bg-white fixed top-14 left-0 bottom-0 flex justify-between flex-col pl-1 md:w-1/5 sm:w-[30%] sm:hidden">
         <div>
-            <div class="flex p-4">
+            <div class="flex p-4" (click)="highlightSelectedComponent(homePage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === homePage}">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                         <path fill-rule="evenodd"
@@ -119,10 +139,10 @@
                     </svg>
                 </div>
                 <div class="pl-1">
-                    <a routerLink="home">Home</a>
+                    <a routerLink={{homePage}}>Home</a>
                 </div>
             </div>
-            <div class="flex p-4">
+            <div class="flex p-4" (click)="highlightSelectedComponent(downloadsPage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === downloadsPage}">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                         <path fill-rule="evenodd"
@@ -131,10 +151,10 @@
                     </svg>
                 </div>
                 <div class="pl-1">
-                    <a routerLink="downloads">Downloads</a>
+                    <a routerLink={{downloadsPage}}>Downloads</a>
                 </div>
             </div>
-            <div class="flex p-4">
+            <div class="flex p-4" (click)="highlightSelectedComponent(aboutUsPage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === aboutUsPage}">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                         <path
@@ -142,10 +162,10 @@
                     </svg>
                 </div>
                 <div class="pl-1">
-                    <a routerLink="aboutUs">About Us</a>
+                    <a routerLink={{aboutUsPage}}>About Us</a>
                 </div>
             </div>
-            <div class="flex p-4">
+            <div class="flex p-4" (click)="highlightSelectedComponent(myAppsPage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === myAppsPage}">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                         <path fill-rule="evenodd"
@@ -154,10 +174,10 @@
                     </svg>
                 </div>
                 <div class="pl-1">
-                    <a routerLink="myApps">My Apps</a>
+                    <a routerLink={{myAppsPage}}>My Apps</a>
                 </div>
             </div>
-            <div class="flex p-4">
+            <div class="flex p-4" (click)="highlightSelectedComponent(newAppPage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === newAppPage}">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                         <path fill-rule="evenodd"
@@ -166,12 +186,12 @@
                     </svg>
                 </div>
                 <div class="pl-1">
-                    <a routerLink="newApp">New App</a>
+                    <a routerLink={{newAppPage}}>New App</a>
                 </div>
             </div>
         </div>
         <div>
-            <div class="flex p-4">
+            <div class="flex p-4" (click)="highlightSelectedComponent(userProfilePage)" [ngClass]="{'bg-gray-200 text-sky-600' : isHighlightComponent === userProfilePage}">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                         <path
@@ -179,7 +199,7 @@
                     </svg>
                 </div>
                 <div class="pl-1">
-                    <a routerLink="userProfile">Profile</a>
+                    <a routerLink={{userProfilePage}}>Profile</a>
                 </div>
             </div>
             <div class="flex p-4">

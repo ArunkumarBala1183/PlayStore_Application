@@ -3,22 +3,22 @@
     <!-- Main Div -->
     <div class="mt-2 shadow-2xl p-3 mx-4 md:mx-[5rem] lg:mx-[10rem] flex flex-col">
         <!-- Logo, App Name, Category, Download -->
-        <div class="flex">
+        <div class="flex justify-between p-2">
             <!-- Logo -->
-            <div class="">
-                <img class="justify-center bg-gray-100 rounded-md h-[5rem] w-[5rem] md:h-[8rem] md:w-[8rem] md:p-2 "
-                    src="../../../assets/Images/instagram.png" alt="Instagram Logo">
+            <div class="flex items-center">
+                <img class="rounded-md md:rounded-2xl bg-gray-100 h-[5rem] shadow-2xl w-[5rem] md:h-[6rem] md:w-[6rem]"
+                    [src]="appDetail.appLogo" alt="Instagram Logo">
             </div>
             <!-- App Name and Category -->
             <div class="flex flex-col pl-2 py-3 md:pl-2 md:py-10 ">
                 <div class="">
                     <h1 class="instagram h-4 lg:font-medium md:text-3xl">
-                        Instagram
+                        {{appDetail.appName}}
                     </h1>
                 </div>
                 <div>
                     <span class="font-medium text-blue-800">
-                        Social
+                        {{appDetail.appCategory}}
                     </span>
                 </div>
             </div>
@@ -32,13 +32,13 @@
             </div>
         </div>
         <!-- Rating and downloads -->
-        <div class="mx-[4rem] lg:mx-[12rem] flex border border-gray-400 w-40">
+        <div class="mx-[4rem] lg:mx-[10 rem] flex justify-center">
             <!-- Ratings -->
-            <div class="flex flex-col p-2">
+            <div class="flex flex-col p-2 border-r">
                 <div class="pl-2">
                     <!-- inorder to print star and rating value side-by-side -->
                     <div class="flex">
-                        {{averageRating}}
+                        {{appDetail.appAverageRating}}
                         <svg xmlns="http://www.w3.org/2000/svg" fill="fill" viewBox="0 0 24 24" stroke-width="1.3"
                             stroke="currentColor" class="w-4 h-4 ml-[0.12rem] mt-[0.09rem]">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -51,16 +51,16 @@
                 </div>
             </div>
             <!-- Downloads -->
-            <div class="">
+            <div class="pl-4">
                 <div class="">
                     <div class="pt-2 px-5" *ngIf="Downloads > 1000">
                         <span class="">
-                            {{Downloads | abbreviateNumber}}+
+                            {{appDetail.appDownloads | abbreviateNumber}}+
                         </span>
                     </div>
                     <div class="pt-[0.5rem]" *ngIf="Downloads < 1000">
                         <span class="text-gray-400">
-                            {{Downloads | abbreviateNumber}}
+                            {{appDetail.appDownloads | abbreviateNumber}}
                         </span>
                     </div>
                     <div class="p-1">
@@ -68,29 +68,22 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="border border-black">
-            hi
-        </div>
-        <div class="border border-black ">
-            hi
-        </div>
-        <div class="border border-black">
-            hi
-        </div> -->
         </div>
         <!-- Preview -->
-        <div class="mt-5 pt-3 pl-3 border border-gray-300 border-t-1 border-b-0 border-l-0 border-r-0">
+        <div class="mt-5 pt-3 pl-3 border-t">
             <h3>
                 Screenshots
             </h3>
         </div>
         <!-- screenshots -->
-        <div class="flex space-x-2 px-3">
-            <div class="border w-1/3">
-                <img class="h-[13rem] w-[13rem] " src="../../../assets/Images/instagram-notifies-about-screenshots.webp"
-                    alt="">
+        <div *ngIf="appDetail" class="flex" >
+        <div *ngFor="let screenshots of appDetail.appScreenshots" class="space-x-2 px-3">
+            <div class="flex flex-row border">
+                <img class="h-[13rem] w-[13rem] rounded-lg " [src]="screenshots"
+                    alt="screenshots">
             </div>
-            <div class="border w-1/3">
+            
+            <!-- <div class="border w-1/3">
                 <img class="h-[13rem] w-[13rem]" src="../../../assets/Images/instagram-ios-app-screenshot-1f60425b.jpg"
                     alt="">
             </div>
@@ -98,10 +91,11 @@
                 <img class="h-[13rem] w-[13rem]"
                     src="../../../assets/Images/instagrams-home-screen-redesign-will-force-you-to-use-reels-whether-you-like-it-or-not-1605248767768104505958.webp"
                     alt="">
-            </div>
+            </div> -->
+        </div>
         </div>
         <!-- Description -->
-        <div class="mt-5 pt-3 pl-3 border border-gray-300 border-t-1 border-l-0 border-r-0 border-b-0">
+        <div class="mt-5 pt-3 pl-3 border-t">
             <div class="">
                 <h3>
                     Description
@@ -109,18 +103,12 @@
             </div>
             <div class="px-2">
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ex iste molestias! Repellendus
-                    tenetur molestiae ut explicabo, tempora illum officiis neque quia deleniti, sunt ad necessitatibus?
-                    Nulla provident dolorem quae. Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet
-                    magnam reiciendis corporis esse saepe quae, rem dolores molestiae. Accusantium rem molestias
-                    officiis. Quo quisquam vel sit in neque repudiandae beatae! Lorem ipsum dolor sit amet, consectetur
-                    adipisicing elit. Eum neque, beatae voluptatem aspernatur possimus minus iusto dolor commodi
-                    veritatis? At asperiores magni, voluptates possimus doloremque eius laborum sequi eum aut?lor
+                    {{appDetail.appDescription}}
                 </p>
             </div>
         </div>
         <!-- review -->
-        <div class="p-2 pt-3 border border-gray-300 bordert-1 border-b-0 border-l-0 border-r-0">
+        <div class="p-2 pt-3 border-t">
             <div class="pl-1">
                 <h3>
                     Reviews
@@ -141,23 +129,26 @@
                 </p>
             </div>
             <!-- Add a Review -->
-            <form action="">
+            <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" action="">
                 <div class="">
                     <!-- input -->
                     <div class="p-2 flex flex-col items-center">
                         <div>
-                            <textarea class="p-2 rounded-xl w-48 md:w-64 focus:outline-none hover:bg-gray-200" type="text" placeholder="Add your Review"
+                            <textarea formControlName="reviews" class="p-2 rounded-xl w-48 md:w-64 focus:outline-none hover:bg-gray-200" type="text" placeholder="Add your Review"
                                 rows="4" cols="4"></textarea>
+                        <div  *ngIf="reviewForm.get('reviews')?.hasError('required') && reviewForm.get('reviews')?.touched" class="text-red-500 flex justify-center">
+                            <span>Please review the App</span>
+                        </div>
                         </div>
                     </div>
                     <div class="flex justify-center md:mx-20 lg:mx-36 border rounded-md hover:bg-gray-200">
                         <div class="flex items-center">
-                            <span>Rate the App</span>
+                            <span>Rate this App</span>
                         </div>
                         <div class="flex p-2">
                         <ng-container *ngFor="let star of stars ; let i = index">
                             <svg (click)="rating(i+1)" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                 <path [ngClass]="i < currentRating ? 'text-yellow-500' : ''" *ngIf="i < 5"
                                     stroke-linecap="round" stroke-linejoin="round"
                                     d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
@@ -172,6 +163,33 @@
                     </div>
                 </div>
             </form>
+        </div>
+        <!-- Publications -->
+        <div class="p-2 pt-3 border-t">
+            <!-- Heading -->
+            <div class="pl-1">
+                <h3>
+                    Publications
+                </h3>
+            </div>
+            <div class="flex justify-center">
+                <div class="border-r hover:shadow-2xl hover:cursor-context-menu p-6 flex flex-col justify-center space-y-2">
+                    <span>
+                        Publisher Name
+                    </span>
+                    <span class="flex justify-center">
+                         Arun Kumar
+                    </span>
+                </div>
+                <div class="p-6 hover:shadow-2xl hover:cursor-pointer space-y-2 flex flex-col">
+                    <span>
+                        Publish Date
+                    </span>
+                    <span class="flex justify-center">
+                        Date
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
     </div>
