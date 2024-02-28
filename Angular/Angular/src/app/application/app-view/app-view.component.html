@@ -1,0 +1,37 @@
+<div class="row">
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <mat-label>Id</mat-label>
+      <input matInput name="id" [(ngModel)]="selectedApp.id" disabled>
+    </mat-form-field>
+    <br />
+    <mat-form-field class="example-full-width">
+      <mat-label>Name</mat-label>
+      <input matInput name="name" [(ngModel)]="selectedApp.name" disabled>
+    </mat-form-field>
+    <br />
+    <mat-form-field class="example-full-width">
+      <mat-label>Description</mat-label>
+      <input matInput name="description" [(ngModel)]="selectedApp.description" disabled>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+      <mat-label>Developer</mat-label>
+      <input matInput name="developer" [(ngModel)]="selectedApp.developer" disabled>
+    </mat-form-field>
+    <br />
+    <mat-form-field class="example-full-width">
+      <mat-label>Price</mat-label>
+      <input matInput name="price" [(ngModel)]="selectedApp.price" disabled>
+    </mat-form-field>
+    <br />
+    <mat-form-field class="example-full-width">
+      <mat-label>Added On</mat-label>
+      <input matInput name="addedOn" [matDatepicker]="addedOnPicker" [value]="selectedApp.addedOn" disabled>
+      <mat-datepicker-toggle matIconSuffix [for]="addedOnPicker"></mat-datepicker-toggle>
+      <mat-datepicker #addedOnPicker></mat-datepicker>
+    </mat-form-field>
+  </form>
+</div>
+<div class="row">
+  <button mat-raised-button (click)="redirectToCancel()" color="primary">Cancel</button>
+</div>

@@ -1,0 +1,92 @@
+
+<div
+    class="bg-gray-200  flex items-center justify-center rounded-md md:flex md:flex-col md:items-center md:justify-center">
+    <form [formGroup]="appData"  (ngSubmit)="onSubmit()"
+        class="bg-white shadow-2xl hover:bg-gray-100 h-auto md:pb-3 w-[100%] md:w-[80%]  md:mb-5 md:mt-20 rounded-md ">
+       
+        <div class="w-[100%] flex flex-col items-center justify-center ">
+            <div class="md:mr-12">
+                <h1 class="text  pt-14 md:pt-2">Upload App</h1>
+            </div>
+            
+            <div class="md:flex md:flex-row md:justify-between  md:w-[80%] md:ml-10">
+                <div class=" w-[72%] mt-3">
+                    <input type="text" name="appName" id="appName" class="w-56  px-3 h-7 rounded-md bg-gray-200"
+                        placeholder="App Name" formControlName="appName"><br>
+     <span  class="px-2 md:pt-3  md:px-3 text-red-400" *ngIf="(appData.get('appName').touched || appData.get('appName').dirty) &&  (appData.get('appName').hasError('required'))">{{validationMessages.appName.required}}</span>
+
+                </div>
+     <!-- <span *ngIf="appData.get('appName').touched && (appData.get('appName').hasError('required'))">{{validationMessages.appName.required}}</span> -->
+
+     
+            
+                <div class=" w-[72%] mt-3 ">
+                    <select name="category" id="category"  formControlName="category" class="w-56  px-3 h-7 rounded-md bg-gray-200" >
+                        <option value="App Category"  selected>App Category</option>
+                        <option *ngFor="let type of categories" [value]="type">{{type}}</option>
+                    </select><br>
+     <span  class="px-2 md:pt-3  md:px-3 text-red-400 " *ngIf="(appData.get('category').touched || appData.get('category').dirty) &&  (appData.get('category').hasError('required'))">{{validationMessages.category.required}}</span> 
+
+                    <!-- <input type="text" name="category" id="category" class="w-56  px-3 h-7 rounded-md bg-gray-200"
+                        placeholder="App Category" formControlName="category"><br>
+     <span  class="px-2 md:pt-3  md:px-3 text-red-400 " *ngIf="(appData.get('category').touched || appData.get('category').dirty) &&  (appData.get('category').hasError('required'))">{{validationMessages.category.required}}</span> -->
+
+                </div>
+                <div class=" w-[72%] mt-3">
+                    <input type="text" name="publisherName" id="publisherName"
+                        class="w-56  px-3 h-7 rounded-md bg-gray-200" placeholder="Publisher Name"
+                        formControlName="publisherName"><br>
+     <span class="px-2 md:pt-3 md:px-3 text-red-400" *ngIf="appData.get('publisherName').touched && (appData.get('publisherName').hasError('required'))">{{validationMessages.publisherName.required}}</span>
+
+                </div>
+
+            </div>
+
+            <div class=" w-[72%] mt-3 md:mt-6  md:w-[76%]">
+                <textarea id="description" name="description" class="w-56 md:w-full px-3 pt-1  bg-gray-200 rounded-md"
+                    rows="4" cols="31" placeholder="Description about your App"
+                    formControlName="description"></textarea>
+     <span class="pt-3 px-3 text-red-400" *ngIf="appData.get('description').touched && (appData.get('description').hasError('required'))">{{validationMessages.desription.required}}</span>
+
+            </div>
+            <div class="flex flex-col items-center md:flex md:flex-row md:mt-1 md:justify-between md:w-[76%] ">
+                <div class=" w-[72%] mt-3 px-3 h-24 border ">
+                    <label for="appLogo" class="">App Logo <span><br>(should be a image)</span></label><br>
+                    <input class="mt-1" type="file" name="appLogo" id="appLogo" accept=".jpg, .jpeg, .png"
+                        formControlName="appLogo"><br>
+                        <span class="pb-1  text-red-400" *ngIf="appData.get('appLogo').touched && (appData.get('appLogo').hasError('required'))">{{validationMessages.appLogo.required}}</span>
+
+                </div>
+
+                <div class=" w-[72%] mt-3 px-3 h-24 border ">
+                    <label for="appFile" >Your Application <span><br> (should be a zip file)</span> </label>
+                    <input class="mt-1" type="file" name="appFile" id="appFile"
+                        accept=".zip, application/zip, application/x-zip-compressed" (change)="handleFile($event)" formControlName="appFile"><br>
+     <span class="pb-1  text-red-400" *ngIf="appData.get('appFile').touched && (appData.get('appFile').hasError('required'))">{{validationMessages.appFile.required}}</span>
+               
+                    </div>
+               <span *ngIf="fileSize" class="text-red-400 text-center">File exceeds more than 2mb . Please upload file with less than 2mb!!!!</span>
+                
+
+            </div>
+            <div class=" w-[72%] mt-3 px-3 h-24 border md:border md:w-[76%]">
+                <label for="screenshot">App Screenshots <span><br>(app screenshots)</span> </label><br>
+                <input class="mt-1" type="file" name="screenshot" id="screenshot" accept=".jpg, .jpeg, .png" multiple (change)="multipleFiles($event)"
+                    formControlName="screenshot"><br>
+                    <span class="pt-1  text-red-400" *ngIf="appData.get('screenshot').touched && (appData.get('screenshot').hasError('required'))">{{validationMessages.screenshot.required}}</span>
+                    <span *ngIf="multipleFile" class="text-red-400 text-center" >
+                         Select atleast  2-3 files
+                    </span>
+            </div>
+
+            <div class="mt-4 pb-2 " >
+                <button type="submit" [disabled]="appData.invalid " class="border border-black h-7 rounded-md w-24 bg-blue-500 text-white">Upload
+                    App</button><br>
+            </div>
+            <span *ngIf="appData.invalid" class=" text-red-400 px-1">Please fill all the  details</span>
+
+        </div>
+    </form>
+
+
+</div>
