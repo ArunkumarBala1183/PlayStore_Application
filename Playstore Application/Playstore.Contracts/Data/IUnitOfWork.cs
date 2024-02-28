@@ -6,6 +6,9 @@ namespace Playstore.Contracts.Data
     {
         IAppRepository App { get; }
         IUserRepository User { get; }
+
+        IUserRoleRepository UserRole {get;}
+        
         Task CommitAsync();
     }
 }

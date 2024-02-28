@@ -8,6 +8,7 @@ namespace Playstore.Contracts.Data.Entities
         [Key]
         public Guid Id { get; set; }
         public byte[] AppFile { get; set; }
+        public string ContentType { get; set; }
         public Guid AppId { get; set; }
         
         [ForeignKey("AppId")] 

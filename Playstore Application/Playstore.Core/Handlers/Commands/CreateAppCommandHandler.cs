@@ -3,7 +3,6 @@ using Playstore.Contracts.Data;
 using Playstore.Contracts.DTO;
 using Playstore.Contracts.Data.Entities;
 using FluentValidation;
-using System.Text.Json;
 using Playstore.Core.Exceptions;
 
 namespace Playstore.Providers.Handlers.Commands

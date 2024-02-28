@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Playstore.Contracts.Data.Entities
 {
@@ -15,9 +16,11 @@ namespace Playstore.Contracts.Data.Entities
 
         public UserCredentials userCredentials { get; set; }
 
-        public AppInfo AppInfo { get; set; }
-        public AppReview AppReview { get; set; }
-        public AppDownloads AppDownloads { get; set; }
+        public List<AdminRequests> AdminRequests { get; set; } = new List<AdminRequests>();
+
+        public List<AppInfo> AppInfo { get; set; } = new List<AppInfo>();
+        public List<AppReview> AppReview { get; set; } = new List<AppReview>();
+        public List<AppDownloads> AppDownloads { get; set; } = new List<AppDownloads>();
         public RefreshToken RefreshToken { get; set; }
 
     }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
+using Playstore.Migrations.DateConvertor;
 
 namespace Playstore.Migrations
 {
@@ -33,6 +34,7 @@ namespace Playstore.Migrations
         public DbSet<AppReview> AppReviews { get; set; }
         public DbSet<AppDownloads> AppDownloads { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<AdminRequests> AdminRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -45,6 +47,15 @@ namespace Playstore.Migrations
             .HasMany(user => user.UserRoles)
             .WithOne(role => role.Role)
             .OnDelete(DeleteBehavior.Cascade);
+        }
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+        {
+            builder.Properties<DateOnly>()
+            .HaveConversion<DateOnlyConvertor>()
+            .HaveColumnType("date");
+            
+            base.ConfigureConventions(builder);
         }
     }
 }
