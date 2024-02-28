@@ -4,7 +4,15 @@
 
 export const environment = {
   production: false,
-  apiBaseAddress:'https://localhost:44339/'
+  apiBaseAddress:'https://localhost:44339/',
+  homeRoute : 'home',
+  downloadsRoute : 'downloads',
+  aboutUsRoute : 'aboutUs',
+  myAppsRoute : 'myApps',
+  newAppRoute : 'newApp',
+  userProfileRoute : 'userProfile',
+  specificAppRoute : 'specificApp/:appId',
+  resetPasswordRoute : 'resetPassword'
 };
 
 /*
