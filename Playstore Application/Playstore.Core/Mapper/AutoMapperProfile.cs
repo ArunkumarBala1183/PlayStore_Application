@@ -31,14 +31,11 @@ namespace Playstore.Core.Mapper
             CreateMap<AppDownloads , AppDownloadsDto>()
             .ForMember(destination => destination.DownloadedDate , option => option.MapFrom(source => source.DownloadedDate.ToString("yyyy-MM-dd")))
             .ReverseMap();
-            CreateMap<RequestAppInfoDto , AppInfo>().ReverseMap();
+            CreateMap<AppInfo , RequestAppInfoDto>()
+            .ForMember(source => source.Status , option => option.MapFrom(destination => destination.Status == RequestStatus.Pending ? "Pending" : "Approved"))
+            .ReverseMap();
             CreateMap<AppImages , RequestedAppImagesDto>().ReverseMap();
             CreateMap<AppData , RequestedAppDataDto>().ReverseMap();
-        }
-
-        private DateTime ConvertToDateTime(DateOnly date)
-        {
-            return new DateTime(date.Year, date.Month , date.Day);
         }
     }
 
