@@ -12,6 +12,7 @@ import { SharedModule } from './shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ToastrModule } from 'ngx-toastr';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { MatIconModule } from '@angular/material/icon';
     SharedModule,
     FormsModule,
     MatButtonModule,
-    MatIconModule     
+    MatIconModule,
+    ToastrModule.forRoot()     
   ],
   providers: [],
   bootstrap: [AppComponent]

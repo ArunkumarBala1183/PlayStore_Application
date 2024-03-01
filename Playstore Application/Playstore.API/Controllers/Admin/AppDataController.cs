@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Playstore.Contracts.DTO.AppData;
 using Playstore.Core.Exceptions;
 using Playstore.Providers.Handlers.Commands;
 using Playstore.Providers.Handlers.Queries.Admin;

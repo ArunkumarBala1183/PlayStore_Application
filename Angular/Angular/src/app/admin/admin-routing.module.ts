@@ -52,7 +52,7 @@ const routes: Routes = [
         },
 
         {
-          path: 'requestdetails', component: RequestdetailsComponent, title: 'requestdetails'
+          path: 'requestdetails/:id', component: RequestdetailsComponent, title: 'requestdetails'
         },
 
         {

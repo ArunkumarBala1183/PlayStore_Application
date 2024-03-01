@@ -28,10 +28,10 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 
 
 
+
 @NgModule({
   declarations: [
     UsersComponent,
-    
     AdminHomeComponent,
     AdminComponent,
     MyDownloadsComponent,
@@ -59,7 +59,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
     ReactiveFormsModule
   ],
   exports:[
-    AdminComponent
+    // AdminComponent
   ]
   
 })

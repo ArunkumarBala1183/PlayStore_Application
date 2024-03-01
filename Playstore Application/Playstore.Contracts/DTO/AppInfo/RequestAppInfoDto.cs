@@ -11,7 +11,7 @@ namespace Playstore.Contracts.DTO.AppInfo
         string Name,
         string Description,
         byte[] Logo,
-        RequestStatus Status,  
+        string Status,  
         RequestedUserDto Users,
         CategoryDto Category,
         string PublisherName,

@@ -1,6 +1,9 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { GetUsers } from 'src/app/interface/get-users';
+import { UserService } from 'src/app/services/user.service';
 // import { error } from 'console';
 // import { MyApiService } from 'src/app/my-api.service';
 
@@ -10,15 +13,12 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
- /**
-  *
-  */
-//  constructor(private myService:MyApiService) {
-  
-//  }
+
   searchUsers: string = '';
-  displayedColumns: string[] = ['Username', 'Email', 'Role'];
+  displayedColumns: string[] = ['name', 'emailId'];
   dataSource = new MatTableDataSource<any>();
+
+  userDetails : GetUsers[] | undefined
   // data:any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -50,31 +50,42 @@ export class UsersComponent implements OnInit {
     // Add more user objects as needed
   ];
 
+  constructor(private service : UserService ){}
+
   ngOnInit() {
-    // Initialize dataSource after users array is initialized
-     this.dataSource = new MatTableDataSource<any>(this.users);
-    // this.myService.getAllUsers().subscribe(
-    //   {
-    //     next:response=>
-    //     {
-    //       console.log(response);
-    //       this.data=response;
-    //     },
-    //     error:error=>
-    //     {
-    //       console.log(error)
-    //     }
-    //   }
-    // )
+     this.getAllUsers();
   }
   
   ngAfterViewInit() {
+    console.log(this.dataSource)
     this.dataSource.paginator = this.paginator;
   }
 
   // Update table data based on search
   applyFilter() {
     this.dataSource.filter = this.searchUsers.trim().toLowerCase();
+  }
+
+  getAllUsers()
+  {
+    this.service.getAllUsers()
+    .subscribe({
+      next : response => {
+        if(response.status == HttpStatusCode.Ok)
+        {
+            this.userDetails = response.body as GetUsers[]
+            this.dataSource = new MatTableDataSource<GetUsers>(this.userDetails); // Specify the type here
+            this.dataSource.paginator = this.paginator;
+        }
+        else
+        {
+          console.log(response.body)
+        }
+      },
+      error : error => {
+        console.log(error)
+      }
+    })
   }
   
 

@@ -1,5 +1,5 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -13,6 +13,20 @@ export class AppInfoService {
 
   GetAllApps()
   {
-    return this.http.get(this.baseUrl + "AppInfo/GetAllApps" , {observe: "response"});
+      return this.http.get(this.baseUrl + "AppInfo/GetAllApps" , {observe: "response"});
   }
+
+  getAppData(appId : string)
+  {
+    const headers = new HttpHeaders({
+      'Content-Type' : 'application/json'
+    });
+
+    return this.http.get(this.baseUrl + "AppData/GetAppData/" + appId, {
+      headers : headers,
+      responseType: 'blob'
+    });
+  }
+
+  
 }

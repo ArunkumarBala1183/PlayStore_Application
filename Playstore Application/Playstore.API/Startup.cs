@@ -1,4 +1,3 @@
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,9 +8,9 @@ using Playstore.Infrastructure;
 using Playstore.Core;
 using Microsoft.AspNetCore.Mvc;
 using Playstore.Core.Security;
-using Playstore.Migrations;
 using Serilog;
 using Playstore.JsonSerialize;
+using System;
 
 namespace Playstore
 {
@@ -58,6 +57,17 @@ namespace Playstore
             .MinimumLevel.Information()
             .WriteTo.Console()
             .CreateLogger();
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins(Configuration.GetValue<string>("Authentication:Jwt:ValidAudience"));
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                    builder.AllowCredentials();
+                });
+            });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
