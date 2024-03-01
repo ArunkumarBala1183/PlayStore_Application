@@ -12,7 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { SharedModule } from '../shared/shared.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AppsComponent } from './apps/apps.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +22,7 @@ import { MatTableModule } from '@angular/material/table';
 import { ApprequestsComponent } from './apprequests/apprequests.component';
 import { RequestdetailsComponent } from './requestdetails/requestdetails.component';
 import { AboutComponent } from './about/about.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 
 
@@ -41,7 +42,8 @@ import { AboutComponent } from './about/about.component';
     AppsComponent,
     ApprequestsComponent,
     RequestdetailsComponent,
-    AboutComponent,     
+    AboutComponent,
+    ChangePasswordComponent,     
   ],
   imports: [
     CommonModule,
@@ -53,7 +55,8 @@ import { AboutComponent } from './about/about.component';
     MatButtonModule,
     MatIconModule,
     MatPaginatorModule,
-    MatTableModule
+    MatTableModule,
+    ReactiveFormsModule
   ],
   exports:[
     AdminComponent

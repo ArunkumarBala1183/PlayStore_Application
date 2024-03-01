@@ -14,19 +14,19 @@ export class LogsComponent implements OnInit{
   appFilter: string = '';
   
   users = [
-      { Username: 'Nithish', Date: '2024-02-27', AppName: 'Instagram' },
-      { Username: 'kumar', Date: '2024-02-27', AppName: 'twitter' },
-      { Username: 'dani', Date: '2024-02-22', AppName: 'calculator' },
-      { Username: 'arun', Date: '2024-02-27', AppName: 'Instagram' },
-      { Username: 'ashiq', Date: '2024-02-27', AppName: 'whatsapp' },
+      { Username: 'Nithish', Date: '2024-03-01', AppName: 'Instagram' },
+      { Username: 'kumar', Date: '2024-03-01', AppName: 'twitter' },
+      { Username: 'dani', Date: '2024-03-01', AppName: 'calculator' },
+      { Username: 'arun', Date: '2024-03-01', AppName: 'Instagram' },
+      { Username: 'ashiq', Date: '2024-03-01', AppName: 'whatsapp' },
       { Username: 'Bala', Date: '2024-02-23', AppName: 'whatsapp' },
       { Username: 'Ashok', Date: '2024-02-24', AppName: 'Instagram' },
       { Username: 'Kavya', Date: '2024-02-23', AppName: 'whatsapp' },
       { Username: 'Lokesh', Date: '2024-02-23', AppName: 'Calculator' },
       { Username: 'Bharath', Date: '2024-02-23', AppName: 'whatsapp' },
       { Username: 'Kishore', Date: '2024-02-23', AppName: 'twitter' },
-      { Username: 'ashiq', Date: '2024-02-23', AppName: 'whatsapp' },
-      { Username: 'ashiq', Date: '2024-02-23', AppName: 'whatsapp' }
+      { Username: 'ashiq', Date: '2024-02-24', AppName: 'whatsapp' },
+      { Username: 'ashiq', Date: '2024-02-24', AppName: 'whatsapp' }
       // Add more user data here
   ];
 

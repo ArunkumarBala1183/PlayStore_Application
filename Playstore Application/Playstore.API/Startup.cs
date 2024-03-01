@@ -41,7 +41,18 @@ namespace Playstore
             .AddNewtonsoftJson(option => {
                 option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
-            
+
+            services.AddCors(options =>
+            {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder.WithOrigins("http://localhost:4200");
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+                builder.AllowCredentials();
+            });
+            });
+
             //Configuring Serilog 
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
@@ -77,6 +88,7 @@ namespace Playstore
             });
 
             app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 

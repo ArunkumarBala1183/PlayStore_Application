@@ -13,6 +13,7 @@ import { AppsComponent } from './apps/apps.component';
 import { ApprequestsComponent } from './apprequests/apprequests.component';
 import { RequestdetailsComponent } from './requestdetails/requestdetails.component';
 import { AboutComponent } from './about/about.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 
 const routes: Routes = [
@@ -56,6 +57,10 @@ const routes: Routes = [
 
         {
           path: 'about', component: AboutComponent, title: 'about'
+        },
+
+        {
+          path: 'changePassword', component: ChangePasswordComponent, title: 'changePassword'
         }
       ]
   }
