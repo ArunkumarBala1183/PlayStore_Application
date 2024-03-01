@@ -51,12 +51,14 @@ namespace Playstore.Core.Data.Repositories.Admin
             {
                 if (appFile != null && appId != Guid.Empty)
                 {
+                    var appDetails = await this.database.AppInfo.FindAsync(appId);
                     var appData = new AppData();
     
                     using (var stream = new MemoryStream())
                     {
                         await appFile.CopyToAsync(stream);
                         appData.AppFile = stream.ToArray();
+                        appDetails.Logo = stream.ToArray();
                         stream.Close();
                     }
     
@@ -64,6 +66,8 @@ namespace Playstore.Core.Data.Repositories.Admin
                     appData.ContentType = appFile.ContentType;
     
                     await this.database.AppDatas.AddAsync(appData);
+
+                    this.database.AppInfo.Update(appDetails);
     
                     await this.database.SaveChangesAsync();
     

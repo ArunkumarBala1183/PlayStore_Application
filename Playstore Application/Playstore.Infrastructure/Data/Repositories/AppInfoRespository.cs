@@ -55,6 +55,7 @@ namespace Playstore.Core.Data.Repositories
                 .Include(category => category.Category)
                 .Include(review => review.AppReview)
                 .Include(downloads => downloads.AppDownloads)
+                .Where(status => status.Status == RequestStatus.Approved)
                 .ToListAsync();
     
                 if (appDetails != null && appDetails.Count > 0)

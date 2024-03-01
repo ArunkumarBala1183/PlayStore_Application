@@ -9,24 +9,24 @@
 
     <div class="overflow-x-auto mt-4 shadow-xl border w-fit border-gray-300 rounded-s">
         <table mat-table [dataSource]="dataSource" class="min-w-full ">
-            <ng-container matColumnDef="Username">
+            <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> User Name </th>
-                <td mat-cell *matCellDef="let user"> {{ user.Username }} </td>
+                <td mat-cell *matCellDef="let user"> {{ user.name }} </td>
             </ng-container>
-            <ng-container matColumnDef="Email">
+            <ng-container matColumnDef="emailId">
                 <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Email id </th>
-                <td mat-cell *matCellDef="let user"> {{ user.Email }} </td>
+                <td mat-cell *matCellDef="let user"> {{ user.emailId }} </td>
             </ng-container>
-            <ng-container matColumnDef="Role">
+            <!-- <ng-container matColumnDef="Role">
                 <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Role </th>
                 <td mat-cell *matCellDef="let user"> {{ user.Role }} </td>
-            </ng-container>
+            </ng-container> -->
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
 
         <!-- Pagination -->
-        <mat-paginator [pageSizeOptions]="[5,10,20] "></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[5,10,20]"></mat-paginator>
     </div>
 </div>

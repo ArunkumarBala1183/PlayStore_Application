@@ -27,10 +27,10 @@ import { AboutComponent } from './about/about.component';
 
 
 
+
 @NgModule({
   declarations: [
     UsersComponent,
-    
     AdminHomeComponent,
     AdminComponent,
     MyDownloadsComponent,
@@ -56,7 +56,7 @@ import { AboutComponent } from './about/about.component';
     MatTableModule
   ],
   exports:[
-    AdminComponent
+    // AdminComponent
   ]
   
 })
