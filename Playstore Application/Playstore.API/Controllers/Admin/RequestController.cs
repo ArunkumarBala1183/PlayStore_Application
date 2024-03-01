@@ -67,7 +67,7 @@ namespace Playstore.Controllers.Admin
     
                 if (response == HttpStatusCode.Created)
                 {
-                    return StatusCode((int) response , "Request Executed Successfully");
+                    return StatusCode((int) response , new {message = "Request Executed Successfully"});
                 }
 
                 return NoContent();

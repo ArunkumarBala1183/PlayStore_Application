@@ -51,19 +51,38 @@ namespace Playstore.Core.Data.Repositories.Admin
             {
                 if (appFile != null && appId != Guid.Empty)
                 {
-                    var appData = new AppData();
-    
-                    using (var stream = new MemoryStream())
+                    if (Path.GetExtension(appFile.FileName).Equals(".zip"))
                     {
-                        await appFile.CopyToAsync(stream);
-                        appData.AppFile = stream.ToArray();
-                        stream.Close();
+                        var appData = new AppData();
+        
+                        using (var stream = new MemoryStream())
+                        {
+                            await appFile.CopyToAsync(stream);
+                            appData.AppFile = stream.ToArray();
+                            stream.Close();
+                        }
+        
+                        appData.AppId = appId;
+                        appData.ContentType = appFile.ContentType;
+        
+                        await this.database.AppDatas.AddAsync(appData);
                     }
-    
-                    appData.AppId = appId;
-                    appData.ContentType = appFile.ContentType;
-    
-                    await this.database.AppDatas.AddAsync(appData);
+                    else
+                    {
+                        var appDetails = await this.database.AppInfo.FindAsync(appId);
+
+                        if (appDetails != null)
+                        {
+                            using (var stream = new MemoryStream())
+                            {
+                                await appFile.CopyToAsync(stream);
+                                appDetails.Logo = stream.ToArray();
+                                stream.Close();
+                            }
+
+                            this.database.Update(appDetails);
+                        }
+                    }
     
                     await this.database.SaveChangesAsync();
     
