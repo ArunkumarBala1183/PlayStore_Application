@@ -29,6 +29,11 @@ namespace Playstore.Infrastructure
             return services.AddTransient<RegisterUsersCommandHandler>();
             
         }
+        private static IServiceCollection SharedDataServices(this IServiceCollection services)
+        {
+           // return services.AddSingleton<ISharedDataService, SharedDataService>();
+           return services.AddSingleton<SharedDataService>();
+        }
         private static IServiceCollection EmailService(this IServiceCollection services)
         {
             return services.AddTransient<IEmailService, EmailService>();
@@ -97,7 +102,8 @@ namespace Playstore.Infrastructure
                            .EmailService().RegisterUsersCommandHandler()
                            .AddUserCredentialsRepository().AddUsersRepository()
                            .UserRoleService().RoleService().RefreshTokenRepository()
-                           .CheckEmailExistenceQuery().PasswordReset().PasswordValidator();
+                           .CheckEmailExistenceQuery().PasswordReset().PasswordValidator().
+                           SharedDataServices();
         }
     }
 }

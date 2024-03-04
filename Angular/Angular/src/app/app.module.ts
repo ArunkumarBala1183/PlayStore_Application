@@ -4,10 +4,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginModule } from './login/login.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule,HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HomeModule } from './home/home.module';
 import { UserModule } from './user/user.module';
 import { FormsModule } from '@angular/forms';
+import { JwtInterceptor } from './jwt.interceptor';
+import { JwtModule } from '@auth0/angular-jwt';
+import { ToastrModule } from 'ngx-toastr';
+
 
 @NgModule({
   declarations: [
@@ -21,9 +25,18 @@ import { FormsModule } from '@angular/forms';
     HttpClientModule,
     HomeModule,
     UserModule,
-    FormsModule
+    FormsModule,
+    ToastrModule.forRoot(),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => localStorage.getItem('token')
+      }}),
   ],
-  providers: [],
+  providers: [
+    {
+      provide:HTTP_INTERCEPTORS,useClass:JwtInterceptor,multi:true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

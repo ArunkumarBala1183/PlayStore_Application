@@ -1,3 +1,4 @@
+
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,7 @@ using Playstore.Core.Exceptions;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-
+ 
 namespace Playstore.Providers.Handlers.Commands
 {
 public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand, bool>
@@ -19,7 +20,7 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IPasswordHasher<UserCredentials> _passwordHasher;
     private readonly IMediator _mediator;
-
+ 
     public ResetPasswordCommandHandler(IMediator mediator,IUserCredentialsRepository credentialsRepository, IValidator<PasswordResetDTO> validator, IPasswordHasher<UserCredentials> passwordHasher, IHttpContextAccessor httpContextAccessor)
     {
         _credentialsRepository = credentialsRepository;
@@ -30,29 +31,29 @@ public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand,
     }
 public async Task<bool> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
 {
-    var emailId = _httpContextAccessor.HttpContext.Session.GetString("ResetPasswordEmail");
-    var otp = _httpContextAccessor.HttpContext.Session.GetString("ResetPasswordOTP");
-
-    Console.WriteLine($"Email from session: {emailId}, OTP from session: {otp}");
-
+    var emailId = request.ResetPasswordEmail;
+    var otp = request.ResetPasswordOTP;
+ 
+    Console.WriteLine($"Email from session: {request.ResetPasswordEmail}, OTP from session: {request.ResetPasswordOTP}");
+ 
     var isOtpValid = await ValidateOtp(emailId, otp);
     Console.WriteLine($"Is OTP Valid in ResetPasswordCommandHandler: {isOtpValid}");
-
+ 
     if (!isOtpValid || request.Model == null)
     {
         return false;
     }
-
+ 
     var model = new PasswordResetDTO
     {
-        EmailId = emailId,
+        EmailId = request.Model.EmailId,
         Otp = otp,
         NewPassword = request.Model.NewPassword,
         ConfirmPassword = request.Model.ConfirmPassword
     };
-
+ 
     var result = _validator.Validate(model);
-
+ 
     if (!result.IsValid)
     {
         var errors = result.Errors.Select(x => x.ErrorMessage).ToArray();
@@ -61,25 +62,27 @@ public async Task<bool> Handle(ResetPasswordCommand request, CancellationToken c
             Errors = errors
         };
     }
-
+ 
     var userCredentials = await _credentialsRepository.GetByEmailAsync(emailId);
-
+ 
     if (userCredentials == null)
     {
         return false;
     }
-
+ 
     userCredentials.Password = _passwordHasher.HashPassword(userCredentials, request.Model.NewPassword); // Hash and save the new password
-
+ 
     await _credentialsRepository.Update(userCredentials);
-
+ 
     return true;
 }
-
+ 
     private async Task<bool> ValidateOtp(string emailId, string otp)
     {
-        var command = new ValidateOtpCommand(new ValidateOtpDTO { EmailId = emailId, Otp = otp });
+        var command = new ValidateOtpCommand(new ValidateOtpDTO { EmailId = emailId, Otp = otp }, emailId, otp);
         return await _mediator.Send(command);
     }
+   
+ 
 }
 }

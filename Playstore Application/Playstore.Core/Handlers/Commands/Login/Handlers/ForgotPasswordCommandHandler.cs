@@ -1,40 +1,39 @@
 using MediatR;
-using Microsoft.AspNetCore.Http; 
+using Microsoft.AspNetCore.Http;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-
+ 
 namespace Playstore.Providers.Handlers.Commands
 {
-    
-    public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, bool>
+   
+    public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, string>
     {
         private readonly IUserCredentialsRepository _credentialsRepository;
-        private readonly IEmailService _emailService; 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public ForgotPasswordCommandHandler(IUserCredentialsRepository credentialsRepository, IEmailService emailService, IHttpContextAccessor httpContextAccessor)
+        private readonly IEmailService _emailService;
+ 
+        public ForgotPasswordCommandHandler(IUserCredentialsRepository credentialsRepository, IEmailService emailService)
         {
             _credentialsRepository = credentialsRepository;
             _emailService = emailService;
-            _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<bool> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
         {
             var userCredentials = await _credentialsRepository.GetByEmailAsync(request.Model.EmailId);
             if (userCredentials == null)
             {
-                return false;
+                return "false";
             }
+           
             var otp = GenerateOtp();
             await _emailService.SendOtpAsync(userCredentials.EmailId, otp);
-            _httpContextAccessor.HttpContext.Session.SetString("ResetPasswordEmail", userCredentials.EmailId);
-            _httpContextAccessor.HttpContext.Session.SetString("ResetPasswordOTP", otp);
-            return true;
+            Console.WriteLine(userCredentials.EmailId);
+            Console.WriteLine(otp);
+            return otp;
         }
-
+ 
         private string GenerateOtp()
         {
             Random random = new Random();

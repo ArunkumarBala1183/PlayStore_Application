@@ -5,7 +5,7 @@
         [formGroup]="loginData" [ngClass]="{ ' md:h-[60%]':loginData.invalid }"  (ngSubmit)="onSubmit()">
         <h1 class="login text-center pt-4 text-black">Login</h1>
         <div class="mt-0 md:mt-1"> 
-            <input class="mt-2  h-7 rounded-md px-3 bg-gray-100 placeholder-red-400" type="email" id="emailId" formControlName="emailId" placeholder="Email Id *">
+            <input class="mt-2  h-7 rounded-md px-3 bg-gray-100 placeholder-sky-600" type="email" id="emailId" formControlName="emailId" placeholder="Email Id *">
             
           </div>
            <!-- <span class="text-center mt-3 text-red-400" *ngIf="loginData.get('emailId').hasError('email') && (loginData.get('emailId').dirty )">
@@ -13,7 +13,7 @@
           </span>
           <span class="text-center mt-3 text-red-400" *ngIf="loginData.get('emailId').hasError('required') && loginData.get('emailId').touched ">{{validationMessages.emailId.required}}</span> -->
           <div class="mt-1"> 
-            <input class="mt-3 h-7 rounded-md px-3 bg-gray-100 placeholder-red-400" type="password" id="password" formControlName="password" placeholder="Password *"><br>
+            <input class="mt-3 h-7 rounded-md px-3 bg-gray-100 placeholder-sky-600" type="password" id="password" formControlName="password" placeholder="Password *"><br>
              
           </div>
           <!-- <span class="text-center text-red-400 mt-3" *ngIf="loginData.get('password').hasError('required') &&  loginData.get('password').touched">

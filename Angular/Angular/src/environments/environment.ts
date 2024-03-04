@@ -7,6 +7,7 @@ export const environment = {
   apiBaseAddress:'https://localhost:5001/',
   registerRedirect:'/login/register',
   forgotPasswordRedirect:'/login/forgotpassword',
+  user:'login'
 };
 
 /*

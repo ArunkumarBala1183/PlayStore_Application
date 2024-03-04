@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Route, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { EmailExists } from 'src/app/interface/login';
 import { LoginService } from 'src/app/services/login.service';
 
@@ -12,7 +13,7 @@ import { LoginService } from 'src/app/services/login.service';
 export class RegisterComponent implements OnInit {
   minDate: Date | undefined;
   emailExists=false;
-  constructor(public formbuilder: FormBuilder, public router: Router, private loginService: LoginService) {
+  constructor(public formbuilder: FormBuilder, public router: Router, private loginService: LoginService, private toastr:ToastrService) {
     this.minDate = new Date();
     this.minDate.setFullYear(this.minDate.getFullYear() - 18);
   }
@@ -60,10 +61,12 @@ export class RegisterComponent implements OnInit {
       required: 'Date of Birth is Required'
     }
   }
+  isPasswordmacth=false;
   PasswordMatch(): boolean {
     const password = this.register.get('password').value;
     const confirmPassword = this.register.get('confirmPassword').value;
     return password === confirmPassword;
+    
   }
   
 
@@ -78,10 +81,10 @@ export class RegisterComponent implements OnInit {
                 console.log(response);
                if(response.body==false) 
                 {
-
+                      this.emailExists=false;
                 }
                 else{
-                  alert('Email already existes')
+                  this.toastr.info('Email Already Exists')
                   this.emailExists=true;
                 }
             },
@@ -113,9 +116,21 @@ export class RegisterComponent implements OnInit {
       console.log(this.register.value)
       const email = this.register.controls.emailId.value;
       console.log(email);
-      // this.loginService.addUser(this.register.value)
-      alert('Register Success.Enter Password to Login');
-      this.router.navigate(['login'], { queryParams: { emailId: email } });
+      this.loginService.addUser(this.register.value).subscribe(
+        {
+          next:response=>
+          {
+            console.log(response);
+            this.toastr.success('Register Success.Enter Password to Login');
+            this.router.navigate(['login'], { queryParams: { emailId: email } });
+          },
+          error:error=>
+          {
+            console.log(error)
+          }
+        }
+      )
+    
     }
     else {
       alert('Please fill the input fields correctly');

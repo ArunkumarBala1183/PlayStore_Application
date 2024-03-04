@@ -3,7 +3,7 @@ using Playstore.Contracts.DTO;
 
 namespace Playstore.Providers.Handlers.Commands
 {
-    public class ForgotPasswordCommand : IRequest<bool>
+    public class ForgotPasswordCommand : IRequest<string>
     {
         public ForgotPasswordDTO Model { get; }
 

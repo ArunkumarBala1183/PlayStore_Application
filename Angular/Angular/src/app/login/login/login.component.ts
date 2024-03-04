@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/services/login.service';
 import { environment } from 'src/environments/environment';
 @Component({
@@ -16,8 +17,11 @@ export class LoginComponent implements OnInit {
   public userData: any;
   registerRedirect = environment.registerRedirect;
   forgotPasswordRedirect = environment.forgotPasswordRedirect;
+  userRedirect=environment.user;
+  private accessTokenKey:string='';
+  private refreshTokenKey:string='';
 
-  constructor(public router: Router, public formbuilder: FormBuilder, private route: ActivatedRoute, public datepipe: DatePipe, private loginService: LoginService) {
+  constructor(public router: Router, public formbuilder: FormBuilder, private route: ActivatedRoute, public datepipe: DatePipe, private loginService: LoginService, private toastr:ToastrService) {
 
   }
 
@@ -47,10 +51,10 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.getEmail();
-    const currentDate: Date = new Date();
-    console.log(currentDate);
-    const formattedDate = this.datepipe.transform(currentDate);
-    console.log(formattedDate);
+    // const currentDate: Date = new Date();
+    // console.log(currentDate);
+    // const formattedDate = this.datepipe.transform(currentDate);
+    // console.log(formattedDate);
   }
   initForm() {
     this.loginData = this.formbuilder.group(
@@ -60,29 +64,46 @@ export class LoginComponent implements OnInit {
       }
     )
   }
-token:any;
+
   onSubmit() {
     if (this.loginData.valid) {
       console.log(this.loginData.value);
       this.loginService.verifyLogin(this.loginData.value).subscribe(
         {
-          next:respose=>
+          next: (response: any) => {
+            // console.log(response);
+            // console.log(response.accessToken);
+            const accessToken=response.accessToken;
+            // console.log(accessToken);
+            localStorage.setItem('accessToken',accessToken);
+            
+            localStorage.setItem(this.refreshTokenKey, response.refreshToken);
+           
+          this.toastr.success('Login Successful');
+          const role=this.getRole();
+          if(role !==null)
           {
-            console.log(respose)
-            this.token=respose;
-            if(this.token)
+           
+            if(role==='User')
             {
-            alert('Login Successful');
-            this.router.navigate(['user']);
+              this.router.navigate(['user']);
+
+            }
+            else{
 
             }
             
+            
 
+          }
+           else{
+            this.toastr.info('Unable to fetch role ')
+           }
           },
           error:error=>
           {
-            alert('Incorrect Email or Password')
-            console.log(error);
+            this.toastr.error('Incorrect Email or Password')
+            // console.log(error);
             return;
           }
         }
@@ -92,7 +113,21 @@ token:any;
 
 
   }
+  getRole()
+  {
+    const role=this.loginService.getUserRole();
+    if(role !== null)
+    {
+       return role;
+    }
+    else  
+    {
+      return null;
+    }
+  }
   login() {
     this.router.navigate(['app']);
   }
 }
+
+

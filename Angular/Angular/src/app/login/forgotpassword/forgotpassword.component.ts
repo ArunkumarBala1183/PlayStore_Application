@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgForm, NgModel } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { EmailExists } from 'src/app/interface/login';
 import { LoginService } from 'src/app/services/login.service';
 
@@ -11,7 +12,7 @@ import { LoginService } from 'src/app/services/login.service';
   styleUrls: ['./forgotpassword.component.scss']
 })
 export class ForgotpasswordComponent {
-  constructor(private router:Router , private loginService:LoginService){
+  constructor(private router:Router , private loginService:LoginService, private toastr:ToastrService){
 
   }
   forgotPassword:NgForm|any;
@@ -57,10 +58,12 @@ export class ForgotpasswordComponent {
       if (!this.emailVerify) {
         
         const emailExists: EmailExists = { emailId: this.emailId };
+        this.toastr.info('Otp sending to your Email')
         this.loginService.forgotPassword(emailExists).subscribe(
           {
             next:response=>
             {
+              this.toastr.success('Otp Sent to your Email');
              
               this.emailSuccess=response;
               console.log(this.emailSuccess);
@@ -69,7 +72,7 @@ export class ForgotpasswordComponent {
             },
             error:error=>
             {
-              alert('Incorrect email');
+              this.toastr.error('Incorrect EmailId')
               console.log(error);
               return;
             }
@@ -95,12 +98,12 @@ export class ForgotpasswordComponent {
                 console.log(response);
                 this.otpVerify = true;
                 this.showOtp=!this.showOtp;
-                alert('Enter your new password')
+                this.toastr.info('Enter Your New Password')
               },
               error:error=>
               {
                 console.log(error)
-                alert('Incorect otp')
+                this.toastr.warning('Incorect otp')
                 return ;
               }
             }
@@ -118,7 +121,7 @@ export class ForgotpasswordComponent {
               next:response=>
               {
                 console.log(response)
-                alert('Password Changed Successfully')
+                this.toastr.success('Password Changed Successfully')
                 this.router.navigate(['login']);
                 form.reset();
                 this.emailVerify = false;
@@ -126,7 +129,7 @@ export class ForgotpasswordComponent {
               },
               error:error=>
               {
-                alert('Password and confirm password doesnt match ')
+                this.toastr.error('Please Try Again Later ')
               }
             }
            )

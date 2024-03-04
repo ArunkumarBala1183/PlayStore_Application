@@ -9,7 +9,8 @@ using System;
 using System.Collections.Generic;
 using Playstore.Providers.Handlers.Queries;
 using Microsoft.AspNetCore.Authorization;
-using Playstore.Contracts.Data.Entities;
+using Microsoft.AspNetCore.Http;
+using Playstore.Core.Data.Repositories;
 
 namespace Playstore.Controllers
 {
@@ -18,10 +19,13 @@ namespace Playstore.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly SharedDataService _sharedDataService;
 
-        public LoginController(IMediator mediator)
+
+        public LoginController(IMediator mediator, SharedDataService sharedDataService)
         {
             _mediator = mediator;
+            _sharedDataService=sharedDataService;
         }
 
         [HttpPost("GetUserbyId")]
@@ -99,57 +103,111 @@ namespace Playstore.Controllers
 }
 
 
+            [HttpPost("forgot-Password")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(object))]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO model)
+        {
+            try
+            {
+                var otp = await _mediator.Send(new ForgotPasswordCommand(model));
+                HttpContext.Session.SetString("ResetPasswordEmail", model.EmailId);
+                var ResetPasswordEmail = HttpContext.Session.GetString("ResetPasswordEmail");
+                _sharedDataService.ResetPasswordEmail = HttpContext.Session.GetString("ResetPasswordEmail");
+                Console.WriteLine(".............This is email" + ResetPasswordEmail);
+ 
+ 
+                HttpContext.Session.SetString("ResetPasswordOTP", otp);
+                var ResetPasswordOTP = HttpContext.Session.GetString("ResetPasswordOTP");
+                _sharedDataService.ResetPasswordOTP = HttpContext.Session.GetString("ResetPasswordOTP");
+                Console.WriteLine("...................This is otp" + ResetPasswordOTP);
+ 
+                return Ok(new { Message = "OTP sent successfully." });
+            }
+            catch (Exception)
+            {
+                return NotFound(new { Message = "Email not registered." });
+            }
+        }
+ 
+ 
         [HttpPost("validate-otp")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-    public async Task<IActionResult> ValidateOtp([FromBody] ValidateOtpDTO validateOtpDTO)
-    {
-        try
+        public async Task<IActionResult> ValidateOtp([FromBody] ValidateOtpDTO validateOtpDTO)
         {
-            Console.WriteLine("................." + validateOtpDTO.Otp);
-            var command = new ValidateOtpCommand(validateOtpDTO);
-            var isOtpValid = await _mediator.Send(command);
-
-            if (isOtpValid)
+            try
             {
-                return Ok(new { Message = "OTP validation successful" });
+                var storedOtp = HttpContext.Session.GetString("ResetPasswordOTP");
+                var storedEmail = HttpContext.Session.GetString("ResetPasswordEmail");
+                var resetPasswordEmail = _sharedDataService.ResetPasswordEmail;
+                var resetPasswordOTP = _sharedDataService.ResetPasswordOTP;
+ 
+                Console.WriteLine("Stored OTP: " + resetPasswordOTP);
+ 
+                Console.WriteLine("Stored Email: " + resetPasswordEmail);
+                Console.WriteLine("Received OTP: " + validateOtpDTO.Otp);
+ 
+                validateOtpDTO.EmailId = storedEmail;
+ 
+                var command = new ValidateOtpCommand(validateOtpDTO, resetPasswordEmail, resetPasswordOTP);
+                var isOtpValid = await _mediator.Send(command);
+ 
+ 
+                if (isOtpValid)
+                {
+                    return Ok(new { Message = "OTP validation successful" });
+                }
+                else
+                {
+                    return BadRequest(new { Error = "Invalid OTP" });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest(new { Error = "Invalid OTP" });
-            }
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
-    }
-
-    [HttpPost("reset-password")]
-    [ProducesResponseType(typeof(bool), (int)HttpStatusCode.Created)]
-    [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-    public async Task<IActionResult> ResetPassword([FromBody] PasswordResetDTO resetPasswordDTO)
-    {
-        try
-        {
-            var command = new ResetPasswordCommand(resetPasswordDTO);
-            var isPasswordReset = await _mediator.Send(command);
-
-            if (isPasswordReset)
-            {
-                return Ok(new { Message = "Password reset successful" });
-            }
-            else
-            {
-                return BadRequest(new { Error = "Password reset failed. Make sure OTP is validated first." });
+                return BadRequest(new { Error = ex.Message });
             }
         }
-        catch (Exception ex)
+ 
+        [HttpPost("reset-password")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.Created)]
+        [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        public async Task<IActionResult> ResetPassword([FromBody] PasswordResetDTO resetPasswordDTO)
         {
-            return BadRequest(new { Error = ex.Message });
+            try
+            {
+                Console.WriteLine(resetPasswordDTO.NewPassword);
+                Console.WriteLine(resetPasswordDTO.ConfirmPassword);
+                var resetPasswordEmail = _sharedDataService.ResetPasswordEmail;
+                var resetPasswordOTP = _sharedDataService.ResetPasswordOTP;
+ 
+                Console.WriteLine("Stored OTP: " + resetPasswordOTP);
+ 
+                Console.WriteLine("Stored Email: " + resetPasswordEmail);
+                Console.WriteLine("Received newpassword: " + resetPasswordDTO.NewPassword);
+ 
+                Console.WriteLine("Received confirmpassword: " + resetPasswordDTO.ConfirmPassword);
+                var command = new ResetPasswordCommand(resetPasswordDTO, resetPasswordEmail, resetPasswordOTP);
+                var isPasswordReset = await _mediator.Send(command);
+ 
+                if (isPasswordReset)
+                {
+                    return Ok(new { Message = "Password reset successful" });
+                }
+                else
+                {
+                    Console.WriteLine("Failed");
+                    return BadRequest(new { Error = "Password reset failed. Make sure OTP is validated first." });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest(new { Error = ex.Message });
+            }
         }
-    }
 
+  
         
         [HttpPost("register")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.Created)]
@@ -186,39 +244,18 @@ namespace Playstore.Controllers
             }
         }
 
-        [HttpPost("forgot-Password")]
-        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        [ProducesErrorResponseType(typeof(object))]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO model)
-        {
-            var command = new ForgotPasswordCommand(model);
-
-            try
-            {
-                var result = await _mediator.Send(command);
-
-                if (result)
-                {
-                    return Ok(new { Message = "OTP sent successfully." });
-                }
-                else
-                {
-                    return NotFound(new { Message = "Email not registered." });
-                }
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, new { Message = "Internal server error." });
-            }
-        }
+      
 
         [HttpPost("User-Login")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> UserLogin([FromBody] LoginUsersDTO model)
-        {
+        { 
+                Console.WriteLine(model.EmailId);
+                Console.WriteLine(model.Password);
             try
             {
+                
                 var command = new LoginUsersCommand(model);
                 var response = await _mediator.Send(command);
                 return Ok(response);
@@ -253,6 +290,13 @@ namespace Playstore.Controllers
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command)
         {
+             if (command == null)
+    {
+        // Handle the case where the command is null
+        return BadRequest("Invalid request. Command object is null.");
+    }
+            Console.WriteLine(command.ExpiredToken);
+
             try
             {
                 var response = await _mediator.Send(command);
