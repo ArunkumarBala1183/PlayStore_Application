@@ -12,32 +12,29 @@ namespace Playstore.Core.Data.Repositories.Admin
     public class AppDownloadsRepository : IAppDownloadsRepository
     {
         private readonly DatabaseContext database;
-        private readonly IMapper mapper;
         public AppDownloadsRepository(DatabaseContext context, IMapper mapper)
         {
             this.database = context;
-            this.mapper = mapper;
         }
         public async Task<object> GetAppLogs(AppLogsDto appSearch)
         {
             try
             {
-                if (appSearch.DownloadedDate is null && appSearch.AppId is null && appSearch.UserId is null)
+                if (appSearch.FromDate is null && appSearch.DownloadedDate is null && appSearch.AppName is null && appSearch.UserName is null)
                 {
                     return HttpStatusCode.BadRequest;
                 }
     
-                var appLogs = await this.CheckValues(appSearch)
+                var query = this.database.AppDownloads
                 .Include(app => app.AppInfo)
-                .ThenInclude(category => category.Category)
                 .Include(user => user.Users)
-                .ThenInclude(roleUser => roleUser.UserRoles)
-                .ThenInclude(role => role.Role)
-                .ToListAsync();
+                .AsQueryable();
+
+                var appLogs = await this.CheckValues(appSearch , query);
     
                 if (appLogs != null && appLogs.Count > 0)
                 {
-                    return this.mapper.Map<IEnumerable<AppDownloadsDto>>(appLogs);
+                    return appLogs;
                 }
     
                 return HttpStatusCode.NotFound;
@@ -52,29 +49,41 @@ namespace Playstore.Core.Data.Repositories.Admin
             }
         }
 
-        private IQueryable<AppDownloads> CheckValues(AppLogsDto appSearch)
-        {
-            var query = this.database.AppDownloads.AsQueryable();
+        private async Task<List<AppDownloadsDto>> CheckValues(AppLogsDto appSearch , IQueryable<AppDownloads> query)
+        {   
 
-            if (appSearch.UserId.HasValue)
+
+            if (appSearch.UserName is not null)
             {
-                Console.WriteLine("UserId has value");
-                query = query.Where(user => user.UserId == appSearch.UserId);
+                query = query.Where(user => user.Users.Name.Contains(appSearch.UserName));
             }
 
-            if (appSearch.AppId.HasValue)
+            if (appSearch.AppName is not null)
             {
-                Console.WriteLine("AppId has value");
-                query = query.Where(app => app.AppId == appSearch.AppId);
+                query = query.Where(app => app.AppInfo.Name.Contains(appSearch.AppName));
             }
 
-            if (appSearch.DownloadedDate.HasValue)
+            if (appSearch.DownloadedDate.HasValue && appSearch.FromDate.HasValue)
             {
-                Console.WriteLine("Date has value");
-                query = query.Where(date => date.DownloadedDate.Date == appSearch.DownloadedDate.Value);
+                query = query.Where(date => date.DownloadedDate.Date >= appSearch.FromDate.Value && date.DownloadedDate.Date <= appSearch.DownloadedDate.Value);
+            }
+            else if(appSearch.FromDate.HasValue)
+            {
+                query = query.Where(date => date.DownloadedDate.Date >= appSearch.FromDate.Value);
+            }
+            else if(appSearch.DownloadedDate.HasValue)
+            {
+                query = query.Where(date => date.DownloadedDate.Date <= appSearch.DownloadedDate.Value);
             }
 
-            return query;
+            var appLogs = await query.Select(values => new AppDownloadsDto{
+                    DownloadedDate = values.DownloadedDate.ToString("yyyy-MM-dd"),
+                    appName = values.AppInfo.Name,
+                    userName = values.Users.Name
+                })
+                .ToListAsync();
+
+            return appLogs;
         }
     }
 }

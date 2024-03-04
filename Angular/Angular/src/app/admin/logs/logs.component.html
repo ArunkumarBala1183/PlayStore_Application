@@ -1,20 +1,30 @@
 <div class="md:flex md:flex-row justify-between flex-col md:ml-16 md:p-0 p-2">
     <div class="mt-2 md:ml-0 ml-16">
-        <input type="text" placeholder="sort by username" class="bg-blue-300 rounded-md mr-5 py-2 px-3 placeholder-black" [(ngModel)]="usernameFilter">
+        <input type="text" placeholder="sort by username"
+            class="bg-blue-300 rounded-md mr-5 py-2 px-3 placeholder-black" [(ngModel)]="filterDetails.userName"
+            (input)="getAppLogs()">
     </div>
-  
+
     <div class="mt-2 md:ml-0 ml-16">
-        <input type="date" class="bg-blue-300 mr-5 py-2 px-3 placeholder-black rounded-md" placeholder="sort by Date" [(ngModel)]="dateFilter">
+        <input type="date" class="bg-blue-300 mr-5 py-2 px-3 placeholder-black rounded-md" placeholder="sort by Date"
+            [(ngModel)]="filterDetails.fromDate" (input)="getAppLogs()">
     </div>
-    
+
     <div class="mt-2 md:ml-0 ml-16">
-        <input type="text" class="bg-blue-300 mr-5 py-2 px-3 placeholder-black rounded-md" placeholder="sort by App" [(ngModel)]="appFilter">
+        <input type="date" class="bg-blue-300 mr-5 py-2 px-3 placeholder-black rounded-md" placeholder="sort by Date"
+            [(ngModel)]="filterDetails.downloadedDate" (input)="getAppLogs()">
     </div>
-    <button class="bg-black rounded-md px-4 md:mt-2 mt-4 md:ml-0 ml-28 text-white" (click)="applyFilters()">Search</button>
+
+    <div class="mt-2 md:ml-0 ml-16">
+        <input type="text" class="bg-blue-300 mr-5 py-2 px-3 placeholder-black rounded-md" placeholder="sort by App"
+            [(ngModel)]="filterDetails.appName" (input)="getAppLogs()">
+    </div>
+    <button class="bg-black rounded-md px-4 md:mt-2 mt-4 md:ml-0 ml-28 text-white"
+        (click)="getAppLogs()">Search</button>
 </div>
 
-<!-- table view --> 
- <div class="overflow-x-auto mt-8 md:ml-48 max-w-full">
+<!-- table view -->
+<div *ngIf="isLogFound; else nodata" class="overflow-x-auto mt-8 md:ml-48 max-w-full">
     <table class="border border-black shadow-lg">
         <thead class="bg-black text-white">
             <tr>
@@ -24,17 +34,20 @@
             </tr>
         </thead>
         <tbody class="bg-gray-50">
-            <tr *ngFor="let user of filteredUsers">
-                <td class="px-6 py-4">{{ user.Username }}</td>
-                <td class="px-6 py-4">{{ user.Date }}</td>
-                <td class="px-6 py-4">{{ user.AppName }}</td>
+            <tr *ngFor="let user of appLogDetails">
+                <td class="px-6 py-4">{{ user.userName }}</td>
+                <td class="px-6 py-4">{{ user.downloadedDate }}</td>
+                <td class="px-6 py-4">{{ user.appName }}</td>
             </tr>
         </tbody>
     </table>
 </div>
+<ng-template #nodata>
+    <span>{{errorMessage}}</span>
+</ng-template>
 
 <div class="mt-4 flex justify-center">
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="pageSize" [length]="filteredUsers.length" (page)="onPageChange($event)">
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="pageSize" [length]="filteredUsers.length"
+        (page)="onPageChange($event)">
     </mat-paginator>
 </div>
-

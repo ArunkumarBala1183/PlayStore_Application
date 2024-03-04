@@ -22,7 +22,9 @@ namespace Playstore.Core.Mapper
             .ForMember(dest => dest.DateOfBirth , opt => opt.MapFrom(src => src.DateOfBirth.ToString("yyyy-MM-dd")))
             .ReverseMap();
             CreateMap<AppInfo , ListAppInfoDto>().ReverseMap();
+            //CreateMap<AppInfo , AppLogDetailsDto>();
             CreateMap<Users , RequestedUserDto>().ReverseMap();
+            //CreateMap<Users , UserLogDetails>();
             CreateMap<Role , RoleDto>().ReverseMap();
             CreateMap<UserRole , UserRoleDto>().ReverseMap();
             CreateMap<AppReview , AppReviewDto>().ReverseMap();

@@ -70,7 +70,7 @@ namespace Playstore.Controllers.Admin
             }
             catch (ApiResponseException error)
             {
-                return NotFound(error.Message);                
+                return NotFound(new {message = error.Message});                
             }
         }
     }

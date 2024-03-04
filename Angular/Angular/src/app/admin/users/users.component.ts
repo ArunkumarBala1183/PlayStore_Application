@@ -12,13 +12,14 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss']
 })
+
 export class UsersComponent implements OnInit {
 
   searchUsers: string = '';
-  displayedColumns: string[] = ['name', 'emailId'];
+  displayedColumns: string[] = ['name', 'emailId' , 'userRoles'];
   dataSource = new MatTableDataSource<any>();
 
-  userDetails : GetUsers[] | undefined
+  userDetails : GetUsers[] = []
   // data:any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -57,11 +58,9 @@ export class UsersComponent implements OnInit {
   }
   
   ngAfterViewInit() {
-    console.log(this.dataSource)
     this.dataSource.paginator = this.paginator;
   }
-
-  // Update table data based on search
+  
   applyFilter() {
     this.dataSource.filter = this.searchUsers.trim().toLowerCase();
   }
@@ -74,6 +73,7 @@ export class UsersComponent implements OnInit {
         if(response.status == HttpStatusCode.Ok)
         {
             this.userDetails = response.body as GetUsers[]
+            console.log(this.userDetails)
             this.dataSource = new MatTableDataSource<GetUsers>(this.userDetails); // Specify the type here
             this.dataSource.paginator = this.paginator;
         }
