@@ -1,3 +1,4 @@
+<div>
 <div class="md:flex md:flex-row justify-between flex-col md:ml-16 md:p-0 p-2">
     <div class="mt-2 md:ml-0 ml-16">
         <input type="text" placeholder="sort by username"
@@ -19,8 +20,8 @@
         <input type="text" class="bg-blue-300 mr-5 py-2 px-3 placeholder-black rounded-md" placeholder="sort by App"
             [(ngModel)]="filterDetails.appName" (input)="getAppLogs()">
     </div>
-    <button class="bg-black rounded-md px-4 md:mt-2 mt-4 md:ml-0 ml-28 text-white"
-        (click)="getAppLogs()">Search</button>
+    <!-- <button class="bg-black rounded-md px-4 md:mt-2 mt-4 md:ml-0 ml-28 text-white"
+        (click)="getAppLogs()">Search</button> -->
 </div>
 
 <!-- table view -->
@@ -41,13 +42,13 @@
             </tr>
         </tbody>
     </table>
+    <div>
+    
+</div>
 </div>
 <ng-template #nodata>
-    <span>{{errorMessage}}</span>
+    <span class="flex justify-center mt-10 font-semibold ml-36">{{errorMessage}}</span>
 </ng-template>
 
-<div class="mt-4 flex justify-center">
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="pageSize" [length]="filteredUsers.length"
-        (page)="onPageChange($event)">
-    </mat-paginator>
+
 </div>

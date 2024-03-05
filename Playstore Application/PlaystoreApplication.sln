@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playstore.API", "Playstore.API\Playstore.API.csproj", "{A4230C42-7A89-48C4-9D1B-E2FBEB25077F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playstore.Tests", "Playstore.Tests\Playstore.Tests.csproj", "{1CB7CACB-001D-4A02-8442-3AC264BFFDBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{A4230C42-7A89-48C4-9D1B-E2FBEB25077F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4230C42-7A89-48C4-9D1B-E2FBEB25077F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4230C42-7A89-48C4-9D1B-E2FBEB25077F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CB7CACB-001D-4A02-8442-3AC264BFFDBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CB7CACB-001D-4A02-8442-3AC264BFFDBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CB7CACB-001D-4A02-8442-3AC264BFFDBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CB7CACB-001D-4A02-8442-3AC264BFFDBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

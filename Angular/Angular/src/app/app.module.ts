@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ToastrModule } from 'ngx-toastr';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +32,8 @@ import { ToastrModule } from 'ngx-toastr';
     FormsModule,
     MatButtonModule,
     MatIconModule,
-    ToastrModule.forRoot()     
+    ToastrModule.forRoot()
+      
   ],
   providers: [],
   bootstrap: [AppComponent]

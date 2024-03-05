@@ -62,7 +62,7 @@ export class UsersComponent implements OnInit {
   }
   
   applyFilter() {
-    this.dataSource.filter = this.searchUsers.trim().toLowerCase();
+    console.log(this.searchUsers)
   }
 
   getAllUsers()

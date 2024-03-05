@@ -27,6 +27,7 @@ import { AboutComponent } from './about/about.component';
 
 
 
+
 @NgModule({
   declarations: [
     UsersComponent,
@@ -52,7 +53,8 @@ import { AboutComponent } from './about/about.component';
     MatButtonModule,
     MatIconModule,
     MatPaginatorModule,
-    MatTableModule
+    MatTableModule,
+   
   ],
   exports:[
     // AdminComponent
