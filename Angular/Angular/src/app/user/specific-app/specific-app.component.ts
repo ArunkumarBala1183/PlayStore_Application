@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { APP_ID, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Guid } from 'guid-typescript';
+import { AllAppsInfo, AppReviewsInfo, SpecificAppInfo } from 'src/app/interface/user';
 
 @Component({
   selector: 'app-specific-app',
@@ -11,10 +13,80 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export class SpecificAppComponent implements OnInit {
 
-onSubmit() 
+
+
+
+  constructor(private route:ActivatedRoute, private service:UserService, private formBuilder : FormBuilder)
+  {
+    this.reviewForm = this.formBuilder.group({
+      commands : ['',Validators.required],
+      rating : ['',Validators.required],
+    })
+  }
+
+  ngOnInit(): void {
+    window.scrollTo(0,0);
+    this.route.params.subscribe(params => {
+      const appId : Guid = params['appId'];
+      console.log(appId);   
+      this.service.getAppsById(appId).subscribe(
+        {
+          next : responses => {
+            this.appDetail = responses;
+            console.log(this.appDetail[0].publisherName);
+            console.log(this.appDetail[0].publishedDate);   
+          },
+          error : error => {
+            console.log(error);
+          }
+        })
+      this.service.getReviews(appId).subscribe(
+        {
+          next : response => {
+            this.appReview = response;
+          },
+          error : error => {
+            console.log(error);
+          }
+        }); 
+        
+    })
+
+    this.service.getAllApps().subscribe(
+      {
+        next : response => 
+        {
+          this.appInfo = response;
+        },
+        error : error => {
+          console.log(error);
+          
+        }
+      })
+  }
+
+
+  onSubmit() 
 {
   if(this.reviewForm.valid)
-  {
+  { 
+    console.log(this.reviewForm);
+    const formData = this.reviewForm.value;
+    const appId = this.route.snapshot.params['appId'];
+    const userId = this.appInfo[0].userId;
+    formData.appId = appId;
+    formData.userId = userId;
+
+    formData.additionalValue = this.service.postReview(formData).subscribe(
+    {
+      next : response => {
+        console.log('Form Submitted',response);
+      },
+      error : error => {
+        console.log(error);
+        
+      }
+    })
     alert("Form Submitted");
   }
   else{
@@ -22,37 +94,19 @@ onSubmit()
   }
 }
 
-  constructor(private route:ActivatedRoute, private service:UserService, private formBuilder : FormBuilder)
-  {
-    this.reviewForm = this.formBuilder.group({
-      reviews : ['',Validators.required],
-    })
-  }
-
-  ngOnInit(): void {
-    window.scrollTo(0,0);
-    this.route.params.subscribe(params => {
-      const appId : string = params['appId'];
-      this.appDetail = this.service.AllAppsInfo.find(a => a.appId === appId);
-      console.log(this.appDetail);
-    })
-  }
-
-  appDetail : any;
-  
+  appDetail : SpecificAppInfo[] = [];
+  appReview : AppReviewsInfo [] = [];
+  appInfo : AllAppsInfo[]=[];
+  reviewForm : FormGroup;
+  currentRating = 0 ;
   stars =  Array(5);
-  currentRating = 0;
   averageRating = 3;
   Downloads = 10000;
-
 // rating function for the user to rate the specific app. 
-rating(rating: number) {
-this.currentRating = rating;
+rating(value: number) {
+this.currentRating = value;
+this.reviewForm.patchValue({rating : value});
 console.log(this.currentRating);
 }
-
-reviewForm : FormGroup;
-
-
 
 }

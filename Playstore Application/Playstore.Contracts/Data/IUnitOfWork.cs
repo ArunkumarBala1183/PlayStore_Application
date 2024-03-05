@@ -17,7 +17,8 @@ namespace Playstore.Contracts.Data
         IAppDeveloperMyAppDetailsRepository MyAppDetails{get;}
         IAppInfoRepository AppInfo{get;}
         IAppDetailsRepository AppDetails{get;}
-         
+
+        ICategoryRepository CategoryDetails {get;}
         Task CommitAsync();
     }
 }

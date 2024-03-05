@@ -1,18 +1,75 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AllAppsInfo, AppReviewsInfo, CategoryInfo, DeveloperAppInfo, DownloadedAppsInfo, SpecificAppInfo } from '../interface/user';
+import { Observable } from 'rxjs';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor() { }
+  constructor(private http:HttpClient) { }
+  apiBaseAddress = environment.apiBaseAddress;
+ 
 
+  // Get All the Apps 
+  getAllApps()
+  {
+     return this.http.get<AllAppsInfo[]>(this.apiBaseAddress + "/AppInfo/GetAllApps");
+  }
+
+  getAppsById(appId:Guid)
+  {
+    const url = `${this.apiBaseAddress}/AppInfo/GetAppById?id=${appId}`;
+    return this.http.get<SpecificAppInfo[]>(url);
+  }
+
+
+  getDeveloperApps(userId : Guid)
+  {
+  return this.http.get<DeveloperAppInfo[]>(`${this.apiBaseAddress}/AppInfo/DeveloperMyAppDetails?id=${userId}`);
+  } 
+
+  getReviews(appId:Guid)
+  {
+    return this.http.get<AppReviewsInfo[]>(`${this.apiBaseAddress}/AppInfo/ReviewDetails?id=${appId}`);
+  }
+
+  postReview(formData : any)
+  {
+    const url = (`${this.apiBaseAddress}/AppInfo/AddReview`);
+    return this.http.post(url,formData);
+  }
   
+  getDownloadedApps(userId : Guid)
+  {
+    console.log(userId)
+    return this.http.get<DownloadedAppsInfo[]>(`${this.apiBaseAddress}/AppInfo/DownloadsDetails?Userid=${userId}`);
+  }
+
+  getCategory()
+  {
+    return this.http.get<CategoryInfo[]>(this.apiBaseAddress + "/AppInfo/GetCategory");
+  }
+
+  postApplication(formData : FormData) 
+  {
+    // const headers = new HttpHeaders({
+    //   'Content-Type': 'application/json',
+    // });
+    const url = (`${this.apiBaseAddress}/AppInfo/AppDetails`);
+    console.log(formData);    
+    // console.log(formData.value);    
+    return this.http.post(url , formData);
+  }
+
+
   AllAppsInfo = [
     {
       appId : '1' , appName : 'Instagram', appLogo: 'https://play-lh.googleusercontent.com/VRMWkE5p3CkWhJs6nv-9ZsLAs1QOg5ob1_3qg-rckwYW7yp1fMrYZqnEFpk0IoVP4LM=w480-h960-rw', appCategory : 'Social', appAverageRating : 4, appDownloads : 1000000, appDescription : 'Instagram to chat, watch feeds, Video and Audio calls',
-       appScreenshots : ['https://play-lh.googleusercontent.com/fRvdBTcc5b7pMwXkSEa5-Jm47ZfTt2lc8buw_wbFgF5lkj3GuLyu2B3b4zf7mKXhW3E=w5120-h2880-rw', 'https://play-lh.googleusercontent.com/W7J_rhJYWt65XQHaZ7N_6Nptu0wC6n4k9WX59qg46KRpe9b5I1LarJqZ7L-Uu9okgA=w1052-h592-rw', 'https://play-lh.googleusercontent.com/sn_2xT5NCjg-Km4XiZMAOM6xb4LxDqC_9sd5TENCjbU9D4aXVNrendOmIzHFyQo_kahz=w1052-h592-rw'
+       appScreenshots : ['https://play-lh.googleusercontent.com/fRvdBTcc5b7pMwXkSEa5-Jm47ZfTt2lc8buw_wbFgF5lkj3GuLyu2B3b4zf7mKXhW3E=w5120-h2880-rw', 'https://play-lh.googleusercontent.com/W7J_rhJYWt65XQHaZ7N_6Nptu0wC6n4k9WX59qg46KRpe9b5I1LarJqZ7L-Uu9okgA=w1052-h592-rw', 'https://play-lh.googl eusercontent.com/sn_2xT5NCjg-Km4XiZMAOM6xb4LxDqC_9sd5TENCjbU9D4aXVNrendOmIzHFyQo_kahz=w1052-h592-rw'
       ]
     },
     {

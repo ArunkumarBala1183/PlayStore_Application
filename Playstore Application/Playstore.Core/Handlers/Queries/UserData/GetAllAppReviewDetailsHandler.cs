@@ -8,7 +8,7 @@ using Playstore.Contracts.Data;
 
 namespace Playstore.Providers.Handlers.Queries.UserData
 {
-    public class GetAllAppReviewDetails : IRequest<AppReview>
+    public class GetAllAppReviewDetails : IRequest<object>
     {
         public Guid AppId { get; }
         public GetAllAppReviewDetails(Guid appId)
@@ -17,7 +17,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
         }
     }
 
-    public class GetAllAppReviewDetailsHandler : IRequestHandler<GetAllAppReviewDetails, AppReview>
+    public class GetAllAppReviewDetailsHandler : IRequestHandler<GetAllAppReviewDetails, object>
     {
         private readonly IUnitOfWork _repository;
         private readonly IMapper _mapper;
@@ -28,7 +28,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
             _mapper = mapper;
         }
 
-        public async Task<AppReview> Handle(GetAllAppReviewDetails request, CancellationToken cancellationToken)
+        public async Task<object> Handle(GetAllAppReviewDetails request, CancellationToken cancellationToken)
         {
             // throw new NotImplementedException();
             var app = await _repository.AppReview.GetReview(request.AppId);
@@ -38,7 +38,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
                 throw new EntityNotFoundException($"No App found for Id {request.AppId}");
             }
            
-            return _mapper.Map<AppReview>(app);
+            return app;
         }
 
         // public async Task<AppInfo> Handle(GetAppByIdQuery request, CancellationToken cancellationToken)

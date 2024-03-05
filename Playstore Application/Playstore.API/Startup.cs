@@ -25,7 +25,7 @@ namespace Playstore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-        services.AddPersistence(Configuration);
+            services.AddPersistence(Configuration);
             services.AddCore();
             services.AddMarketplaceAuthentication(Configuration);
             services.Configure<ApiBehaviorOptions>(options =>
@@ -36,6 +36,16 @@ namespace Playstore
             services.AddControllers()
             .AddNewtonsoftJson(option => option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
+            services.AddCors(options =>
+                {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200");
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                    builder.AllowCredentials();
+                });
+                });
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -52,8 +62,8 @@ namespace Playstore
             }
 
             app.UseHttpsRedirection();
-          
-         
+
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -67,7 +77,7 @@ namespace Playstore
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {

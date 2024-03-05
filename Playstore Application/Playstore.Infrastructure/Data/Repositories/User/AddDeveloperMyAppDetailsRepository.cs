@@ -68,7 +68,7 @@ namespace Playstore.Infrastructure.Data.Repositories
             var appReview = this.databaseContext.AppReviews
                 .Where(review => review.AppId == appInfo.AppId)
                 .ToList();
-             var AppDownload=this.databaseContext.AppDownloads.Where(download=>download.AppId==appInfo.AppId).ToList();   
+             var AppDownload=this.databaseContext.AppDownloads.Where(download=>download.AppId==appInfo.AppId).ToList();  
             
             return new Myappdetails
             {
@@ -80,8 +80,8 @@ namespace Playstore.Infrastructure.Data.Repositories
                 PublisherName = appInfo.PublisherName,
                 Apps=Count,
                 Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
-                CategoryId = appInfo.Category.CategoryName,
-                Downloads = AppDownload.Count()
+                CategoryName = appInfo.Category.CategoryName,
+                Downloads = AppDownload.Count(),
             };
         }).ToList();
 

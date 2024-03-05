@@ -46,7 +46,8 @@ namespace Playstore.Infrastructure.Data.Repositories
                     CategoryId=response.Category.CategoryId,
                     CategoryName=response.Category.CategoryName,
                     Downloads=Count,
-                    
+                    PublisherName = response.PublisherName,
+                    PublishedDate = response.PublishedDate                    
                 });
                 return appinfoDetails;
             }

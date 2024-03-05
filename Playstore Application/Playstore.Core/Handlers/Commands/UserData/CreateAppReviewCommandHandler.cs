@@ -34,8 +34,7 @@ public class CreateAppReviewCommandHandler : IRequestHandler<CreateAppReviewComm
           UserId=model.UserId,
           Rating=model.Rating,
           Comment=model.Commands
-          };
-         
+          };         
         _repository.AppReview.Add(entity);
         await _repository.CommitAsync();
         return entity.Id;

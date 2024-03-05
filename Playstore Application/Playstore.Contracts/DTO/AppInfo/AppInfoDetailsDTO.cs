@@ -17,6 +17,8 @@ public class AppInfoDetailsDTO{
     public string CategoryName{get;set;}
     public Guid CategoryId{get;set;}
     public int Downloads{get;set;}
+    public string PublisherName {get;set;}
+    public DateTime PublishedDate {get;set;}
    
     
 

@@ -35,10 +35,10 @@ namespace Playstore.Infrastructure.Data.Repositories
                     Description = createAppInfoDTO.Description,
                     PublisherName = createAppInfoDTO.PublisherName,
                     RequestId = newRequest.Id,
+                
                     CategoryId = createAppInfoDTO.CategoryId,
                     UserId = createAppInfoDTO.UserId
                 };
-
 
                 using (var memoryStream = new MemoryStream())
                 {

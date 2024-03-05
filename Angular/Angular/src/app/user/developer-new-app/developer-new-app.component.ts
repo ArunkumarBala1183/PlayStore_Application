@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AllAppsInfo, CategoryInfo } from 'src/app/interface/user';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-developer-new-app',
@@ -9,69 +12,85 @@ import { Router } from '@angular/router';
 })
 export class DeveloperNewAppComponent implements OnInit {
 
-    public uploadApp:FormGroup | any;
-    public appData:any;
+    // public uploadApp:FormGroup | any;
+    public appData !: FormGroup;
     fileSize=false;
     multipleFile=false;
-    constructor(public router:Router, public formbuilder:FormBuilder)
+    category : CategoryInfo[] = [];
+    appInfo : AllAppsInfo[] = [];
+    AppFile : File | null = null;
+    Logo : File | null = null;
+    appImages : File[] = [];
+
+    constructor(public router:Router, public formbuilder:FormBuilder, private service : UserService)
     {}
     ngOnInit(): void {
       this.initForm();
+      this.service.getCategory().subscribe(
+        {
+          next : response =>{
+            this.category = response;
+            console.log(this.category);
+            console.log(this.category.length);
+
+          }
+        })
+        this.service.getAllApps().subscribe(
+          {
+            next : response => 
+            {
+              this.appInfo = response;
+            },
+            error : error => {
+              console.log(error);
+            }
+          })
     }
     initForm()
     {
       this.appData=this.formbuilder.group(
         {
-          appName:['',Validators.required],
-          category:['',Validators.required],
-          publisherName:['', Validators.required],
-          description:['', Validators.required],
-          appLogo:[null,Validators.required],
-          appFile:[null,Validators.required],
-          screenshot:[null,Validators.required]
+          Name:['',Validators.required],
+          CategoryId:['',Validators.required],
+          PublisherName:['', Validators.required],
+          Description:['', Validators.required],
+          Logo:[null,Validators.required],
+          // Logo : [this.Logo],
+          AppFile:[null,Validators.required],
+          appImages:[null,Validators.required]
         }
       )
     }
     validationMessages={
-      appName:{
+      Name:{
         required:'App Name is required'
       },
-      category:{
+      CategoryId:{
         required:'Required '
       },
-      publisherName:{
+      PublisherName:{
         required:'Required '
       },
-      desription:{
+      Description:{
         required:'Description for App is Required'
       },
-      appLogo:{
+      Logo:{
         required:'App Logo is Required'
       },
-      appFile:{
+      AppFile:{
         required:'App File is Required'
       },
-      screenshot:
+      appImages:
       {
         required:'Screenshot of App is Required'
       }
     }
-    // appFileValidator(control: AbstractControl) {
-    //   const files: FileList = control.value;
-    //   if (files && files.length > 0) {
-    //     const file = files[0];
-    //     const maxFileSize = 2 * 1024 * 1024; // 2 MB
-    //     if (file.size > maxFileSize) {
-    //       return { invalidFileSize: true };
-    //     }
-    //   }
-    //   return null;
-    // }
+
     handleFile(event:any):void
     {
-      const files: FileList = event.target.files;
-      if (files && files.length > 0) {
-        const file = files[0];
+      const files = event.target.files[0];
+      if (files) {
+        const file = files;
         const maxFileSize = 2 * 1024 * 1024; // 2 MB
         if (file.size > maxFileSize) {
           this.fileSize=true;
@@ -80,6 +99,8 @@ export class DeveloperNewAppComponent implements OnInit {
           return;
             };
             this.fileSize=false;
+            this.AppFile = event.target.files[0];
+        console.log(this.AppFile);      
         }
     }
     multipleFiles(event:any) :void{
@@ -91,12 +112,80 @@ export class DeveloperNewAppComponent implements OnInit {
         return;
       }
       this.multipleFile=false;
+      for(let i = 0; i < files.length; i++)
+      {
+        this.appImages.push(files.item(i)!);    
+      }
+      console.log(this.appImages);
     }
-    categories=Array('social','entertainment');
+    // categories=Array('social','entertainment');
      
+    handleLogo(event : any) : void {
+      this.Logo = event.target.files[0];
+      console.log(this.Logo);      
+    }
     onSubmit()
     {
-     
-    }
-    }
+      if(this.appData.valid)
+      {
+        // const formData = this.appData.value;
+        // const userId = this.appInfo[0].userId;
+        // const categoryId = this.appData.get('CategoryId')?.value;
+        // const selectedCategorycategory = this.category.find(obj => obj.categoryId == categoryId);
+        // const categoryName = selectedCategorycategory?.categoryName;
+        // console.log(categoryName);
+        // console.log(categoryId);        
+        // formData.UserId = userId;
+        // formData.categoryName = categoryName;
+        //console.log(this.appImages);
+        // formData.AppFile = this.AppFile;
+        // formData.Logo = this.Logo;
+        // formData.appImages = this.appImages;
+        // console.log(formData);
+        // formData.additionalValue = 
+  //       this.service.postApplication(formData).subscribe(
+  //         {
+  //           next : respose => {
+  //             console.log('form submitted',respose);
+  //           },
+  //           error : error =>
+  //           {
+  //             console.log(error);
+  //           }
+  //         }
+  //       )
+  //     }  
+  //   }
+  // }
 
+
+         const userId = this.appInfo[0].userId;
+         
+        const formData = new FormData();
+        formData.append('UserId' , userId.toString());
+
+        formData.append('Logo' , this.Logo!);
+        formData.append('AppFile' , this.AppFile!);
+        formData.append('Name' , this.appData.get('Name')?.value);
+        formData.append('CategoryId' , this.appData.get('CategoryId')?.value);
+        formData.append('PublisherName' , this.appData.get('PublisherName')?.value);
+        formData.append('Description' , this.appData.get('Description')?.value);
+        for(let i = 0; i < this.appImages.length ; i ++)
+        {
+          formData.append('appImages' , this.appImages[i]);
+        }
+        // const UserId = this.appInfo[0].userId
+        this.service.postApplication(formData).subscribe(
+          {
+            next : response => {
+              console.log('Form Submitted' , response);
+            },
+            error : error => {
+              console.log(error);
+
+            }
+          }
+        )
+      }
+    }
+  }

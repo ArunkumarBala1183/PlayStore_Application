@@ -11,7 +11,7 @@ public class Myappdetails
     public DateTime PublishedDate { get; set; }
     public string PublisherName { get; set; }
     public int Apps{get;set;}
-    public string CategoryId { get; set; }=string.Empty;
+    public string CategoryName { get; set; }=string.Empty;
     public Double Rating{get;set;}
     public int Downloads{get;set;}
 

@@ -15,13 +15,5 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     FormsModule
   ],
-  // exports:[
-  //   UserHomeComponent,
-  //   UserDownloadsComponent,
-  //   AboutUsComponent,
-  //   DeveloperMyAppsComponent,
-  //   DeveloperNewAppComponent,
-  //   UserComponent,
-  // ]
 })
 export class UserModule { }

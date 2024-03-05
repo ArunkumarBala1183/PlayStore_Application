@@ -1,22 +1,22 @@
-<div class="px-9 pt-12 pb-3 md:pl-48 lg:pl-72 lg:pt-[4rem]">
-<!-- Main Body -->
+<div class="px-9 pt-12 pb-3 md:pl-48 h-full lg:pl-72 lg:pt-[4rem]">
+    <!-- Main Body -->
     <div *ngFor="let app of developedApps" class="p-3 mt-2 bg-white border border-gray-300 md:mt-5 md:mx-[5rem] lg:mx-[10rem] items-center rounded-lg flex flex-col md:flex-row hover:shadow-2xl duration-300">
         <!-- Body Content -->
         <!-- specificApp function for Routing to that specific App Page -->
-        <button (click)="redirectTospecificApp(app.appId)">
+        <!-- <button (click)="redirectTospecificApp(app.appId)"> -->
             <div class="flex flex-col items-center md:border border-gray-400 md:border-r-1 md:border-l-0 md:border-t-0 md:border-b-0 pr-3">
                 <!-- App Logo -->
             <div class="p-1 ">
-                <img class="justify-center border bg-gray-100 p-1 rounded-md h-[4rem] w-[4rem] "
-                    [src]="app.appLogo" alt="Instagram Logo">
+                <img class="justify-center p-1 rounded-2xl h-[4rem] w-[4rem] "
+                 [src]="'data:image/jpg;base64,' + app.logo" alt="Instagram Logo">
             </div>
             <!-- App Name -->
             <div class="p-1 font-medium ">
-                {{app.appName}}
+                {{app.name}}
             </div>
             <!-- App Category -->
-            <div class="font-medium text-blue-800 pb-1 w-24">
-                {{app.appCategory}}
+            <div class="font-medium text-sky-600 pb-1 w-24 flex justify-center">
+                {{app.categoryName}}
             </div>
             <!-- App Rating -->
             <div class="flex">
@@ -31,27 +31,28 @@
                 </div>
                 <div>
                     <span>
-                    {{app.appAverageRating}}
+                    {{app.rating | number : '1.1-1'}}
                     </span>
                 </div>
             </div>
-                    <div class="mt-1 ml-1 " *ngIf = "Downloads >= 1000">
+                    <div class="mt-1 ml-1 " *ngIf = "app.downloads >= 1000">
                         <span class="text-gray-400">
-                            {{app.appDownloads |  abbreviateNumber}}+
+                            {{app.downloads |  abbreviateNumber}}+
                         </span>
                     </div>
-                    <div class="mt-1" *ngIf = "Downloads < 1000">
+                    <div class="mt-1" *ngIf = "app.downloads < 1000">
                         <span class="text-gray-400">
-                            {{app.appDownloads |  abbreviateNumber}}
+                            {{app.downloads |  abbreviateNumber}}
                         </span>
                     </div>
         </div>
-        </button>
+        <!-- </button> -->
         <!-- App - Description -->
         <div class="p-1 text-center md:pl-2 md:pt-2 w-full ">
-            <p>{{app.appDescription}}</p>
+            <p>{{app.description}}</p>
         </div>
     </div>
-</div>
-
-
+    </div>
+    
+    
+    
