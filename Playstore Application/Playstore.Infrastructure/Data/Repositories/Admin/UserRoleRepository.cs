@@ -3,19 +3,19 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data.Entities;
-using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.Data.Repositories.Admin;
 using Playstore.Contracts.Data.RoleConfig;
 using Playstore.Contracts.DTO.AppPublishRequest;
 using Playstore.Migrations;
 
 namespace Playstore.Core.Data.Repositories.Admin
 {
-    public class UserRoleRepository : Repository<UserRole>, IUserRoleRepository
+    public class DeveloperRoleRepository : Repository<UserRole>, IDeveloperRole
     {
         private readonly DatabaseContext database;
 
         private readonly RoleConfig role;
-        public UserRoleRepository(DatabaseContext context, IOptions<RoleConfig> options) : base(context)
+        public DeveloperRoleRepository(DatabaseContext context, IOptions<RoleConfig> options) : base(context)
         {
             database = context;
             role = options.Value;

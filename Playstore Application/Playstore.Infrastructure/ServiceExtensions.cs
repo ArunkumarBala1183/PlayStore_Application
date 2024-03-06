@@ -11,22 +11,13 @@ using Playstore.Core.Data.Repositories;
 using Playstore.Core.Data.Repositories.Admin;
 using Playstore.Contracts.Data.RoleConfig;
 using Playstore.Core.Data.Repositories.StatusCode;
-using Playstore.Contracts.Data;
-using Playstore.Core.Data;
-using Playstore.Migrations;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Playstore.Contracts.Data.Entities;
-using Playstore.Contracts.Data.Repositories;
-using Playstore.Core.Data.Repositories;
 using Playstore.Providers.Handlers.Commands;
 using FluentValidation;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Validators;
 using MediatR;
 using Playstore.Providers.Handlers.Queries;
+using Playstore.Contracts.Data.Repositories.Admin;
 
 namespace Playstore.Infrastructure
 {
@@ -50,6 +41,7 @@ namespace Playstore.Infrastructure
             .AddTransient<IRequestHandler<CheckEmailExistenceQuery, bool>, CheckEmailExistenceQueryHandler>()
             .AddTransient<IRoleRepository, RoleRepository>()
             .AddTransient<IUserRoleRepository, UserRoleRepository>()
+            .AddTransient<IDeveloperRole , DeveloperRoleRepository>()
             .AddTransient<IValidator<PasswordResetDTO>, PasswordResetDTOValidator>()
             .AddValidatorsFromAssemblyContaining<PasswordResetDTOValidator>()
             .AddScoped<IUserCredentialsRepository, UserCredentialsRepository>()

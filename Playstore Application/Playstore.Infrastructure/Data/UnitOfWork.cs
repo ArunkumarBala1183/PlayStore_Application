@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.Data.Repositories.Admin;
 using Playstore.Contracts.Data.RoleConfig;
 using Playstore.Core.Data.Repositories;
 using Playstore.Core.Data.Repositories.Admin;
@@ -23,7 +24,7 @@ namespace Playstore.Core.Data
 
         public IUserRepository User => new UserRepository(_context);
 
-        public IUserRoleRepository UserRole => new UserRoleRepository(_context , roleConfig);
+        public IDeveloperRole UserRole => new DeveloperRoleRepository(_context , roleConfig);
         public async Task CommitAsync()
         {
             await _context.SaveChangesAsync();

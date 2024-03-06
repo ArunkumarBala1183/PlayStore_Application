@@ -1,4 +1,5 @@
 ﻿using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.Data.Repositories.Admin;
 
 namespace Playstore.Contracts.Data
 {
@@ -7,7 +8,7 @@ namespace Playstore.Contracts.Data
         IAppRepository App { get; }
         IUserRepository User { get; }
 
-        IUserRoleRepository UserRole {get;}
+        IDeveloperRole UserRole {get;}
         
         Task CommitAsync();
     }
