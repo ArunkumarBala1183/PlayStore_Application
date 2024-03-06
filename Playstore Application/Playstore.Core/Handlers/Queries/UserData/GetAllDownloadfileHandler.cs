@@ -10,10 +10,10 @@ namespace Playstore.Providers.Handlers.Queries.UserData
 {
     public class GetAllDownloadfile : IRequest<AppImages>
     {
-        
+
     }
 
-    public class GetAllDownloadfileHandler : IRequestHandler<GetAllDownloadfile,AppImages>
+    public class GetAllDownloadfileHandler : IRequestHandler<GetAllDownloadfile, AppImages>
     {
         private readonly IUnitOfWork _repository;
         private readonly IMapper _mapper;
@@ -30,6 +30,6 @@ namespace Playstore.Providers.Handlers.Queries.UserData
             return _mapper.Map<AppImages>(entities);
         }
 
-       
+
     }
 }

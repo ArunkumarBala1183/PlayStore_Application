@@ -8,16 +8,16 @@ using Playstore.Contracts.DTO.AppDownloads;
 
 namespace Playstore.Providers.Handlers.Queries.UserData
 {
-    public class GetDeveloperMyAppDetails : IRequest<object>
+    public class GetDeveloperMyAppDetails : IRequest<IEnumerable<Myappdetails>>
     {
-        public Guid _UserId{get;set;}
+        public Guid _UserId { get; set; }
         public GetDeveloperMyAppDetails(Guid Userid)
         {
-            _UserId=Userid;
+            _UserId = Userid;
         }
     }
 
-    public class GetDeveloperMyAppDetailsQueryHandler : IRequestHandler<GetDeveloperMyAppDetails,object>
+    public class GetDeveloperMyAppDetailsQueryHandler : IRequestHandler<GetDeveloperMyAppDetails, IEnumerable<Myappdetails>>
     {
         private readonly IUnitOfWork _repository;
         private readonly IMapper _mapper;
@@ -28,9 +28,9 @@ namespace Playstore.Providers.Handlers.Queries.UserData
             _mapper = mapper;
         }
 
-        public async Task<object> Handle(GetDeveloperMyAppDetails request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Myappdetails>> Handle(GetDeveloperMyAppDetails request, CancellationToken cancellationToken)
         {
-            
+
             var app = await _repository.MyAppDetails.GetAppDetails(request._UserId);
 
             if (app == null)
@@ -38,7 +38,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
                 throw new EntityNotFoundException($"No App found");
             }
 
-            return app;
+            return (IEnumerable<Myappdetails>)app;
         }
     }
 }

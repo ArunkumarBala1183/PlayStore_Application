@@ -8,42 +8,45 @@ using Playstore.Contracts.DTO.AppDownloads;
 
 namespace Playstore.Providers.Handlers.Queries.UserData
 {
-    public class GetAppDataQuery : IRequest<object>
+    public class GetAppDataQuery : IRequest<IEnumerable<AppDownloadDataDto>>
     {
-        public Guid AppId { get; }
-   
-        public GetAppDataQuery(Guid appId)
+        public AppDownloadsDto appDownloadsDto { get; }
+
+        public GetAppDataQuery(AppDownloadsDto _appDownloadsDto)
         {
-            AppId = appId;
-           
+            appDownloadsDto = _appDownloadsDto;
+
         }
     }
 
-    public class GetAppDataQueryHandler : IRequestHandler<GetAppDataQuery, object>
+    public class GetAppDataQueryHandler : IRequestHandler<GetAppDataQuery, IEnumerable<AppDownloadDataDto>>
     {
         private readonly IUnitOfWork _repository;
-      
-    
 
-        public GetAppDataQueryHandler(IUnitOfWork repository)
+
+        public GetAppDataQueryHandler(IUnitOfWork repository, IMapper mapper)
         {
             _repository = repository;
-           
+
         }
 
-        public async Task<object> Handle(GetAppDataQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<AppDownloadDataDto>> Handle(GetAppDataQuery request, CancellationToken cancellationToken)
         {
-            var app = await _repository.AppValue.GetAppData(request.AppId);
+            AppDownloadsDto model = request.appDownloadsDto;
+            var app = await _repository.AppValue.GetAppData(model);
             if (app == null)
             {
-                throw new EntityNotFoundException($"No App found for Id {request.AppId}");
+                throw new EntityNotFoundException($"No App found for Id");
             }
-           
-            // return _mapper.Map<AppDownloadDataDto>(app);
-            return app;
-           
+            var AppFile = new AppDownloadDataDto
+            {
+                appFile = app.AppFile
+            };
+
+            return new List<AppDownloadDataDto> { AppFile };
+
         }
 
-        
+
     }
 }

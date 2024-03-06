@@ -1,6 +1,9 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.DTO.Category;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
 
@@ -10,15 +13,21 @@ public class CategoryDetailsRepository : Repository<Category>, ICategoryReposito
 {
     private readonly DatabaseContext context;
 
-    public CategoryDetailsRepository(DatabaseContext context) : base(context)
+    private IMapper _mapper;
+
+    public CategoryDetailsRepository(DatabaseContext context , IMapper mapper) : base(context)
         {
             this.context = context;
+            this._mapper = mapper;
         }
    
         public async Task<object> GetAllCategory()
         {
-            var category = await context.Categories.Select(obj => new {obj.CategoryName,obj.CategoryId}).ToListAsync();
-            return category;
+            var category = await context.Categories.ToListAsync();
+           
+         var categoryDetails = this._mapper.Map<CategoryUpdateDto>(category);
+         
+            return categoryDetails;
         }
 
 }

@@ -54,7 +54,7 @@ export class DeveloperNewAppComponent implements OnInit {
     {
       this.appData=this.formbuilder.group(
         {
-          Name:['',[Validators.required,Validators.maxLength(5)]],
+          Name:['', Validators.required],
           CategoryId:['',Validators.required],
           PublisherName:['', Validators.required],
           Description:['', Validators.required],
@@ -104,16 +104,16 @@ export class DeveloperNewAppComponent implements OnInit {
             };
             this.fileSize=false;
             this.AppFile = event.target.files[0];
-            const filetype = this.AppFile?.type;
-            if(filetype !== 'application/zip')
-            {
-              this.appFileFormatCheck = true;
-              event.target.value = '';
-            }
-            else
-            {
-              this.appFileFormatCheck = false;
-            }
+            // const filetype = this.AppFile?.type;
+            // if(filetype !== 'application/zip')
+            // {
+            //   this.appFileFormatCheck = true;
+            //   event.target.value = '';
+            // }
+            // else 
+            // {
+            //   this.appFileFormatCheck = false;
+            // }
             console.log(this.AppFile);      
         }
     }

@@ -22,16 +22,16 @@ namespace Playstore.Providers.Handlers.Commands.UserData
 
     }
 
-    public class CreateAdminRequestCommandHandler : IRequestHandler<CreateAdminRequestCommand,object>
+    public class CreateAdminRequestCommandHandler : IRequestHandler<CreateAdminRequestCommand, object>
     {
         private readonly IUnitOfWork _repository;
-       
+
 
 
         public CreateAdminRequestCommandHandler(IUnitOfWork repository)
         {
             _repository = repository;
-           
+
         }
 
 
@@ -40,10 +40,10 @@ namespace Playstore.Providers.Handlers.Commands.UserData
         public async Task<object> Handle(CreateAdminRequestCommand request, CancellationToken cancellationToken)
         {
 
-            
+
             return await _repository.AdminRequest.AddRequest(request.Id);
 
-           
+
         }
 
     }

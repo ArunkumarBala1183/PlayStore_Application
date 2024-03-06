@@ -13,7 +13,6 @@
                     <input type="text" name="Name" id="Name" class="px-3 h-7 rounded-md bg-gray-200"
                         placeholder="App Name" formControlName="Name"><br>
      <span  class="px-2 md:pt-3  md:px-3 text-red-400" *ngIf="(appData.get('Name')?.touched || appData.get('Name')?.dirty) &&  (appData.get('Name')?.hasError('required'))">{{validationMessages.Name.required}}</span>
- <span *ngIf="appData.get('Name')?.hasError('maxLength') && appData.get('Name')?.dirty">Min length should be 5</span>
                 </div>
      <!-- <span *ngIf="appData.get('appName').touched && (appData.get('appName').hasError('required'))">{{validationMessages.appName.required}}</span> -->
  

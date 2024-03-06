@@ -22,6 +22,8 @@ namespace Playstore.Infrastructure.Data.Repositories
         {
             try
             {
+                bool name = this.databaseContext.AppInfo.Any(appName => appName.Name == createAppInfoDTO.Name);
+                if(!name){
                 var newRequest = new AdminRequests()
                 {
                     UserId = createAppInfoDTO.UserId
@@ -114,6 +116,8 @@ namespace Playstore.Infrastructure.Data.Repositories
                 }
 
                 return HttpStatusCode.NotFound;
+                }
+                return HttpStatusCode.BadRequest;
             }
             catch (Exception error)
             {

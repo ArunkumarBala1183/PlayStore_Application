@@ -9,6 +9,7 @@ using System.Net;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Playstore.Contracts.DTO.AppDownloads;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
@@ -20,20 +21,36 @@ namespace Playstore.Infrastructure.Data.Repositories
             this.context = context;
         }
 
-        public async Task<object> GetAppData(Guid id)
+        public async Task<AppData> GetAppData(AppDownloadsDto appDownloadsDto)
         {
-            var response = await this.context.AppInfo
+            var response = await context.AppInfo
             .Include(data => data.AppData)
-            .FirstOrDefaultAsync(appId => appId.AppId == id);
-             
+            .FirstOrDefaultAsync(appId => appId.AppId == appDownloadsDto.AppId);
+ 
             if (response != null)
             {
-                return response.AppData.AppFile;
+                var fileEntity = this.context.AppDownloads.FirstOrDefault(app => app.AppId == appDownloadsDto.AppId && app.UserId == appDownloadsDto.UserId);
+ 
+                if (fileEntity == null)
+                {
+                    var entity = new AppDownloads
+                    {
+                        AppId = appDownloadsDto.AppId,
+                        UserId = appDownloadsDto.UserId,
+                        DownloadedDate = DateTime.Today,
+ 
+                    };
+                    this.context.AppDownloads.Add(entity);
+                    await this.context.SaveChangesAsync();
+                    return response.AppData;
+                    
+                }
+                throw new EntityNotFoundException($"App Already Downloded");
+ 
             }
-
-            return HttpStatusCode.NoContent;
+ 
+            throw new EntityNotFoundException($"No App Found");
         }
-
         public async Task<object> GetValue(Guid id)
         {
             var response = await context.AppInfo.FirstOrDefaultAsync(appId => appId.UserId == id);

@@ -7,11 +7,11 @@ using System.Linq;
 
 namespace Playstore.Providers.Handlers.Queries.UserData
 {
-    public class GetAllAppInfoQuery : IRequest<object>
+    public class GetAllAppInfoQuery : IRequest<IEnumerable<AppsdetailsDTO>>
     {
     }
 
-    public class GetAllAppInfoQueryHandler : IRequestHandler<GetAllAppInfoQuery, object>
+    public class GetAllAppInfoQueryHandler : IRequestHandler<GetAllAppInfoQuery, IEnumerable<AppsdetailsDTO>>
     {
         private readonly IUnitOfWork _repository;
         private readonly IMapper _mapper;
@@ -22,10 +22,10 @@ namespace Playstore.Providers.Handlers.Queries.UserData
             _mapper = mapper;
         }
 
-        public async Task<object> Handle(GetAllAppInfoQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<AppsdetailsDTO>> Handle(GetAllAppInfoQuery request, CancellationToken cancellationToken)
         {
-           var app=await _repository.AppValue.ViewAllApps();
-           return app;
+            var app = await _repository.AppValue.ViewAllApps();
+            return (IEnumerable<AppsdetailsDTO>)app;
         }
     }
 }

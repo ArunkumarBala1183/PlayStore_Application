@@ -8,16 +8,16 @@ using Playstore.Contracts.DTO.AppDownloads;
 
 namespace Playstore.Providers.Handlers.Queries.UserData
 {
-    public class GetAppInfoDownloadFile : IRequest<object>
+    public class GetAppInfoDownloadFile : IRequest<IEnumerable<AppStoreDTO>>
     {
-        public Guid Userid{get;set;}
+        public Guid Userid { get; set; }
         public GetAppInfoDownloadFile(Guid _Userid)
         {
-          Userid=_Userid;
+            Userid = _Userid;
         }
     }
 
-    public class GetAppInfoDownloadFileHandler : IRequestHandler<GetAppInfoDownloadFile,object>
+    public class GetAppInfoDownloadFileHandler : IRequestHandler<GetAppInfoDownloadFile, IEnumerable<AppStoreDTO>>
     {
         private readonly IUnitOfWork _repository;
 
@@ -26,9 +26,9 @@ namespace Playstore.Providers.Handlers.Queries.UserData
             _repository = repository;
         }
 
-        public async Task<object> Handle(GetAppInfoDownloadFile request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<AppStoreDTO>> Handle(GetAppInfoDownloadFile request, CancellationToken cancellationToken)
         {
-          
+
 
             var app = await _repository.AppDownload.GetData(request.Userid);
 
@@ -36,8 +36,8 @@ namespace Playstore.Providers.Handlers.Queries.UserData
             {
                 throw new EntityNotFoundException($"No App found");
             }
-    
-            return app;
+
+            return (IEnumerable<AppStoreDTO>)app;
         }
     }
 }

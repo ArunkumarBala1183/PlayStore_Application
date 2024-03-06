@@ -21,16 +21,14 @@ namespace Playstore.Controllers.UserData
     [Route("[controller]")]
     public class AppInfoController : ControllerBase
     {
-     
-        public AppDownloads appInfo=new AppDownloads();
-        public AppReviewDetailsDTO reviewDetailsDTO=new AppReviewDetailsDTO();
-        public DatabaseContext _Dbcontext;
+
+
         private readonly IMediator _mediator;
         public Guid Assignvalue;
-        public AppInfoController(IMediator mediator,DatabaseContext Dbcontext)
+        public AppInfoController(IMediator mediator)
         {
             _mediator = mediator;
-            _Dbcontext=Dbcontext;
+
 
         }
 
@@ -40,45 +38,35 @@ namespace Playstore.Controllers.UserData
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> Get()
         {
-            try{
-            var query = new GetAllAppInfoQuery();
-            var response=await _mediator.Send(query);
-            return Ok(response);
-            }
-            catch (EntityNotFoundException ex)
+            try
             {
-                return NotFound(new BaseResponseDTO
-                {
-                    IsSuccess = false,
-                    Errors = new string[] { ex.Message }
-                });
-            }
-        }
-
-        // to get the reviews for the app
-        [HttpGet("ReviewDetails")]
-        [ProducesResponseType(typeof(IEnumerable<AppInfoDTO>), (int)HttpStatusCode.OK)]
-        [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-        public async Task<IActionResult> GetDetails(Guid id)
-        {
-             try
-            {
-                var query = new GetAllAppReviewDetails(id);
+                var query = new GetAllAppInfoQuery();
                 var response = await _mediator.Send(query);
-                // reviewDetailsDTO.AppId=id;
-                // var sum=_Dbcontext.AppReviews.Where(x=>x.AppId==id).Sum(y=>y.Rating);
-                // var Count=_Dbcontext.AppReviews.Count(x=>x.AppId==id);
-                // if(Count==0)
-                // {
-                //     return BadRequest(Count);
-                // }
-                // reviewDetailsDTO.AppCount=Count;
-                // reviewDetailsDTO.AvergeRatings= (double)sum/Count;
-                
-                // reviewDetailsDTO.Commands =_Dbcontext.AppReviews.Where(x => x.AppId == id).ToDictionary(x => x.UserId, x => x.Comment.Split(',').ToList());
                 return Ok(response);
             }
-            catch (EntityNotFoundException ex)
+            catch (Exception ex)
+            {
+                return NotFound(new BaseResponseDTO
+                {
+                    IsSuccess = false,
+                    Errors = new string[] { ex.Message }
+                });
+            }
+        }
+
+        // To get the reviews for the app
+        [HttpGet("ReviewDetails/{appId}")]
+        [ProducesResponseType(typeof(IEnumerable<AppInfoDTO>), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        public async Task<IActionResult> GetDetails(Guid appId)
+        {
+            try
+            {
+                var query = new GetAllAppReviewDetails(appId);
+                var response = await _mediator.Send(query);
+                return Ok(response);
+            }
+            catch (Exception ex)
             {
                 return NotFound(new BaseResponseDTO
                 {
@@ -88,47 +76,41 @@ namespace Playstore.Controllers.UserData
             }
 
         }
-      
-        // to upload the application
+
+        // To upload the application
         [HttpPost("AppDetails")]
         [ProducesResponseType(typeof(CreateAppInfoDTO), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-        public async Task<IActionResult> Post([FromForm]CreateAppInfoDTO model)
+        public async Task<IActionResult> Post([FromForm] CreateAppInfoDTO model)
         {
-            Console.WriteLine("UserId:" +model.Name);
-            Console.WriteLine("CategoryId:" +model.CategoryId);
-            Console.WriteLine("PublisherName:" +model.PublisherName);
-            Console.WriteLine("AppFile:" +model.AppFile + "");
-            Console.WriteLine("Logo:" +model.Logo + "");
-            Console.WriteLine("Description:" +model.Description);
-            Console.WriteLine("AppScreenshots:" +model.appImages + "");
-           try
+
+            try
             {
-                    var command = new CreateAppInfoCommand(model);
+                var command = new CreateAppInfoCommand(model);
 
-                    var response = await _mediator.Send(command);
+                var response = await _mediator.Send(command);
 
-                    return Ok(response);
-                             
+                return Ok(response);
+
             }
-            catch (InvalidRequestBodyException ex)
+            catch (Exception ex)
             {
                 return BadRequest(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = ex.Errors
+                    Errors = new string[] { ex.Message }
                 });
             }
         }
-
-        [HttpGet("GetAppById")]
+        //Getting Individual App Details Using "GetAppById"
+        [HttpGet("GetAppById/{appId}")]
         [ProducesResponseType(typeof(AppInfoDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid appId)
         {
             try
             {
-                var query = new GetAppByIdValueQuery(id);
+                var query = new GetAppByIdValueQuery(appId);
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
@@ -141,18 +123,21 @@ namespace Playstore.Controllers.UserData
                 });
             }
         }
-        [HttpGet("DeveloperMyAppDetails")]
+
+        //Getting Developer My App Details Using "DeveloperMyAppDetails"
+        [HttpGet("DeveloperMyAppDetails/{userId}")]
         [ProducesResponseType(typeof(AppInfoDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-        public async Task<object> GetDeveloperDetails(Guid id)
+        public async Task<object> GetDeveloperDetails(Guid userId)
         {
-            try{
-                var query = new GetDeveloperMyAppDetails(id);
+            try
+            {
+                var query = new GetDeveloperMyAppDetails(userId);
                 var response = await _mediator.Send(query);
-                 
+
                 return response;
             }
-             catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException ex)
             {
                 return NotFound(new BaseResponseDTO
                 {
@@ -161,17 +146,20 @@ namespace Playstore.Controllers.UserData
                 });
             }
         }
-        [HttpGet("DownloadsDetails")]
+
+        //Getting MyDownload Details Using "DownloadsDetails"
+        [HttpGet("DownloadsDetails/{userId}")]
         [ProducesResponseType(typeof(AppDownloadsDto), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-        public async Task<IActionResult> GetDownloadDetails(Guid Userid)
+        public async Task<IActionResult> GetDownloadDetails(Guid userId)
         {
-            try{
-                var query = new GetAppInfoDownloadFile(Userid);
+            try
+            {
+                var query = new GetAppInfoDownloadFile(userId);
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
-              catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException ex)
             {
                 return NotFound(new BaseResponseDTO
                 {
@@ -179,68 +167,46 @@ namespace Playstore.Controllers.UserData
                     Errors = new string[] { ex.Message }
                 });
             }
-             
+
         }
-        
 
-        
 
+
+        //To be use Download the File 
         [HttpPost]
         [Route("DownloadFile")]
-        [ProducesResponseType(typeof(AppDownloadsDto),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AppDownloadsDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DownloadFile(AppDownloadsDto appDownloadsDto)
         {
             try
-            {   
-                Console.WriteLine(appDownloadsDto.AppId);
-                Console.WriteLine(appDownloadsDto.UserId);
+            {
 
-                var query = new GetAppDataQuery(appDownloadsDto.AppId);
+                var query = new GetAppDataQuery(appDownloadsDto);
                 var response = await _mediator.Send(query);
-                Console.WriteLine(response);
-               if (response.GetType() != typeof(HttpStatusCode))
-               {
-                 Console.WriteLine(appDownloadsDto.AppId);
-                 var fileEntity = _Dbcontext.AppDownloads.FirstOrDefault(f => f.AppId == appDownloadsDto.AppId && f.UserId == appDownloadsDto.UserId);
- 
-                 if (fileEntity == null)
-                 {
-                     var entity = new AppDownloads
-                     {
-                         AppId = appDownloadsDto.AppId,
-                         UserId = appDownloadsDto.UserId,
-                         DownloadedDate=DateTime.Today,
-                     };
-                     _Dbcontext.AppDownloads.Add(entity);
-                     _Dbcontext.SaveChanges();
-                     return Ok(response);
-                 }
-                 return Ok(new { status = "File Already Download" });
-               }
-
-
-               return BadRequest("No Data");
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return NotFound(new BaseResponseDTO
+                {
+                    IsSuccess = false,
+                    Errors = new string[] { ex.Message }
+                });
             }
 
         }
-
-        
-
+        //To be Add Review for Apps
         [HttpPost("AddReview")]
-       [ProducesResponseType(typeof(AppreviewDTO),StatusCodes.Status200OK)]
-       [ProducesResponseType(StatusCodes.Status400BadRequest)]
-       public async Task<IActionResult> AddReview(AppreviewDTO appreviewDTO)
-       {
-        try
+        [ProducesResponseType(typeof(AppreviewDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddReview(AppreviewDTO appreviewDTO)
+        {
+            try
             {
                 Console.WriteLine(appreviewDTO.Commands);
                 var command = new CreateAppReviewCommand(appreviewDTO);
-                
+
                 return StatusCode((int)HttpStatusCode.Created, await _mediator.Send(command));
             }
             catch (InvalidRequestBodyException ex)
@@ -251,20 +217,20 @@ namespace Playstore.Controllers.UserData
                     Errors = ex.Errors
                 });
             }
-        
 
-       }
 
-       [HttpGet("GetCategory")] 
-       public async Task<IActionResult> GetCategory()
-       {
+        }
+        //Get the Category name
+        [HttpGet("GetCategory")]
+        public async Task<IActionResult> GetCategory()
+        {
             try
             {
                 var category = new GetAllCategoryQuery();
                 var response = await _mediator.Send(category);
                 return Ok(response);
             }
-           catch (InvalidRequestBodyException ex)
+            catch (InvalidRequestBodyException ex)
             {
                 return BadRequest(new BaseResponseDTO
                 {
@@ -272,8 +238,8 @@ namespace Playstore.Controllers.UserData
                     Errors = ex.Errors
                 });
             }
-       }
-        
+        }
+
 
     }
 }

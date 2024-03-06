@@ -7,7 +7,7 @@ using Playstore.Contracts.Data;
 
 namespace Playstore.Providers.Handlers.Queries.UserData
 {
-    public class GetAppByIdValueQuery : IRequest<object>
+    public class GetAppByIdValueQuery : IRequest<IEnumerable<AppInfoDetailsDTO>>
     {
         public Guid AppId { get; }
         public GetAppByIdValueQuery(Guid appId)
@@ -16,7 +16,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
         }
     }
 
-    public class GetAppByIdQueryHandler : IRequestHandler<GetAppByIdValueQuery, object>
+    public class GetAppByIdQueryHandler : IRequestHandler<GetAppByIdValueQuery, IEnumerable<AppInfoDetailsDTO>>
     {
         private readonly IUnitOfWork _repository;
         private readonly IMapper _mapper;
@@ -27,7 +27,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
             _mapper = mapper;
         }
 
-        public async Task<object> Handle(GetAppByIdValueQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<AppInfoDetailsDTO>> Handle(GetAppByIdValueQuery request, CancellationToken cancellationToken)
         {
             var app = await _repository.AppDetails.GetAppDetails(request.AppId);
 
@@ -36,7 +36,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
                 throw new EntityNotFoundException($"No App found for Id {request.AppId}");
             }
 
-            return app;
+            return (IEnumerable<AppInfoDetailsDTO>)app;
         }
     }
 }

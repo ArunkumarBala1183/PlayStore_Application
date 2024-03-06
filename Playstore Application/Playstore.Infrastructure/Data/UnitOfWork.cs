@@ -1,4 +1,5 @@
-﻿using Playstore.Contracts.Data;
+﻿using AutoMapper;
+using Playstore.Contracts.Data;
 using Playstore.Contracts.Data.Repositories;
 // using Playstore.Core.Data.Repositories;
 using Playstore.Infrastructure.Data.Repositories;
@@ -9,10 +10,12 @@ namespace Playstore.Infrastructure.Data
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DatabaseContext _context;
-
-        public UnitOfWork(DatabaseContext context)
+        
+        private IMapper Mapper;
+        public UnitOfWork(DatabaseContext context,IMapper _mapper)
         {
             _context = context;
+            Mapper=_mapper;
         }
         public IAppRepository App => new AppRepository(_context);
 
@@ -31,7 +34,8 @@ namespace Playstore.Infrastructure.Data
         public IAppInfoRepository AppInfo => throw new NotImplementedException();
         public IAppDetailsRepository AppDetails=>new AppDetailsRepository(_context);
 
-        public ICategoryRepository CategoryDetails => new CategoryDetailsRepository(_context);
+        public ICategoryRepository CategoryDetails => new CategoryDetailsRepository(_context,Mapper);
+        public IGetCategory GetCategory=>new GetCategoryRepository(_context);
 
         // public IAppInfoRepository AppInfo=new AppInfoRepository();
         // public IAppInfoRepository AppInfo => new AppInfoRepository();
