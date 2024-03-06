@@ -20,7 +20,7 @@ export class ApprequestsComponent implements OnInit {
 
     this.getAllRequests();
   }
-
+// complete have to add
   getAllRequests() 
   {
     this.service.getAppRequests()
@@ -41,9 +41,5 @@ export class ApprequestsComponent implements OnInit {
    }
 
 
-requestapps=[
-  { name: 'Instagram', category: 'Social', imageUrl: 'https://cdn-icons-png.flaticon.com/128/1409/1409946.png' ,Description:'Social media app for all the users.can upload photos videos and so on lorem nhdbdkndjnsdknfssnvkjsnvjcnvkjvuisf'},
-  { name: 'Instagram', category: 'Education', imageUrl: 'https://cdn-icons-png.flaticon.com/128/1409/1409946.png' ,Description:'Social media app for all the users.can upload '},
-  { name: 'Instagram', category: 'Social', imageUrl: 'https://cdn-icons-png.flaticon.com/128/1409/1409946.png' ,Description:'Social media app for all the users.can upload photos videos and so on lorem '},
-]
+
 }

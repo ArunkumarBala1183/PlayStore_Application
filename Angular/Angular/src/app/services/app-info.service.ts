@@ -28,5 +28,10 @@ export class AppInfoService {
     });
   }
 
+  getAllAppDownloadDetails()
+  {
+    return this.http.get(this.baseUrl + "AppInfo/GetTotalDownloads" , {observe : "response"})
+  }
+
   
 }

@@ -1,29 +1,35 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { AppInfoService } from 'src/app/services/app-info.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
+
+  responseDetails : any
+  dates! : string[]
+  count! : number[]
 
   ngOnInit(): void {
-    console.log("came here");
-    this.createChart();
+    this.getAppDownloads();
   }
 
-  createChart(){
+  constructor(private service: AppInfoService) { }
+
+  createChart() {
     const dates = this.generateDates(); // Function to generate dates
     const ctx = document.getElementById('appDownloadsChart') as HTMLCanvasElement;
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
         // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        labels:dates,
+        labels: this.dates,
         datasets: [{
           label: 'No of apps downloaded',
-          data: [12, 193, 360, 5, 59, 300,100],
+          data: this.count,
           backgroundColor: [
             'rgba(0, 0, 0, 1)',
             'rgba(0, 0, 0, 1)',
@@ -53,18 +59,6 @@ export class DashboardComponent implements OnInit{
     });
   }
 
-  // generateDates(): string[] {
-  //   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  //   const today = new Date();
-  //   const dates = [];
-  //   for (let i = 0; i < 7; i++) {
-  //     const day = new Date(today);
-  //     day.setDate(today.getDate() - today.getDay() + i);
-  //     dates.push(daysOfWeek[i] + ' (' + day.toLocaleDateString() + ')');
-  //   }
-  //   return dates;
-  // }
-
   generateDates(): string[] {
     const today = new Date();
     const dates = [];
@@ -76,8 +70,23 @@ export class DashboardComponent implements OnInit{
     }
     return dates;
   }
-  
 
+  getAppDownloads() {
+    this.service.getAllAppDownloadDetails()
+      .subscribe({
+        next: response => {
+          this.responseDetails = response.body
+
+          this.dates = this.responseDetails.dates as string[]
+          this.count = this.responseDetails.count as number[]
+
+          this.createChart();
+        },
+        error: error => {
+          console.log(error)
+        }
+      })
   }
-  
+}
+
 

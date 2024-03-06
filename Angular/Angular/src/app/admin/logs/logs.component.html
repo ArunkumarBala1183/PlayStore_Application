@@ -31,9 +31,10 @@
             </tr>
         </tbody>
     </table>
+    <div *ngIf="filteredUsers.length === 0" class="text-center mt-24 mr-20 text-2xl">No data available</div>
 </div>
 
-<div class="mt-4 flex justify-center">
+<div class="mt-10 flex justify-center ">
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="pageSize" [length]="filteredUsers.length" (page)="onPageChange($event)">
     </mat-paginator>
 </div>

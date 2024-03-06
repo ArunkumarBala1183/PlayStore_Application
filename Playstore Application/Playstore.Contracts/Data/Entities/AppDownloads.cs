@@ -16,5 +16,6 @@ namespace Playstore.Contracts.Data.Entities
         
         [ForeignKey("UserId")]
         public Users Users { get; set; }
+      
     }
 }

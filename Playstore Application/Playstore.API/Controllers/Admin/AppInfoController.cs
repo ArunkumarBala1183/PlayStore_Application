@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Playstore.Contracts.DTO.AppDownloads;
 using Playstore.Contracts.DTO.AppInfo;
+using Playstore.Contracts.DTO.TotalDownloads;
 using Playstore.Core.Exceptions;
 using Playstore.Providers.Handlers.Commands;
 using Playstore.Providers.Handlers.Queries;
@@ -24,14 +25,14 @@ namespace Playstore.Controllers.Admin
         }
 
         [HttpGet("GetAllApps")]
-        [ProducesResponseType(typeof(IEnumerable<ListAppInfoDto>) , (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<ListAppInfoDto>), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetAllApps()
         {
             try
             {
                 var response = await this._mediator.Send(new GetAllAppsInfoQuery());
-    
+
                 return Ok(response);
             }
             catch (ApiResponseException error)
@@ -58,20 +59,40 @@ namespace Playstore.Controllers.Admin
         }
 
         [HttpPost("GetAppLogs")]
-        [ProducesResponseType(typeof(IEnumerable<AppDownloadsDto>) , (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<AppDownloadsDto>), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetAppLogs(AppLogsDto appLogsDto)
         {
             try
             {
                 var response = await this._mediator.Send(new GetAppLogsQuery(appLogsDto));
-    
+
                 return Ok(response);
             }
             catch (ApiResponseException error)
             {
-                return NotFound(error.Message);                
+                return NotFound(error.Message);
             }
         }
+
+        [HttpGet("GetTotalDownloads")]
+        [ProducesResponseType(typeof(DownloadDetailsDto), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ApiResponseException))]
+        public async Task<IActionResult> GetTotalDownloads()
+        {
+            try
+            {
+                var response = await this._mediator.Send(new GetTotalDownloadsQuery());
+
+                return Ok(response);
+            }
+            catch (ApiResponseException error)
+            {
+                return NotFound(new { message = error.Message });
+            }
+
+        }
     }
+
+
 }

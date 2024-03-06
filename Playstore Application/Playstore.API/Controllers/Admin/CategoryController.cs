@@ -30,10 +30,10 @@ namespace Playstore.Controllers.Admin
 
                 if (response == HttpStatusCode.AlreadyReported)
                 {
-                    return StatusCode((int)response, "Category Already Exists");
+                    return StatusCode((int)response, new {message = "Category Already Exists"});
                 }
 
-                return StatusCode((int)response, "Category Added");
+                return StatusCode((int)response, new {message = "Category Added"});
             }
             catch (ApiResponseException error)
             {
