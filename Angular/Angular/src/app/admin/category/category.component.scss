@@ -1,0 +1,42 @@
+/* Add custom styles for the paginator */
+::ng-deep .p-paginator {
+    /* Example styles */
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  ::ng-deep .p-paginator .p-paginator-pages {
+    /* Example styles */
+    margin-left: 1rem;
+  }
+  
+  ::ng-deep .p-paginator .p-paginator-pages button {
+    /* Example styles */
+    padding: 0.5rem;
+    margin: 0 0.2rem;
+    border-radius: 0.25rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    /* Add fixed size */
+    width: 1.5rem; /* Adjust the width as needed */
+    height: 1.5rem; /* Adjust the height as needed */
+    text-align: center; /* Center the text */
+  }
+  
+  ::ng-deep .p-paginator .p-paginator-pages button.p-paginator-element {
+    /* Example styles */
+    background-color: #6c757d;
+  }
+  
+  ::ng-deep .p-paginator .p-paginator-page {
+    /* Example styles */
+    margin: 0 0.5rem;
+  }
+
+
+::ng-deep .p-paginator-icon {
+    display: none;
+  }
+  

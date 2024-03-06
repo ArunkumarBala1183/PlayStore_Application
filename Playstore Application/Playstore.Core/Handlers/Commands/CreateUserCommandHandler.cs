@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Playstore.Providers.Handlers.Commands
 {
-    
     public class CreateUserCommand : IRequest<int>
     {
         public CreateUserDTO Model { get; }
@@ -17,7 +16,6 @@ namespace Playstore.Providers.Handlers.Commands
         {
             this.Model = model;
         }
-
     }
 
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, int>

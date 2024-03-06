@@ -1,3 +1,16 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using Playstore.Infrastructure;
+using Playstore.Core;
+using Microsoft.AspNetCore.Mvc;
+using Playstore.Core.Security;
+using Serilog;
+using Playstore.JsonSerialize;
+using System;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,37 +50,38 @@ namespace Playstore
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-                       services.AddCors(options =>
-{
-    options.AddDefaultPolicy(builder =>
-    {
-        builder.WithOrigins("http://localhost:4200");
-        builder.AllowAnyHeader();
-        builder.AllowAnyMethod();
-        builder.AllowCredentials();
-    });
-});
             services.AddPersistence(Configuration);
-            //services.AddMediatR(typeof(Startup));
             services.AddCore();
-            
-            
-
             services.AddDistributedMemoryCache(); // Distributed cache for session  
-            services.AddHttpContextAccessor(); // Session Configuration
+            services.AddHttpContextAccessor();
             services.AddMarketplaceAuthentication(Configuration);
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            services.Configure<EmailConfig>(Configuration.GetSection("EmailConfig"));
-
-            
-
-
             services.AddControllers().AddJsonOptions(option => {
                 option.JsonSerializerOptions.Converters.Add(new JsonConvertor());
+            })
+            .AddNewtonsoftJson(option => {
+                option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+
+            //Configuring Serilog 
+            Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.Console()
+            .CreateLogger();
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins(Configuration.GetValue<string>("Authentication:Jwt:ValidAudience"));
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                    builder.AllowCredentials();
+                });
             });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
@@ -84,10 +98,10 @@ namespace Playstore
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors();
+
             app.UseHttpsRedirection();
           
-            
+         
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
             app.UseSession();
@@ -100,6 +114,7 @@ namespace Playstore
             });
 
             app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 

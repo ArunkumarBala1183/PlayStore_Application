@@ -4,7 +4,6 @@ using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.DTO;
 using MediatR;
 using System.Linq;
-using Playstore.Contracts.Data.Repositories;
 
 namespace Playstore.Providers.Handlers.Queries
 {

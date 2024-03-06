@@ -9,8 +9,7 @@ namespace Playstore.Core
     {
         public static IServiceCollection AddCore(this IServiceCollection services)
         {
-            return services
-            .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
+            return services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly())
                 .AddAutoMapper(Assembly.GetExecutingAssembly())
                 .AddMediatR(Assembly.GetExecutingAssembly());
         }

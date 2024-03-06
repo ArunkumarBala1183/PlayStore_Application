@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
- 
+
 namespace Playstore.JsonSerialize
 {
     public class JsonConvertor : JsonConverter<DateOnly>
@@ -10,7 +10,7 @@ namespace Playstore.JsonSerialize
         {
             return DateOnly.Parse(reader.GetString());
         }
- 
+
         public override void Write(Utf8JsonWriter writer, DateOnly value, JsonSerializerOptions options)
         {
             writer.WriteStringValue(value.ToString());

@@ -34,6 +34,7 @@ namespace Playstore.Controllers
         [ProducesResponseType(typeof(IEnumerable<UserDTO>), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         [Authorize]
+        [NonAction]
         public async Task<IActionResult> Get()
         {
             var query = new GetAllUserQuery();
@@ -44,6 +45,7 @@ namespace Playstore.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(int), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        [NonAction]
         public async Task<IActionResult> Post([FromBody] CreateUserDTO model)
         {
             try
@@ -82,6 +84,7 @@ namespace Playstore.Controllers
         [Route("{id}")]
         [ProducesResponseType(typeof(UserDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        [NonAction]
         public async Task<IActionResult> GetByUserName(string userName)
         {
             try

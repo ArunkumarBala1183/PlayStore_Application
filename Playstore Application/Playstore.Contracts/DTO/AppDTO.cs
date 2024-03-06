@@ -9,5 +9,6 @@
         public string Developer { get; set; }
         public string Type { get; set; }
         public DateTime AddedOn { get; set; }
+        
     }
 }
