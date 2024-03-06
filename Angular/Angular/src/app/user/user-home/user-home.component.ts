@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Guid } from 'guid-typescript';
+
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -11,32 +13,39 @@ export class UserHomeComponent implements OnInit {
 constructor(private router : Router, private service: UserService)
 {
 }
+  ngOnInit(): void {
+    
+    // this.getApps();
+    
+    
+  }
 
-ngOnInit(): void {
-  this.application = this.service.AllAppsInfo
-  console.log(this.application);
-}
+  // getApps()
+  // {
+   
+  // }
 
-application = Array();
+
+application : any;
 
 averageRating = 3;
 
 Downloads = 10000;
 
-redirectTospecificApp(appId: number) 
+redirectTospecificApp(appId: Guid) 
 {
   this.router.navigate(['user/specificApp',appId]);
 }
 
 searchInput : string = '';
 
-filterItems()
-{
-  return this.application.filter(app => 
-      app.appName.toLowerCase().includes(this.searchInput.toLowerCase()) || 
-      app.appCategory.toLowerCase().includes(this.searchInput.toLowerCase())   
-    )
-}
+// filterItems()
+// {
+//   return this.application.filter(app => 
+//       app.appName.toLowerCase().includes(this.searchInput.toLowerCase()) || 
+//       app.appCategory.toLowerCase().includes(this.searchInput.toLowerCase())   
+//     )
+// }
 }
 
 

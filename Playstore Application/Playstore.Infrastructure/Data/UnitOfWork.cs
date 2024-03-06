@@ -30,6 +30,7 @@ namespace Playstore.Infrastructure.Data
 
         public IAppInfoRepository AppInfo => throw new NotImplementedException();
         public IAppDetailsRepository AppDetails=>new AppDetailsRepository(_context);
+        public IGetCategory GetCategory=>new GetCategoryRepository(_context);
 
         // public IAppInfoRepository AppInfo=new AppInfoRepository();
         // public IAppInfoRepository AppInfo => new AppInfoRepository();

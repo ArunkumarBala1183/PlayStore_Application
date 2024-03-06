@@ -5,7 +5,7 @@ using Playstore.Contracts.DTO.AppDownloads;
 namespace Playstore.Contracts.Data.Repositories
 {
     public interface IAppDeveloperMyAppDetailsRepository : IRepository<AppInfo> { 
-        Task<object> GetAppDetails(Guid id);
+        Task<object> GetAppDetails(Guid UserId);
         
     }
 }

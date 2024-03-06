@@ -16,45 +16,45 @@ namespace Playstore.Infrastructure.Data.Repositories
         public readonly DatabaseContext databaseContext;
         public AppInfoDownloadRepository(DatabaseContext context) : base(context)
         {
-         this.databaseContext=context;   
+            this.databaseContext = context;
         }
-
-        public async Task<object> GetData(Guid Userid)
+        //Getting MyDownload Details Using AppInfo Table
+        public async Task<object> GetData(Guid UserId)
         {
             var response = await databaseContext.AppDownloads
-            .Include(data=>data.AppInfo)
-            .Include(data=>data.AppInfo.Category)
-            .Where(appId => appId.UserId == Userid)
+            .Include(data => data.AppInfo)
+            .Include(data => data.AppInfo.Category)
+            .Where(appId => appId.UserId == UserId)
             .ToListAsync();
-          
+
             if (response.Any())
             {
-               var myappDetails = response.Select(appInfo =>
-        {
-            var appReview = this.databaseContext.AppReviews
-                .Where(review => review.AppId == appInfo.AppId)
-                .ToList();
-             var AppDownload=this.databaseContext.AppDownloads.Where(download=>download.AppId==appInfo.AppId).ToList();   
-            
-            return new AppStoreDTO
-            {
-                FileId = appInfo.AppId,
-                FileName = appInfo.AppInfo.Name,
-                Logo = appInfo.AppInfo.Logo,
-                Description=appInfo.AppInfo.Description,
-                Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
-                Category = appInfo.AppInfo.Category.CategoryName,
-                Downloads = AppDownload.Count()
-            };
-        }).ToList();
+                var myappDetails = response.Select(appInfo =>
+             {
+                 var appReview = this.databaseContext.AppReviews
+                     .Where(review => review.AppId == appInfo.AppId)
+                     .ToList();
+                 var AppDownload = this.databaseContext.AppDownloads.Where(download => download.AppId == appInfo.AppId).ToList();
 
-        return myappDetails;
+                 return new AppStoreDTO
+                 {
+                     FileId = appInfo.AppId,
+                     FileName = appInfo.AppInfo.Name,
+                     Logo = appInfo.AppInfo.Logo,
+                     Description = appInfo.AppInfo.Description,
+                     Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
+                     Category = appInfo.AppInfo.Category.CategoryName,
+                     Downloads = AppDownload.Count()
+                 };
+
+
+
+             }).ToList();
+
+
+                return myappDetails;
             }
             throw new EntityNotFoundException($"No AppDownloads found");
-
-           
-
-            // return response;
 
         }
 

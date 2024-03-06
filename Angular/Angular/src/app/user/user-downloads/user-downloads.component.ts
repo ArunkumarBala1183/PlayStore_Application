@@ -12,7 +12,9 @@ export class UserDownloadsComponent implements OnInit {
   constructor(private router:Router, private services : UserService){}
   
   ngOnInit(): void {
-    this.downloadedApps = this.services.DownloadedAppInfo;
+    
+    
+
   }
 
   redirectTospecificApp(appId : string) 
@@ -20,7 +22,8 @@ export class UserDownloadsComponent implements OnInit {
     this.router.navigate(['user/specificApp',appId]);
   }
 
-  downloadedApps : any;
+
+ 
 
   
   averageRating = 3;

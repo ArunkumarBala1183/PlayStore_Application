@@ -13,10 +13,13 @@ public class AppInfoDetailsDTO{
     public List<byte[]> appImages{get;set;}
     public int Apps{get;set;}
     public Double Rating{get;set;}
+    public string Publishername{get;set;}
+    public DateTime PublishedDate{get;set;}
     public List<string> Commands{get;set;}
     public string CategoryName{get;set;}
     public Guid CategoryId{get;set;}
     public int Downloads{get;set;}
+    public RequestStatus Status{get;set;}
    
     
 

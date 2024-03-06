@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-developer-new-app',
@@ -10,10 +11,10 @@ import { Router } from '@angular/router';
 export class DeveloperNewAppComponent implements OnInit {
 
     public uploadApp:FormGroup | any;
-    public appData:any;
+    public appData!:FormGroup;
     fileSize=false;
     multipleFile=false;
-    constructor(public router:Router, public formbuilder:FormBuilder)
+    constructor(public router:Router, public formbuilder:FormBuilder,private Services:UserService)
     {}
     ngOnInit(): void {
       this.initForm();
@@ -94,9 +95,10 @@ export class DeveloperNewAppComponent implements OnInit {
     }
     categories=Array('social','entertainment');
      
-    onSubmit()
+    onSubmit():void{
     {
      
     }
+  }
     }
 

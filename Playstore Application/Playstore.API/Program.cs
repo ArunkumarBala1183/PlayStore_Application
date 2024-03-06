@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 
+
 namespace Playstore
 {
     public class Program
@@ -13,7 +14,7 @@ namespace Playstore
         {
             var builder = CreateHostBuilder(args).Build();
 
-            using var scope = builder.Services.CreateScope();
+            using var scope=builder.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
             if (db.Database.GetPendingMigrations().Any())
             {
@@ -27,7 +28,7 @@ namespace Playstore
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                     webBuilder.UseStartup<Startup>();
                 });
     }
 }

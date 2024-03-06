@@ -4,6 +4,9 @@ using Playstore.Migrations;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using Playstore.Contracts.DTO.AppReview;
+using Playstore.Contracts.DTO;
+using Playstore.Core.Exceptions;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
@@ -12,17 +15,29 @@ namespace Playstore.Infrastructure.Data.Repositories
         private readonly DatabaseContext databaseContext;
         public AppReviewRepository(DatabaseContext context) : base(context)
         {
-            this.databaseContext=context;
+            this.databaseContext = context;
         }
-
-        public async Task<object> GetReview(Guid id)
+        //Get Review Details For AppReview Tables
+        public async Task<object> GetReview(Guid AppId)
         {
-            var response = await this.databaseContext.AppReviews.FirstOrDefaultAsync(appId => appId.AppId == id);
-            if(response!=null)
+            var response = await this.databaseContext.AppReviews.Include(obj => obj.Users).Where(obj => obj.AppId == AppId).ToListAsync();
+            if (response.Any())
             {
-                return response;
+                var userReview = response.Select(obj =>
+                {
+                    var reviewAppId = this.databaseContext.Users.Where(review => review.UserId == obj.UserId).ToList();
+                    return new AppReviewDetailsDTO
+                    {
+                        AppId = obj.AppId,
+                        Username = response.Select(username => username.Users.Name).ToList(),
+                        Commands = response.GroupBy(item => item.UserId).ToDictionary(group => group.Key, group => group.Select(item => item.Comment).ToList())
+
+
+                    };
+                });
+                return userReview;
             }
-            return HttpStatusCode.NoContent;
+           throw new EntityNotFoundException($"No Apps found");
         }
     }
 }

@@ -25,13 +25,13 @@ namespace Playstore.Providers.Handlers.Commands.UserData
     public class CreateAppInfoCommandHandler : IRequestHandler<CreateAppInfoCommand,HttpStatusCode>
     {
         private readonly IUnitOfWork _repository;
-        public AppImages AppNumber { get; set; }
+
 
 
         public CreateAppInfoCommandHandler(IUnitOfWork repository)
         {
             _repository = repository;
-           
+
         }
 
 
@@ -41,7 +41,7 @@ namespace Playstore.Providers.Handlers.Commands.UserData
         {
             CreateAppInfoDTO model = request.Model;
 
-            return await _repository.AppFiles.AddFiles(model);           
+            return await _repository.AppFiles.AddFiles(model);
         }
 
     }

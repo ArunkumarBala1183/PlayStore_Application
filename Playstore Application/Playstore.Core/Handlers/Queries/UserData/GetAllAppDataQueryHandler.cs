@@ -8,41 +8,41 @@ using Playstore.Contracts.DTO.AppDownloads;
 
 namespace Playstore.Providers.Handlers.Queries.UserData
 {
-    public class GetAppDataQuery : IRequest<AppDownloadDataDto>
+    public class GetAppDataQuery : IRequest<IEnumerable<AppDownloads>>
     {
-        public Guid AppId { get; }
-   
-        public GetAppDataQuery(Guid appId)
+        public AppDownloadsDto appDownloadsDto { get; }
+
+        public GetAppDataQuery(AppDownloadsDto _appDownloadsDto)
         {
-            AppId = appId;
-           
+            appDownloadsDto = _appDownloadsDto;
+
         }
     }
 
-    public class GetAppDataQueryHandler : IRequestHandler<GetAppDataQuery,AppDownloadDataDto>
+    public class GetAppDataQueryHandler : IRequestHandler<GetAppDataQuery,IEnumerable<AppDownloads>>
     {
         private readonly IUnitOfWork _repository;
-        private readonly IMapper _mapper;
-    
+
 
         public GetAppDataQueryHandler(IUnitOfWork repository, IMapper mapper)
         {
             _repository = repository;
-            _mapper = mapper;
+
         }
 
-        public async Task<AppDownloadDataDto> Handle(GetAppDataQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<AppDownloads>> Handle(GetAppDataQuery request, CancellationToken cancellationToken)
         {
-            var app = await _repository.AppValue.GetAppData(request.AppId);
+            AppDownloadsDto model = request.appDownloadsDto;
+            var app = await _repository.AppValue.GetAppData(model);
             if (app == null)
             {
-                throw new EntityNotFoundException($"No App found for Id {request.AppId}");
+                throw new EntityNotFoundException($"No App found for Id");
             }
-           
-            return _mapper.Map<AppDownloadDataDto>(app);
-           
+
+            return (IEnumerable<AppDownloads>)app;
+
         }
 
-        
+
     }
 }
