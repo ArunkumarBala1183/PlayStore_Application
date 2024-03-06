@@ -34,5 +34,22 @@ namespace Playstore.Controllers.Admin
                 return NotFound(error.Message);
             }
         }
+
+        [HttpPost("SearchUserDetails")]
+        [ProducesResponseType(typeof(UserInfoDto), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ApiResponseException))]
+        public async Task<IActionResult> SearchUserDetails([FromBody] GetUserDetailsQuery searchDetails)
+        {
+            try
+            {
+                var response = await mediator.Send(searchDetails);
+
+                return Ok(response);
+            }
+            catch (ApiResponseException error)
+            {
+                return NotFound(new {message = error.Message});
+            }
+        }
     }
 }

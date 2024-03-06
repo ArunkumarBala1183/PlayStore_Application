@@ -18,9 +18,7 @@ namespace Playstore.Core.Mapper
         {
             CreateMap<App, AppDTO>();
             CreateMap<User, UserDTO>();
-            CreateMap<Users , UserInfoDto>()
-            .ForMember(dest => dest.DateOfBirth , opt => opt.MapFrom(src => src.DateOfBirth.ToString("yyyy-MM-dd")))
-            .ReverseMap();
+            CreateMap<Users , UserInfoDto>().ReverseMap();
             CreateMap<AppInfo , ListAppInfoDto>().ReverseMap();
             //CreateMap<AppInfo , AppLogDetailsDto>();
             CreateMap<Users , RequestedUserDto>().ReverseMap();

@@ -3,9 +3,8 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { GetUsers } from 'src/app/interface/get-users';
+import { SearchUser } from 'src/app/interface/search-user';
 import { UserService } from 'src/app/services/user.service';
-// import { error } from 'console';
-// import { MyApiService } from 'src/app/my-api.service';
 
 @Component({
   selector: 'app-users',
@@ -15,9 +14,11 @@ import { UserService } from 'src/app/services/user.service';
 
 export class UsersComponent implements OnInit {
 
-  searchUsers: string = '';
+  searchUsers: SearchUser = {searchDetails : ''};
   displayedColumns: string[] = ['name', 'emailId' , 'userRoles'];
   dataSource = new MatTableDataSource<any>();
+  errorMessage : string = ''
+  isUserFound : boolean = true
 
   userDetails : GetUsers[] = []
   // data:any;
@@ -61,8 +62,20 @@ export class UsersComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
   
-  applyFilter() {
-    console.log(this.searchUsers)
+  getUserDetails() {
+    this.service.getUserDetails(this.searchUsers)
+    .subscribe({
+      next : response => {
+        this.isUserFound = true
+        this.userDetails = response.body as GetUsers[]
+        this.dataSource = new MatTableDataSource<GetUsers>(this.userDetails); // Specify the type here
+        this.dataSource.paginator = this.paginator;
+      },
+      error: error => {
+        this.isUserFound = false
+        this.errorMessage = error.error.message
+      }
+    })
   }
 
   getAllUsers()
@@ -87,9 +100,5 @@ export class UsersComponent implements OnInit {
       }
     })
   }
-  
 
-  // get filteredUsers() {
-  //   return this.users.filter(user => user.Username.toLowerCase().includes(this.searchUsers.toLowerCase()) || user.Role.toLowerCase().includes(this.searchUsers.toLowerCase()));
-  // }
 }
