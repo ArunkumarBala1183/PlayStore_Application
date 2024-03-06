@@ -9,7 +9,6 @@ import { MyDownloadsComponent } from './my-downloads/my-downloads.component';
 import { CategoryComponent } from './category/category.component';
 import { LogsComponent } from './logs/logs.component';
 import { ProfileComponent } from './profile/profile.component';
-import { SharedModule } from '../shared/shared.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AppsComponent } from './apps/apps.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

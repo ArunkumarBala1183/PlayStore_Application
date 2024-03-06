@@ -3,27 +3,28 @@
         <h1 class="text-3xl md:text-2xl lg:text-5xl text-black underline font-bold mb-4">Registered Users</h1>
     </div>    
     <div class="flex items-center mt-4 md:ml-24 ml-10">
-        <input type="text" placeholder="Search the username or role "  class="px-4 py-2 w-60 mr-2 rounded-lg shadow-md border border-gray-300 focus:outline-none focus:ring focus:border-blue-300" [(ngModel)]="searchUsers" (keyup)="applyFilter()">
+        <input type="text" placeholder="Search the username or role "  class="px-4 py-2 w-60 mr-2 rounded-lg shadow-md border border-gray-300 focus:outline-none focus:ring focus:border-blue-300" [(ngModel)]="searchUsers.searchDetails" (input)="getUserDetails()">
         <!-- <button class="bg-blue-500 text-white py-2 px-4 rounded-lg">Search</button> -->
     </div>
+    
 
-    <div class="overflow-x-auto mt-4 shadow-xl border w-fit border-gray-300 rounded-s">
+    <div *ngIf="isUserFound ; else userNotFound" class="overflow-x-auto mt-4 shadow-xl border w-fit border-gray-300 rounded-s">
         <table mat-table [dataSource]="dataSource" class="min-w-full ">
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> User Name </th>
+                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Username </th>
                 <td mat-cell *matCellDef="let user"> {{ user.name }} </td>
             </ng-container>
             <ng-container matColumnDef="emailId">
-                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Email id </th>
+                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Email Id </th>
                 <td mat-cell *matCellDef="let user"> {{ user.emailId }} </td>
             </ng-container>
             <ng-container matColumnDef="userRoles">
                 <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Role </th>
-                <td mat-cell *matCellDef="let user"> 
+                <td mat-cell *matCellDef="let user">
                     <ul>
-                        <li class="my-2" *ngFor="let role of user.userRoles">{{role.role.rolecode}}</li>
+                        <li class="my-2" *ngFor="let role of user.userRoles">{{role.role.roleCode}}</li>
                     </ul>
-                 </td>
+                </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -33,4 +34,7 @@
         <!-- Pagination -->
         <mat-paginator [pageSizeOptions]="[5,10,20]"></mat-paginator>
     </div>
+    <ng-template #userNotFound>
+        <span class="flex justify-center mt-10 font-semibold">{{errorMessage}}</span>
+    </ng-template>
 </div>

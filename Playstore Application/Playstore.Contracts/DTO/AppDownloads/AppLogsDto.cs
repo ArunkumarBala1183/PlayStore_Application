@@ -2,8 +2,9 @@ namespace Playstore.Contracts.DTO.AppDownloads
 {
     public record struct AppLogsDto
     (
+        DateTime? FromDate,
         DateTime? DownloadedDate,
-        Guid? AppId,
-        Guid? UserId
+        string UserName,
+        string AppName
     );
 }
