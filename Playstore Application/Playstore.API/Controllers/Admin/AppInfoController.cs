@@ -9,7 +9,6 @@ using Playstore.Contracts.DTO.AppInfo;
 using Playstore.Contracts.DTO.TotalDownloads;
 using Playstore.Core.Exceptions;
 using Playstore.Providers.Handlers.Commands;
-using Playstore.Providers.Handlers.Queries;
 using Playstore.Providers.Handlers.Queries.Admin;
 
 namespace Playstore.Controllers.Admin
