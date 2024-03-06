@@ -62,7 +62,7 @@ export class RegisterComponent implements OnInit {
     }
   }
   isPasswordmacth=false;
-  PasswordMatch(): boolean {
+ public PasswordMatch(): boolean {
     const password = this.register.get('password').value;
     const confirmPassword = this.register.get('confirmPassword').value;
     return password === confirmPassword;
@@ -71,7 +71,7 @@ export class RegisterComponent implements OnInit {
   
 
 
-  checkEmail(event: any): void {
+ public checkEmail(event: any): void {
     console.log(event.target.value);
     const emailId = event.target.value;
     const emailExists: EmailExists = { emailId: emailId };
@@ -97,7 +97,7 @@ export class RegisterComponent implements OnInit {
 
   validdateOfBirth = false;
 
-    checkdateOfBirth(event: any): void {
+  public  checkdateOfBirth(event: any): void {
     const dateOfBirthString: string = event.target.value;
     const dateOfBirth: Date = new Date(dateOfBirthString);
   

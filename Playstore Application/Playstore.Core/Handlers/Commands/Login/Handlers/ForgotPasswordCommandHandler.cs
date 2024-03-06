@@ -28,7 +28,7 @@ namespace Playstore.Providers.Handlers.Commands
             }
            
             var otp = GenerateOtp();
-            await _emailService.SendOtpAsync(userCredentials.EmailId, otp);
+             _emailService.SendOtpAsync(userCredentials.EmailId, otp);
             Console.WriteLine(userCredentials.EmailId);
             Console.WriteLine(otp);
             return otp;

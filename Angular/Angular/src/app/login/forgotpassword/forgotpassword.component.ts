@@ -40,7 +40,7 @@ export class ForgotpasswordComponent {
     }
     return true;
   }
-  otpCheck()
+ public otpCheck()
   {
     
     if(this.otp.length>6 || this.otp.length<6 || isNaN(+this.otp))

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/services/login.service';
-import { environment } from 'src/environments/environment';
+import { redirect } from 'src/app/shared/routings/redirect';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -15,17 +15,15 @@ export class LoginComponent implements OnInit {
 
   public loginData: FormGroup | any;
   public userData: any;
-  registerRedirect = environment.registerRedirect;
-  forgotPasswordRedirect = environment.forgotPasswordRedirect;
-  userRedirect=environment.user;
-  private accessTokenKey:string='';
-  private refreshTokenKey:string='';
+  registerRedirect = redirect.registerRedirect;
+  forgotPasswordRedirect = redirect.forgotPasswordRedirect;
 
-  constructor(public router: Router, public formbuilder: FormBuilder, private route: ActivatedRoute, public datepipe: DatePipe, private loginService: LoginService, private toastr:ToastrService) {
+
+  constructor(public router: Router, public formbuilder: FormBuilder, private route: ActivatedRoute, public datepipe: DatePipe, private loginService: LoginService, private toastr: ToastrService) {
 
   }
 
-  getEmail(): void {
+ public getEmail(): void {
     this.route.queryParams.subscribe(params => {
 
       if (params.emailId) {
@@ -73,59 +71,52 @@ export class LoginComponent implements OnInit {
           next: (response: any) => {
             // console.log(response);
             // console.log(response.accessToken);
-            const accessToken=response.accessToken;
+            const accessToken = response.accessToken;
             // console.log(accessToken);
-            localStorage.setItem('accessToken',accessToken);
-            
-            localStorage.setItem(this.refreshTokenKey, response.refreshToken);
-           
-          this.toastr.success('Login Successful');
-          const role=this.getRole();
-          if(role !==null)
-          {
-           
-            if(role==='User')
-            {
-              this.router.navigate(['user']);
+            localStorage.setItem('accessToken', accessToken);
+            this.toastr.success('Login Successful');
+            const role = this.getRole();
+            if (role !== null) {
+
+              if (role === 'User') {
+                this.router.navigate(['user']);
+
+              }
+              else {
+                this.router.navigate(['admin'])
+
+              }
+
+
 
             }
-            else{
-
+            else {
+              return;
+              this.toastr.info('Unable to fetch role .Please Login')
             }
-            
-            
-
-          }
-           else{
-            this.toastr.info('Unable to fetch role ')
-           }
           },
-          error:error=>
-          {
+          error: error => {
             this.toastr.error('Incorrect Email or Password')
             // console.log(error);
             return;
           }
         }
       )
-     
+
     }
 
 
   }
-  getRole()
-  {
-    const role=this.loginService.getUserRole();
-    if(role !== null)
-    {
-       return role;
+ public getRole() {
+    const role = this.loginService.getUserRole();
+    if (role !== null) {
+      return role;
     }
-    else  
-    {
+    else {
       return null;
     }
   }
-  login() {
+ public login() {
     this.router.navigate(['app']);
   }
 }

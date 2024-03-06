@@ -14,7 +14,7 @@ export class LoginService {
   constructor(private http:HttpClient , private jwtHelper:JwtHelperService) {
     this.jwtHelper=new JwtHelperService();
    }
-  checkUser(email: EmailExists) {
+public  checkUser(email: EmailExists) {
    
   
     return this.http.post(this.apiBaseAddress + 'Login/CheckEmailExistence', email, {observe: 'response' });
@@ -22,32 +22,32 @@ export class LoginService {
 
 
   
-  forgotPassword(email:EmailExists)
+ public forgotPassword(email:EmailExists)
   {
     
     console.log(email);
      return this.http.post(this.apiBaseAddress + 'Login/forgot-Password' , email ,{  observe: 'response' });
   }
-  addUser(userData: Register)
+ public addUser(userData: Register)
   { 
     console.log(userData);
     return this.http.post(this.apiBaseAddress +'Login/register',userData , {observe:'response'} );
 
   }
-  verifyLogin(credentials:Login)
+ public verifyLogin(credentials:Login)
   { console.log(credentials);
     return this.http.post(this.apiBaseAddress + "Login/User-Login" ,credentials);
 
   }
-  verifyOtp(otp:otpVerify)
+ public verifyOtp(otp:otpVerify)
   {
     return this.http.post(this.apiBaseAddress +"Login/validate-otp", otp);
   }
-  changePassword(password :PasswordChange)
+ public changePassword(password :PasswordChange)
   {
      return this.http.post(this.apiBaseAddress +"Login/reset-password" ,password);
   }
-  refreshToken(expiredToken:string)
+ public refreshToken(expiredToken:string)
   {
     console.log('refreshtokenService')
     console.log(expiredToken)
@@ -55,22 +55,22 @@ export class LoginService {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
       return this.http.post(this.apiBaseAddress + "Login/refresh-token",JSON.stringify(refreshTokenCommand),{headers});
   }
-  logout():void
+ public logout():void
   {
        localStorage.removeItem('accessToken');
   }
-  isAuthenticated():boolean
+ public isAuthenticated():boolean
   {
     const token=this.getToken();
     console.log(token);
     return !!token 
      && !this.jwtHelper.isTokenExpired(token);
   }
-  getToken():string|null
+ public getToken():string|null
   {
     return localStorage.getItem('accessToken');
   }
-  getUserRole():string |null{
+ public getUserRole():string |null{
     const token=localStorage.getItem('accessToken');
     // console.log('.........Arun.........'+ token);
     if(token)
@@ -83,7 +83,7 @@ export class LoginService {
     }
     return null;
   }
-  isTokenExpired():boolean
+ public isTokenExpired():boolean
   { 
     console.log('token expired called')
    const token=this.getToken();

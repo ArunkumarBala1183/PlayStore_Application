@@ -84,7 +84,7 @@ namespace Playstore.Providers.Handlers.Commands
             await this.GenerateUserCredentials(userEntity.EmailId, request);
             Guid defaultRoleId = await _roleRepository.GetDefaultRoleId();
             await this.GenerateUserRole(userEntity, defaultRoleId);
-            // await _emailService.SendUserCredentialsAsync(model.EmailId, model.Name, model.MobileNumber, DateOnly.FromDateTime(model.DateOfBirth));
+            _emailService.SendUserCredentialsAsync(model.EmailId, model.Name, model.MobileNumber, DateOnly.FromDateTime(model.DateOfBirth));
             return userEntity.UserId;
         }
         private async Task GenerateUserRole(Users userEntity, Guid defaultRoleId)
