@@ -95,7 +95,7 @@ namespace Playstore.Controllers.UserData
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> Post([FromForm]CreateAppInfoDTO model)
         {
-            Console.WriteLine("UserId:" +model.UserId);
+            Console.WriteLine("UserId:" +model.Name);
             Console.WriteLine("CategoryId:" +model.CategoryId);
             Console.WriteLine("PublisherName:" +model.PublisherName);
             Console.WriteLine("AppFile:" +model.AppFile + "");
@@ -104,12 +104,12 @@ namespace Playstore.Controllers.UserData
             Console.WriteLine("AppScreenshots:" +model.appImages + "");
            try
             {
-                var command = new CreateAppInfoCommand(model);
+                    var command = new CreateAppInfoCommand(model);
 
-                var response = await _mediator.Send(command);
+                    var response = await _mediator.Send(command);
 
-                return Ok(response);
-               
+                    return Ok(response);
+                             
             }
             catch (InvalidRequestBodyException ex)
             {
@@ -189,13 +189,16 @@ namespace Playstore.Controllers.UserData
         [Route("DownloadFile")]
         [ProducesResponseType(typeof(AppDownloadsDto),StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DownloadFile([FromForm]AppDownloadsDto appDownloadsDto)
+        public async Task<IActionResult> DownloadFile(AppDownloadsDto appDownloadsDto)
         {
             try
-            {
+            {   
+                Console.WriteLine(appDownloadsDto.AppId);
+                Console.WriteLine(appDownloadsDto.UserId);
 
                 var query = new GetAppDataQuery(appDownloadsDto.AppId);
                 var response = await _mediator.Send(query);
+                Console.WriteLine(response);
                if (response.GetType() != typeof(HttpStatusCode))
                {
                  Console.WriteLine(appDownloadsDto.AppId);
@@ -203,18 +206,15 @@ namespace Playstore.Controllers.UserData
  
                  if (fileEntity == null)
                  {
- 
                      var entity = new AppDownloads
                      {
                          AppId = appDownloadsDto.AppId,
                          UserId = appDownloadsDto.UserId,
                          DownloadedDate=DateTime.Today,
- 
                      };
                      _Dbcontext.AppDownloads.Add(entity);
                      _Dbcontext.SaveChanges();
                      return Ok(response);
-                
                  }
                  return Ok(new { status = "File Already Download" });
                }
@@ -226,7 +226,6 @@ namespace Playstore.Controllers.UserData
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-
 
         }
 

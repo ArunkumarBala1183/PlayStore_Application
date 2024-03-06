@@ -22,6 +22,7 @@ export class DeveloperMyAppsComponent implements OnInit {
           this.service.getDeveloperApps(userId).subscribe(response => {
             this.developedApps = response;
             console.log(this.developedApps);
+            console.log(this.developedApps[0].status);
           })
         }
       }

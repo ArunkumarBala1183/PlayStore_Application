@@ -22,6 +22,10 @@ export class DeveloperNewAppComponent implements OnInit {
     Logo : File | null = null;
     appImages : File[] = [];
 
+    logoFileFormatCheck = false;
+    screenshotFileFormatCheck = false;
+    appFileFormatCheck = false;
+
     constructor(public router:Router, public formbuilder:FormBuilder, private service : UserService)
     {}
     ngOnInit(): void {
@@ -50,7 +54,7 @@ export class DeveloperNewAppComponent implements OnInit {
     {
       this.appData=this.formbuilder.group(
         {
-          Name:['',Validators.required],
+          Name:['',[Validators.required,Validators.maxLength(5)]],
           CategoryId:['',Validators.required],
           PublisherName:['', Validators.required],
           Description:['', Validators.required],
@@ -100,7 +104,17 @@ export class DeveloperNewAppComponent implements OnInit {
             };
             this.fileSize=false;
             this.AppFile = event.target.files[0];
-        console.log(this.AppFile);      
+            const filetype = this.AppFile?.type;
+            if(filetype !== 'application/zip')
+            {
+              this.appFileFormatCheck = true;
+              event.target.value = '';
+            }
+            else
+            {
+              this.appFileFormatCheck = false;
+            }
+            console.log(this.AppFile);      
         }
     }
     multipleFiles(event:any) :void{
@@ -114,7 +128,14 @@ export class DeveloperNewAppComponent implements OnInit {
       this.multipleFile=false;
       for(let i = 0; i < files.length; i++)
       {
-        this.appImages.push(files.item(i)!);    
+        if(files[i] && ['image/jpeg' , 'image/png'].includes(files[i].type))
+        {
+          this.appImages.push(files.item(i)!);    
+          this.screenshotFileFormatCheck = false;
+        }
+        else{
+          this.screenshotFileFormatCheck = true;
+        }
       }
       console.log(this.appImages);
     }
@@ -122,6 +143,14 @@ export class DeveloperNewAppComponent implements OnInit {
      
     handleLogo(event : any) : void {
       this.Logo = event.target.files[0];
+      if(this.Logo && ['image/jpeg', 'image/png'].includes(this.Logo.type))
+      {
+        this.logoFileFormatCheck = false;
+      }
+      else {
+      this.logoFileFormatCheck = true;
+      event.target.value = '';
+      }
       console.log(this.Logo);      
     }
     onSubmit()
@@ -174,11 +203,13 @@ export class DeveloperNewAppComponent implements OnInit {
         {
           formData.append('appImages' , this.appImages[i]);
         }
+        console.log(formData);
+        
         // const UserId = this.appInfo[0].userId
         this.service.postApplication(formData).subscribe(
           {
             next : response => {
-              console.log('Form Submitted' , response);
+              alert("Form Submitted");
             },
             error : error => {
               console.log(error);

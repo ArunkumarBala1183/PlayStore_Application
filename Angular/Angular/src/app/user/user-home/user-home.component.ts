@@ -20,6 +20,7 @@ ngOnInit(): void {
     console.log(this.application);
     console.log(this.application[0].description);
     console.log(this.application[0].userId);
+    console.log(this.application[0].status);
   })
 }
 

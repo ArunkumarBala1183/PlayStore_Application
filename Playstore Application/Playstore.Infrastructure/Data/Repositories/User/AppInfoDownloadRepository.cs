@@ -44,7 +44,8 @@ namespace Playstore.Infrastructure.Data.Repositories
                 Description=appInfo.AppInfo.Description,
                 Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
                 Category = appInfo.AppInfo.Category.CategoryName,
-                Downloads = AppDownload.Count()
+                Downloads = AppDownload.Count(),
+                
             };
         }).ToList();
 

@@ -13,6 +13,14 @@ export interface AllAppsInfo
     apps : number;
     userId : Guid;
     commands : string;
+    status : RequestStatus;
+    }
+
+    export enum RequestStatus
+    {
+        Declined = -1,
+        Pending = 0,
+        Approved = 1
     }
 
 export interface SpecificAppInfo
@@ -71,6 +79,7 @@ export interface DeveloperAppInfo
     commands : string;
     publishedDate : Date;
     PublisherName : string;
+    status : RequestStatus
 }
 
 export interface CategoryInfo

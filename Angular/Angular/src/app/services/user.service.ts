@@ -49,6 +49,15 @@ export class UserService {
     return this.http.get<DownloadedAppsInfo[]>(`${this.apiBaseAddress}/AppInfo/DownloadsDetails?Userid=${userId}`);
   }
 
+  PostAppFile(appId:Guid,userId:Guid)
+  {
+    const url=(`${this.apiBaseAddress}/AppInfo/DownloadFile?AppId=${appId} &UserId=${userId}`);
+    const data = {appId,userId};
+    console.log(data);
+    return this.http.post(url,data,{
+      responseType: 'blob'});     
+  }
+
   getCategory()
   {
     return this.http.get<CategoryInfo[]>(this.apiBaseAddress + "/AppInfo/GetCategory");

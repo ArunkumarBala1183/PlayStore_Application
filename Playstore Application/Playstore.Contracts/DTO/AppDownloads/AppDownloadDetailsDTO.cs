@@ -3,10 +3,12 @@ namespace Playstore.Contracts.DTO.AppDownloads;
 public class AppDownloadDetailsDto
     {
 
-       public Guid Id;
-       public Guid Appid;
-       public Guid Userid;
+       public Guid Id {get; set;}
+       public Guid Appid{get; set;}
+       public Guid Userid{get; set;}
        public DateTime DateTime{get;set;}
+
+       
        
         
         

@@ -6,6 +6,6 @@ namespace Playstore.Contracts.Data.Repositories
     {
         Task<object> GetAppData(Guid id);
         Task<object> GetValue(Guid id);
-       Task<object>ViewAllApps();
+        Task<object>ViewAllApps();
     }
 }

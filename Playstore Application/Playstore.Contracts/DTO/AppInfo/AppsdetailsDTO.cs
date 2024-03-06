@@ -16,6 +16,8 @@ public class AppsdetailsDTO{
     public Double Downloads{get;set;}
     public  Guid UserId{get;set;}
 
+    public RequestStatus Status {get;set;}
+
    
     
 

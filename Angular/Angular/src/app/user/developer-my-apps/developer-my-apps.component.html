@@ -49,7 +49,14 @@
         <!-- </button> -->
         <!-- App - Description -->
         <div class="p-1 text-center md:pl-2 md:pt-2 w-full ">
-            <p>{{app.description}}</p>
+            <div>
+                <p>{{app.description}}</p>
+            </div>
+            <div class="">
+                <button *ngIf="app.status == 1" class="border p-2 bg-green-700 rounded-md text-white">Approved</button>
+                <button *ngIf="app.status == 0" class="border p-2 bg-blue-700 rounded-md text-white">Pending</button>
+                <button *ngIf="app.status == -1" class="border p-2 bg-black rounded-md text-white">Declined</button>
+            </div>
         </div>
     </div>
     </div>

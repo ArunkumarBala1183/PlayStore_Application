@@ -15,5 +15,7 @@ public class Myappdetails
     public Double Rating{get;set;}
     public int Downloads{get;set;}
 
+    public RequestStatus Status {get;set;}
+
 }
 

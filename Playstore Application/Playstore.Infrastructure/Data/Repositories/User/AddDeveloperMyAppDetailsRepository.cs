@@ -59,6 +59,7 @@ namespace Playstore.Infrastructure.Data.Repositories
         .Include(data => data.AppDownloads)
         .Include(data => data.Category)
         .Where(obj => obj.UserId == userId)
+        // .Where(status => status.Status == RequestStatus.Pending || status.Status == RequestStatus.Approved || status.Status == RequestStatus.Declined)
         .ToListAsync();
      int Count=response.Count();
     if (response.Any())
@@ -82,6 +83,7 @@ namespace Playstore.Infrastructure.Data.Repositories
                 Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
                 CategoryName = appInfo.Category.CategoryName,
                 Downloads = AppDownload.Count(),
+                Status = appInfo.Status
             };
         }).ToList();
 
