@@ -27,7 +27,7 @@ export class DeveloperNewAppComponent implements OnInit {
   appImages: File[] = [];
   logoFileFormatCheck = false;
   screenshotFileFormatCheck = false;
-  appFileFormatCheck = false;
+  appFileFormatCheck = true;
 
   constructor(
     public router: Router,
@@ -89,24 +89,25 @@ export class DeveloperNewAppComponent implements OnInit {
     const files = event.target.files[0];
     if (files) {
       const file = files;
+      const filetype = file.type;
       const maxFileSize = 2 * 1024 * 1024; // 2 MB
       if (file.size > maxFileSize) {
         this.fileSize = true;
         event.target.value = '';
         return;
       }
-      this.fileSize = false;
-      this.AppFile = event.target.files[0];
-      // const filetype = this.AppFile?.type;
-      // if(filetype !== 'application/zip')
-      // {
-      //   this.appFileFormatCheck = true;
-      //   event.target.value = '';
-      // }
-      // else
-      // {
-      //   this.appFileFormatCheck = false;
-      // }
+      else if(filetype === 'application/x-zip-compressed')
+      {
+        this.appFileFormatCheck = true;
+        this.fileSize = false;
+        this.AppFile = event.target.files[0];
+      }
+      else
+      {
+        this.appFileFormatCheck = false;
+        event.target.value = '';
+        this.fileSize = false;
+      }     
     }
   }
   public multipleFiles(event: any): void {
@@ -123,6 +124,7 @@ export class DeveloperNewAppComponent implements OnInit {
         this.screenshotFileFormatCheck = false;
       } else {
         this.screenshotFileFormatCheck = true;
+        event.target.value ='';
       }
     }
   }

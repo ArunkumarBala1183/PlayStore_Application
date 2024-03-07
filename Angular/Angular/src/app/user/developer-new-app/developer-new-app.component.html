@@ -64,10 +64,11 @@
                         formControlName="AppFile"><br>
                     <span class="pb-1  text-red-400"
                         *ngIf="appData.get('AppFile')?.touched && (appData.get('AppFile')?.hasError('required'))">{{validationMessages.AppFile.required}}</span>
-                    <span *ngIf="this.appFileFormatCheck">App File should be Zip</span>
+                    <span *ngIf="!this.appFileFormatCheck">App File should be Zip</span>
+                    <span *ngIf="fileSize" class="text-red-400 text-center">File exceeds more than 2mb . Please upload file
+                        with less than 2mb!!!!</span>
                 </div>
-                <span *ngIf="fileSize" class="text-red-400 text-center">File exceeds more than 2mb . Please upload file
-                    with less than 2mb!!!!</span>
+                
 
 
             </div>

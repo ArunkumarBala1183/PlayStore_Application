@@ -30,28 +30,34 @@ export class SpecificAppComponent implements OnInit {
     window.scrollTo(0, 0);
     this.route.params.subscribe((params) => {
       const appId: Guid = params['appId'];
-      this.service.getAppsById(appId).subscribe({
-        next: (responses) => {
-          this.appDetail = responses;
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      });
-      this.service.getReviews(appId).subscribe({
-        next: (response) => {
-          this.appReview = response;
-          this.updateDisplayedReviews();
-        },
-        error: (error) => {
-          console.log(error);
-        },
-      });
+      this.getSpecificApp(appId)
     });
 
     this.service.getAllApps().subscribe({
       next: (response) => {
         this.appInfo = response;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+  }
+
+  getSpecificApp(appId : Guid)
+  {
+    this.service.getAppsById(appId).subscribe({
+      next: (responses) => {
+        this.appDetail = responses;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+    
+    this.service.getReviews(appId).subscribe({
+      next: (response) => {
+        this.appReview = response;
+        this.updateDisplayedReviews();
       },
       error: (error) => {
         console.log(error);
@@ -74,6 +80,9 @@ export class SpecificAppComponent implements OnInit {
           anchor.download = new Date().toISOString() + '.zip';
           anchor.click();
           anchor.remove();
+
+          this.getSpecificApp(appId)
+
         },
         error: (error) => {
           console.error('Error Occurred :', error);
