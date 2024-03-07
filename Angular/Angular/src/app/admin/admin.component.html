@@ -88,8 +88,8 @@
           <div class="flex  items-center h-10 mb-5 hover:bg-gray-200  transition duration-700 md:pl-6">
             <div><img src="https://www.svgrepo.com/show/509151/logout.svg" alt="" class="h-3 md:h-4"></div>
             <div class=" ml-2">
-              <li><a [routerLink]="['']" routerLinkActive="router-link-active"
-                  class="text-black text-xs md:text-base hover:text-black">Logout</a></li>
+              <li><button (click)="logout()"
+                  class="text-black text-xs md:text-base hover:text-black">Logout</button></li>
             </div>
           </div>
         </div>

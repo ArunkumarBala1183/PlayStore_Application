@@ -55,9 +55,15 @@ public  checkUser(email: EmailExists) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
       return this.http.post(this.apiBaseAddress + "Login/refresh-token",JSON.stringify(refreshTokenCommand),{headers});
   }
- public logout():void
+ public logout():boolean
   {
-       localStorage.removeItem('accessToken');
+    localStorage.removeItem('accessToken');
+      const token=localStorage.getItem('accessToken')
+      if(token==null)
+      {
+        return true;
+      }
+      return false;
   }
  public isAuthenticated():boolean
   {
@@ -104,5 +110,6 @@ public  checkUser(email: EmailExists) {
     return false;
 
   }
+  
  
 }

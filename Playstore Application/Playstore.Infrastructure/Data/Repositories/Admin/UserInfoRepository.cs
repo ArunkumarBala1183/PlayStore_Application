@@ -2,8 +2,10 @@ using System.Net;
 using AutoMapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.Data.RoleConfig;
 using Playstore.Contracts.DTO.UserInfo;
 using Playstore.Migrations;
 
@@ -13,10 +15,12 @@ namespace Playstore.Core.Data.Repositories.Admin
     {
         private readonly DatabaseContext database;
         private readonly IMapper mapper;
-        public UserInfoRepository(DatabaseContext context, IMapper mapper)
+        private readonly RoleConfig role;
+        public UserInfoRepository(DatabaseContext context, IMapper mapper , IOptions<RoleConfig> options)
         {
             this.database = context;
             this.mapper = mapper;
+            this.role = options.Value;
         }
 
         public async Task<object> SearchUserDetail(string searchDetails)
@@ -32,16 +36,19 @@ namespace Playstore.Core.Data.Repositories.Admin
                 if (!string.IsNullOrEmpty(searchDetails))
                 {
                     userDetails = await query.Where(user =>
-                    user.Name.Contains(searchDetails) ||
+                    (user.Name.Contains(searchDetails) ||
                     user.EmailId.Contains(searchDetails) ||
                     user.MobileNumber.Contains(searchDetails) ||
-                    user.UserRoles.Any(role => role.Role.RoleCode.Contains(searchDetails)))
+                    user.UserRoles.Any(role => role.Role.RoleCode.Contains(searchDetails))) &&
+                    user.UserRoles.Any(roles => roles.Role.RoleCode != role.AdminCode))
                     .ToListAsync();
                     
                 }
                 else
                 {
-                    userDetails = await query.ToListAsync();
+                    userDetails = await query
+                    .Where(user => user.UserRoles.Any(roles => roles.Role.RoleCode != role.AdminCode)) 
+                    .ToListAsync();
                 }
 
                 if (userDetails != null && userDetails.Count > 0)
@@ -67,9 +74,10 @@ namespace Playstore.Core.Data.Repositories.Admin
         {
             try
             {
-                var existedData = await this.database.Users.
-                Include(userrole => userrole.UserRoles)
+                var existedData = await this.database.Users
+                .Include(userRole => userRole.UserRoles)
                 .ThenInclude(role => role.Role)
+                .Where(userRole => userRole.UserRoles.Any(roles => roles.Role.RoleCode == role.UserCode || roles.Role.RoleCode == role.DeveloperCode))
                 .ToListAsync();
 
                 if (existedData != null && existedData.Count > 0)

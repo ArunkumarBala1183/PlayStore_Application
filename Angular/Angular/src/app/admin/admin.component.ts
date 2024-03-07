@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoginService } from '../services/login.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-admin',
@@ -8,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class AdminComponent {
 
-  constructor(private router: Router){}
+  constructor(private router: Router, private loginService:LoginService,private toastr:ToastrService){}
   menu = false;
   show()
   {
@@ -19,5 +21,14 @@ export class AdminComponent {
   about()
   {
     this.router.navigate(["admin/about"]) 
+  }
+  public logout()
+  {
+     const response=this.loginService.logout();
+     if(response)
+     {
+       this.toastr.show('Logout Successful')
+       this.router.navigate(['']);
+     }
   }
 }

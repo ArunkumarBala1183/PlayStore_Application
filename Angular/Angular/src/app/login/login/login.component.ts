@@ -76,14 +76,15 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('accessToken', accessToken);
             this.toastr.success('Login Successful');
             const role = this.getRole();
+            console.log(role);
             if (role !== null) {
 
               if (role === 'User') {
-                this.router.navigate(['user']);
+                this.router.navigate(['admin/dashboard']);
 
               }
               else {
-                this.router.navigate(['admin'])
+                this.router.navigate([''])
 
               }
 

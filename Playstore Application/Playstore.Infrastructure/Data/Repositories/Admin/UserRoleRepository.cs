@@ -29,19 +29,19 @@ namespace Playstore.Core.Data.Repositories.Admin
                 .Include(app => app.AppInfo)
                 .Include(roles => roles.UserRoles)
                 .FirstOrDefaultAsync(id => id.AppInfo.Any(id => id.AppId == appPublishDto.AppId));
-    
+
                 if (userDetails != null)
                 {
                     if (appPublishDto.Approve)
                     {
-                        return await RoleUpdate(userDetails.UserId , appPublishDto.AppId);
+                        return await RoleUpdate(userDetails.UserId, appPublishDto.AppId);
                     }
                     else
                     {
                         return await RemoveRequest(userDetails.UserId);
                     }
                 }
-    
+
                 return HttpStatusCode.NotFound;
             }
             catch (SqlException)
@@ -54,21 +54,36 @@ namespace Playstore.Core.Data.Repositories.Admin
             }
         }
 
-        private async Task<HttpStatusCode> RoleUpdate(Guid userId , Guid appId)
+        private async Task<HttpStatusCode> RoleUpdate(Guid userId, Guid appId)
         {
-            var userRoles = new UserRole()
+            var developerDetails = await this.database.Users
+            .Include(userrole => userrole.UserRoles)
+            .Where(id => id.UserId == userId)
+            .FirstOrDefaultAsync();
+
+            if (developerDetails != null)
             {
-                RoleId = role.DeveloperId,
-                UserId = userId
-            };
+                var isAlreadyDeveloper = developerDetails.UserRoles.Any(id => id.RoleId == role.DeveloperId);
 
-            Add(userRoles);
+                if (!isAlreadyDeveloper)
+                {
+                    var userRoles = new UserRole()
+                    {
+                        RoleId = role.DeveloperId,
+                        UserId = userId
+                    };
 
-            await database.SaveChangesAsync();
+                    Add(userRoles);
 
-            await this.PublishApp(appId);
+                    await database.SaveChangesAsync();
+                }
 
-            return HttpStatusCode.Created;
+                await this.PublishApp(appId);
+
+                return HttpStatusCode.Created;
+            }
+
+            return HttpStatusCode.NotFound;
         }
 
         private async Task<HttpStatusCode> RemoveRequest(Guid userId)
@@ -91,9 +106,10 @@ namespace Playstore.Core.Data.Repositories.Admin
         {
             var appDetails = await database.AppInfo.FindAsync(appId);
 
-            if(appDetails != null)
+            if (appDetails != null)
             {
                 appDetails.Status = RequestStatus.Approved;
+                appDetails.PublishedDate = DateTime.Now;
 
                 database.AppInfo.Update(appDetails);
 

@@ -25,7 +25,7 @@ namespace Playstore.Controllers
         public LoginController(IMediator mediator, SharedDataService sharedDataService)
         {
             _mediator = mediator;
-            _sharedDataService=sharedDataService;
+            _sharedDataService = sharedDataService;
         }
 
         [HttpPost("GetUserbyId")]
@@ -68,7 +68,7 @@ namespace Playstore.Controllers
         // [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         // public async Task<IActionResult> CheckEmailExistence(  ForgotPasswordDTO model)
         // {
-            
+
         //     Console.WriteLine(model.EmailId);
         //     var query = new CheckEmailExistenceQuery(model.EmailId);
 
@@ -80,30 +80,30 @@ namespace Playstore.Controllers
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> CheckEmailExistence(ForgotPasswordDTO model)
-{
-    try
-    {
-        Console.WriteLine(model?.EmailId);
-        if (model == null)
         {
-            // Log or handle the case where model is null
-            return BadRequest("Invalid model");
+            try
+            {
+                Console.WriteLine(model?.EmailId);
+                if (model == null)
+                {
+                    // Log or handle the case where model is null
+                    return BadRequest("Invalid model");
+                }
+                Console.WriteLine(model.EmailId);
+                var query = new CheckEmailExistenceQuery(model.EmailId);
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Exception in CheckEmailExistence: {ex.Message}");
+                return StatusCode(500, "Internal Server Error");
+            }
         }
-        Console.WriteLine(model.EmailId);
-        var query = new CheckEmailExistenceQuery(model.EmailId);
-        var result = await _mediator.Send(query);
-        return Ok(result);
-    }
-    catch (Exception ex)
-    {
-        // Log the exception
-        Console.WriteLine($"Exception in CheckEmailExistence: {ex.Message}");
-        return StatusCode(500, "Internal Server Error");
-    }
-}
 
 
-            [HttpPost("forgot-Password")]
+        [HttpPost("forgot-Password")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(object))]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO model)
@@ -115,13 +115,13 @@ namespace Playstore.Controllers
                 var ResetPasswordEmail = HttpContext.Session.GetString("ResetPasswordEmail");
                 _sharedDataService.ResetPasswordEmail = HttpContext.Session.GetString("ResetPasswordEmail");
                 Console.WriteLine(".............This is email" + ResetPasswordEmail);
- 
- 
+
+
                 HttpContext.Session.SetString("ResetPasswordOTP", otp);
                 var ResetPasswordOTP = HttpContext.Session.GetString("ResetPasswordOTP");
                 _sharedDataService.ResetPasswordOTP = HttpContext.Session.GetString("ResetPasswordOTP");
                 Console.WriteLine("...................This is otp" + ResetPasswordOTP);
- 
+
                 return Ok(new { Message = "OTP sent successfully." });
             }
             catch (Exception)
@@ -129,8 +129,8 @@ namespace Playstore.Controllers
                 return NotFound(new { Message = "Email not registered." });
             }
         }
- 
- 
+
+
         [HttpPost("validate-otp")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
@@ -142,18 +142,18 @@ namespace Playstore.Controllers
                 var storedEmail = HttpContext.Session.GetString("ResetPasswordEmail");
                 var resetPasswordEmail = _sharedDataService.ResetPasswordEmail;
                 var resetPasswordOTP = _sharedDataService.ResetPasswordOTP;
- 
+
                 Console.WriteLine("Stored OTP: " + resetPasswordOTP);
- 
+
                 Console.WriteLine("Stored Email: " + resetPasswordEmail);
                 Console.WriteLine("Received OTP: " + validateOtpDTO.Otp);
- 
+
                 validateOtpDTO.EmailId = storedEmail;
- 
+
                 var command = new ValidateOtpCommand(validateOtpDTO, resetPasswordEmail, resetPasswordOTP);
                 var isOtpValid = await _mediator.Send(command);
- 
- 
+
+
                 if (isOtpValid)
                 {
                     return Ok(new { Message = "OTP validation successful" });
@@ -168,7 +168,7 @@ namespace Playstore.Controllers
                 return BadRequest(new { Error = ex.Message });
             }
         }
- 
+
         [HttpPost("reset-password")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
@@ -180,16 +180,16 @@ namespace Playstore.Controllers
                 Console.WriteLine(resetPasswordDTO.ConfirmPassword);
                 var resetPasswordEmail = _sharedDataService.ResetPasswordEmail;
                 var resetPasswordOTP = _sharedDataService.ResetPasswordOTP;
- 
+
                 Console.WriteLine("Stored OTP: " + resetPasswordOTP);
- 
+
                 Console.WriteLine("Stored Email: " + resetPasswordEmail);
                 Console.WriteLine("Received newpassword: " + resetPasswordDTO.NewPassword);
- 
+
                 Console.WriteLine("Received confirmpassword: " + resetPasswordDTO.ConfirmPassword);
                 var command = new ResetPasswordCommand(resetPasswordDTO, resetPasswordEmail, resetPasswordOTP);
                 var isPasswordReset = await _mediator.Send(command);
- 
+
                 if (isPasswordReset)
                 {
                     return Ok(new { Message = "Password reset successful" });
@@ -207,20 +207,20 @@ namespace Playstore.Controllers
             }
         }
 
-  
-        
+
+
         [HttpPost("register")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> UserRegistration([FromBody] RegisterUsersDTO model)
         {
             try
-            { 
-                  if (model == null)
-        {
-            // Log or handle the case where model is null
-            return BadRequest("Invalid model");
-        }
+            {
+                if (model == null)
+                {
+                    // Log or handle the case where model is null
+                    return BadRequest("Invalid model");
+                }
                 Console.WriteLine(model.Name);
                 var command = new RegisterUsersCommand(model);
                 var response = await _mediator.Send(command);
@@ -244,18 +244,18 @@ namespace Playstore.Controllers
             }
         }
 
-      
+
 
         [HttpPost("User-Login")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> UserLogin([FromBody] LoginUsersDTO model)
-        { 
-                Console.WriteLine(model.EmailId);
-                Console.WriteLine(model.Password);
+        {
+            Console.WriteLine(model.EmailId);
+            Console.WriteLine(model.Password);
             try
             {
-                
+
                 var command = new LoginUsersCommand(model);
                 var response = await _mediator.Send(command);
                 return Ok(response);
@@ -290,11 +290,11 @@ namespace Playstore.Controllers
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command)
         {
-             if (command == null)
-    {
-        // Handle the case where the command is null
-        return BadRequest("Invalid request. Command object is null.");
-    }
+            if (command == null)
+            {
+                // Handle the case where the command is null
+                return BadRequest("Invalid request. Command object is null.");
+            }
             Console.WriteLine(command.ExpiredToken);
 
             try

@@ -1,6 +1,6 @@
 
 <div class="flex ">
-    <input type="text" placeholder="Search" class="px-4  py-2 w-60 mt-3 ml-3 md:ml-56 rounded-2xl border border-black focus:outline-none focus:ring bg-gray-100 focus:border-blue-300 ngm" [(ngModel)]="searchTerm">
+    <input type="text" placeholder="Search" class="px-4  py-2 w-60 mt-3 ml-3 md:ml-56 rounded-2xl focus:outline-none focus:ring bg-gray-100 focus:border-blue-300 ngm" [(ngModel)]="searchTerm">
     <button class=" text-white py-2 px-4 ml-2 rounded-md"><img src="https://cdn-icons-png.flaticon.com/128/3031/3031293.png" class="h-6 mt-3" alt=""></button>
   </div>
 
@@ -8,19 +8,19 @@
   
 
    <div *ngFor="let app of allApps" class="mt-5  md:ml-40 mb-6 flex items-center p-4 rounded-lg hover:shadow-lg hover:scale-105 w-96 shadow-md bg-gray-100">
-    <div > 
-      <img src="data:image/png;base64,{{app.logo}}" class="h-14 w-14">
+    <div class="w-32 "> 
+      <img src="data:image/png;base64,{{app.logo}}" class="h-14 w-16">
     </div>
     <div class="ml-4 ">
       <h2>{{app.name}}</h2>
-      <div class="flex flex-row items-center">
+      <div class="flex flex-row items-center ">
         <div class="flex items-center">
         <p class="mr-2">{{app.rating}}</p>
         <img src="https://cdn-icons-png.flaticon.com/128/2893/2893811.png" class="h-4  mb-3 mr-2">
-        <p > {{app.category.categoryName}}</p>
+        <p class="w-24 "> {{app.category.categoryName}}</p>
       </div>
       <div>
-        <button class="md:ml-36 bg-blue-300 px-2 mb-3 mr-0 rounded-lg hover:scale-110">Get</button>
+        <button class="md:ml-36  bg-blue-300 px-2 mb-3 mr-0 rounded-lg hover:scale-110">Get</button>
       </div>
     </div>
 </div>

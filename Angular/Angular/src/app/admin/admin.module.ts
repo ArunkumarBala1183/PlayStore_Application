@@ -22,6 +22,7 @@ import { ApprequestsComponent } from './apprequests/apprequests.component';
 import { RequestdetailsComponent } from './requestdetails/requestdetails.component';
 import { AboutComponent } from './about/about.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { HomeModule } from '../home/home.module';
 
 
 
@@ -56,6 +57,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
     MatPaginatorModule,
     MatTableModule,
     ReactiveFormsModule,
+    HomeModule
     
   ],
   exports:[
