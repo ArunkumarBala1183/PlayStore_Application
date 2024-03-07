@@ -1,6 +1,11 @@
-﻿using AutoMapper;
+using Microsoft.Extensions.Options;
+using AutoMapper;
 using Playstore.Contracts.Data;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.Data.Repositories.Admin;
+using Playstore.Contracts.Data.RoleConfig;
+using Playstore.Core.Data.Repositories;
+using Playstore.Core.Data.Repositories.Admin;
 // using Playstore.Core.Data.Repositories;
 using Playstore.Infrastructure.Data.Repositories;
 using Playstore.Migrations;
@@ -10,16 +15,19 @@ namespace Playstore.Infrastructure.Data
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DatabaseContext _context;
-        
-        private IMapper Mapper;
-        public UnitOfWork(DatabaseContext context,IMapper _mapper)
+
+        private readonly IOptions<RoleConfig> roleConfig;
+
+        public UnitOfWork(DatabaseContext context , IOptions<RoleConfig> roleConfig)
         {
             _context = context;
-            Mapper=_mapper;
+            this.roleConfig = roleConfig;
         }
         public IAppRepository App => new AppRepository(_context);
 
         public IUserRepository User => new UserRepository(_context);
+
+        public IDeveloperRole UserRole => new DeveloperRoleRepository(_context , roleConfig);
         
         
         public IAppValueRepository AppValue => new AppInfoRespository(_context);

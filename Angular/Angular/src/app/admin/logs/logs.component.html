@@ -1,0 +1,69 @@
+<div>
+    <div class="md:flex md:flex-row justify-between flex-col md:ml-16 md:p-0 p-2">
+        <div class="mt-2 md:ml-0 ml-16">
+            <input type="text" placeholder="sort by username"
+                class="bg-blue-300 rounded-md mr-5 py-2 px-3 placeholder-black" [(ngModel)]="filterDetails.userName"
+                (input)="getAppLogs()">
+        </div>
+ 
+        <div class="mt-2 md:ml-0 ml-16">
+            <input type="date" class="bg-blue-300 mr-5 py-2 px-3 placeholder-black rounded-md"
+                placeholder="Frome Date" [(ngModel)]="filterDetails.fromDate" [max]="maxDate" (input)="getAppLogs()">
+        </div>
+ 
+        <div class="mt-2 md:ml-0 ml-16">
+            <input type="date" class="bg-blue-300 mr-5 py-2 px-3 placeholder-black rounded-md"
+                placeholder="To Date" [(ngModel)]="filterDetails.downloadedDate" [max]="maxDate" (input)="getAppLogs()">
+        </div>
+ 
+        <div class="mt-2 md:ml-0 ml-16">
+            <input type="text" class="bg-blue-300 mr-5 py-2 px-3 placeholder-black rounded-md" placeholder="sort by App"
+                [(ngModel)]="filterDetails.appName" (input)="getAppLogs()">
+        </div>
+        <!-- <button class="bg-black rounded-md px-4 md:mt-2 mt-4 md:ml-0 ml-28 text-white"
+        (click)="getAppLogs()">Search</button> -->
+    </div>
+ 
+    <!-- table view -->
+    <div *ngIf="isLogFound && appLogDetails.length > 0; else noLogs" class="overflow-x-auto mt-8 md:ml-48 max-w-full">
+        <table class="border border-black shadow-lg">
+            <thead class="bg-black text-white">
+                <tr>
+                    <th class="px-6 py-4">User Name</th>
+                    <th class="px-6 py-4">Date</th>
+                    <th class="px-6 py-4">App Name</th>
+                </tr>
+            </thead>
+            <tbody class="bg-gray-50">
+                <tr *ngFor="let user of filteredLogs">
+                    <td class="px-6 py-4">{{ user.userName }}</td>
+                    <td class="px-6 py-4">{{ user.downloadedDate }}</td>
+                    <td class="px-6 py-4">{{ user.appName }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="flex">
+            <nav class="flex items-center flex-col flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
+               <div class="ml-24"> <span class="text-sm font-normal text-gray-900 dark:text-gray-900 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+                    Showing &nbsp; - &nbsp; <span class="font-semibold text-gray-900 ">{{ values.length }}</span> &nbsp; Entries
+                </span></div>
+                <div class="ml-20 mt-2 mb-3"><ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                    <li>
+                        <button (click)="goToPage(currentPage - 1)"  class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-900 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-300 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</button>
+                    </li>
+                    <li *ngFor="let page of getPages()">
+                        <button  (click)="goToPage(page)" [class.active]="currentPage === page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-900 bg-blue border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-300 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ page }}</button>
+                    </li>
+                    <li>
+                        <button (click)="goToPage(currentPage + 1)" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-900 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-300 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</button>
+                    </li>
+                </ul>
+                </div>
+            </nav>
+        </div>
+ 
+    </div>
+    <ng-template #noLogs>
+        <span class="flex justify-center mt-10 font-semibold ml-36">{{ errorMessage }}</span>
+      </ng-template>
+</div>

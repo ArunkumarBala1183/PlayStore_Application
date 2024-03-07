@@ -227,7 +227,7 @@ namespace Playstore.Migrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RefreshId")
+                    b.Property<string>("RefreshKey")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
@@ -328,7 +328,7 @@ namespace Playstore.Migrations.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("EmailId")
                         .HasColumnType("nvarchar(max)");

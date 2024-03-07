@@ -1,4 +1,5 @@
 ﻿using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.Data.Repositories.Admin;
 
 namespace Playstore.Contracts.Data
 {
@@ -6,6 +7,9 @@ namespace Playstore.Contracts.Data
     {
        
         IUserRepository User { get; }
+
+        IDeveloperRole UserRole {get;}
+        
         IAppRepository App{get;}
         IAppReviewRepository AppReview{get;}
         IAppDataRepository AppData{get;}

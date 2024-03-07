@@ -1,3 +1,16 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using Playstore.Infrastructure;
+using Playstore.Core;
+using Microsoft.AspNetCore.Mvc;
+using Playstore.Core.Security;
+using Serilog;
+using Playstore.JsonSerialize;
+using System;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +23,12 @@ using Playstore.Core;
 using Microsoft.AspNetCore.Mvc;
 using Playstore.Core.Security;
 using Playstore.Migrations;
+using System;
+using Playstore.JsonSerialize;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Playstore.Contracts.DTO;
 
 namespace Playstore
 {
@@ -25,27 +44,46 @@ namespace Playstore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession(options => // Session Configuration
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(60);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             services.AddPersistence(Configuration);
             services.AddCore();
+            services.AddDistributedMemoryCache(); // Distributed cache for session  
+            services.AddHttpContextAccessor();
             services.AddMarketplaceAuthentication(Configuration);
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            services.AddControllers()
-            .AddNewtonsoftJson(option => option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddControllers().AddJsonOptions(option => {
+                option.JsonSerializerOptions.Converters.Add(new JsonConvertor());
+            })
+            .AddNewtonsoftJson(option => {
+                option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+
+            //Configuring Serilog 
+            Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.Console()
+            .CreateLogger();
 
             services.AddCors(options =>
-                {
+            {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200");
+                    builder.WithOrigins(Configuration.GetValue<string>("Authentication:Jwt:ValidAudience"));
                     builder.AllowAnyHeader();
                     builder.AllowAnyMethod();
                     builder.AllowCredentials();
                 });
-                });
+            });
+
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -66,6 +104,7 @@ namespace Playstore
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
+            app.UseSession();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
@@ -75,6 +114,7 @@ namespace Playstore
             });
 
             app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors();
