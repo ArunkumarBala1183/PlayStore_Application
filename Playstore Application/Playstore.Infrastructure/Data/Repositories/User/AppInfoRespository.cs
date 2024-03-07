@@ -88,8 +88,6 @@ namespace Playstore.Infrastructure.Data.Repositories
                          Status = appInfo.Status
                      };
                  }).ToList();
-
-                Console.WriteLine(myappDetails[0].Status);
                 return myappDetails;
 
             }

@@ -126,9 +126,5 @@ namespace Playstore.Infrastructure.Data.Repositories
                 return HttpStatusCode.InternalServerError;
             }
         }
-
-
     }
-
-
 }

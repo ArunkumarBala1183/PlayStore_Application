@@ -17,7 +17,7 @@ export class ResetPasswordComponent {
     })
   }
 
-  checkPassword():boolean
+  public checkPassword():boolean
   {
     const password = this.changePasswordForm.get('password')?.value;
     const confirmPassword = this.changePasswordForm.get('confirmPassword')?.value;
@@ -25,7 +25,7 @@ export class ResetPasswordComponent {
   }
 
   
-  onSubmit() {
+  public onSubmit() {
     if(this.changePasswordForm.valid){
       alert("Form Submitted");     
     }

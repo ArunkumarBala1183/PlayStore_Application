@@ -17,20 +17,10 @@ constructor(private router : Router, private service: UserService)
 ngOnInit(): void {
   this.service.getAllApps().subscribe(response => {
     this.application=response;
-    console.log(this.application);
-    console.log(this.application[0].description);
-    console.log(this.application[0].userId);
-    console.log(this.application[0].status);
   })
 }
 
 application : AllAppsInfo[] = [];
-// application = Array();
-// application:any;
-
-averageRating = 3;
-
-Downloads = 10000;
 
 public redirectTospecificApp(appId: Guid) 
 {

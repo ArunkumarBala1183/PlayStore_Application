@@ -21,13 +21,10 @@ export class DeveloperMyAppsComponent implements OnInit {
           const userId = this.appDetails[0].userId;
           this.service.getDeveloperApps(userId).subscribe(response => {
             this.developedApps = response;
-            console.log(this.developedApps);
-            console.log(this.developedApps[0].status);
           })
         }
       }
     )
-   
   }
   appDetails : AllAppsInfo[] = [];
   developedApps : DeveloperAppInfo[] = [];
@@ -35,8 +32,4 @@ export class DeveloperMyAppsComponent implements OnInit {
   {
     this.router.navigate(['user/specificApp',appId]);
   }
-  
-  averageRating = 3;
-  // Total Downloads
-  Downloads = 1000000;
 }

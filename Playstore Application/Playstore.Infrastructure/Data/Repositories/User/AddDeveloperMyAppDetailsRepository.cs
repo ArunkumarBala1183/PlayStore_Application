@@ -92,6 +92,5 @@ namespace Playstore.Infrastructure.Data.Repositories
 
     throw new EntityNotFoundException($"No AppInfo found for UserId {userId}");
 }
-
-    }
+}
 }   
