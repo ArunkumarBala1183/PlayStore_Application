@@ -50,7 +50,7 @@ export class DeveloperNewAppComponent implements OnInit {
             }
           })
     }
-    initForm()
+    public initForm()
     {
       this.appData=this.formbuilder.group(
         {
@@ -90,7 +90,7 @@ export class DeveloperNewAppComponent implements OnInit {
       }
     }
 
-    handleFile(event:any):void
+    public handleFile(event:any):void
     {
       const files = event.target.files[0];
       if (files) {
@@ -117,7 +117,7 @@ export class DeveloperNewAppComponent implements OnInit {
             console.log(this.AppFile);      
         }
     }
-    multipleFiles(event:any) :void{
+    public multipleFiles(event:any) :void{
       const files:FileList=event.target.files;
       if(files.length>3 || files.length<=1)
       {
@@ -141,7 +141,7 @@ export class DeveloperNewAppComponent implements OnInit {
     }
     // categories=Array('social','entertainment');
      
-    handleLogo(event : any) : void {
+    public handleLogo(event : any) : void {
       this.Logo = event.target.files[0];
       if(this.Logo && ['image/jpeg', 'image/png'].includes(this.Logo.type))
       {
@@ -153,7 +153,7 @@ export class DeveloperNewAppComponent implements OnInit {
       }
       console.log(this.Logo);      
     }
-    onSubmit()
+    public onSubmit()
     {
       if(this.appData.valid)
       {
@@ -188,7 +188,7 @@ export class DeveloperNewAppComponent implements OnInit {
   // }
 
 
-         const userId = this.appInfo[0].userId;
+        const userId = this.appInfo[0].userId;
          
         const formData = new FormData();
         formData.append('UserId' , userId.toString());

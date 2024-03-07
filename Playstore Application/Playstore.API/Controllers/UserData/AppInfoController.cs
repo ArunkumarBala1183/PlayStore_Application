@@ -55,7 +55,7 @@ namespace Playstore.Controllers.UserData
         }
 
         // To get the reviews for the app
-        [HttpGet("ReviewDetails/{appId}")]
+        [HttpGet("ReviewDetails")]
         [ProducesResponseType(typeof(IEnumerable<AppInfoDTO>), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> GetDetails(Guid appId)
@@ -103,7 +103,7 @@ namespace Playstore.Controllers.UserData
             }
         }
         //Getting Individual App Details Using "GetAppById"
-        [HttpGet("GetAppById/{appId}")]
+        [HttpGet("GetAppById")]
         [ProducesResponseType(typeof(AppInfoDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> GetById(Guid appId)
@@ -125,7 +125,7 @@ namespace Playstore.Controllers.UserData
         }
 
         //Getting Developer My App Details Using "DeveloperMyAppDetails"
-        [HttpGet("DeveloperMyAppDetails/{userId}")]
+        [HttpGet("DeveloperMyAppDetails")]
         [ProducesResponseType(typeof(AppInfoDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<object> GetDeveloperDetails(Guid userId)
@@ -148,7 +148,7 @@ namespace Playstore.Controllers.UserData
         }
 
         //Getting MyDownload Details Using "DownloadsDetails"
-        [HttpGet("DownloadsDetails/{userId}")]
+        [HttpGet("DownloadsDetails")]
         [ProducesResponseType(typeof(AppDownloadsDto), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> GetDownloadDetails(Guid userId)
@@ -186,6 +186,16 @@ namespace Playstore.Controllers.UserData
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
+
+            catch (InvalidRequestBodyException)
+            {
+                return BadRequest(new BaseResponseDTO 
+                {   
+                    IsSuccess = false,
+                    Errors = new String[] {"Already Downloaded"}
+                });
+            }
+            
             catch (Exception ex)
             {
                 return NotFound(new BaseResponseDTO
@@ -193,6 +203,8 @@ namespace Playstore.Controllers.UserData
                     IsSuccess = false,
                     Errors = new string[] { ex.Message }
                 });
+                
+
             }
 
         }

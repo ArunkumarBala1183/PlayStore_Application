@@ -8,6 +8,7 @@ import {
   AppReviewsInfo,
   SpecificAppInfo,
 } from 'src/app/interface/user';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-specific-app',
@@ -25,7 +26,6 @@ export class SpecificAppComponent implements OnInit {
       rating: ['', Validators.required],
     });
   }
-
   ngOnInit(): void {
     window.scrollTo(0, 0);
     this.route.params.subscribe((params) => {
@@ -44,6 +44,7 @@ export class SpecificAppComponent implements OnInit {
       this.service.getReviews(appId).subscribe({
         next: (response) => {
           this.appReview = response;
+          this.updateDisplayedReviews();
         },
         error: (error) => {
           console.log(error);
@@ -61,7 +62,7 @@ export class SpecificAppComponent implements OnInit {
     });
   }
 
-  Downloadfile() {
+  public Downloadfile() {
     this.route.params.subscribe((params) => {
       const appId: Guid = params['appId'];
       const userId = this.appInfo[0].userId;
@@ -70,24 +71,33 @@ export class SpecificAppComponent implements OnInit {
         {
         next: (response) => {
           console.log(response);
-          const blob = new Blob([response]);
-          const url = window.URL.createObjectURL(blob);
-          const anchor = document.createElement('a');
-          anchor.setAttribute('type', 'hidden');
-          anchor.href = url;
-          anchor.download = new Date().toISOString() + '.zip';
-          anchor.click();
-          anchor.remove();
-        },
-        error : error => {
-          console.log(error);
-          
-        }
-      });
-    });
-  }
+            const blob = new Blob([response]);
+            const url = window.URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.setAttribute('type', 'hidden');
+            anchor.href = url;
+            anchor.download = new Date().toISOString() + '.zip';
+            anchor.click();
+            anchor.remove();
+          },
+          error : error => {
+            console.error('Error Occurred :' , error);
+            if(error instanceof HttpErrorResponse)
+            {
+              if(error.status === 400)
+              {
+              this.alreadyDownloaded = true;
+              const errorMessage = error.error instanceof Blob ? 'Already Downloaded' : error.error;
+              console.error(errorMessage);
+              
+              }
+            }
+          }
+        });
+  })
+}
 
-  onSubmit() {
+  public onSubmit() {
     if (this.reviewForm.valid) {
       console.log(this.reviewForm);
       const formData = this.reviewForm.value;
@@ -110,16 +120,29 @@ export class SpecificAppComponent implements OnInit {
     }
   }
 
+  showMoreReviews() {
+    this.showAllReviews = true;
+    this.updateDisplayedReviews();
+  }
+
+  updateDisplayedReviews() {
+    const maxReviewsToShow = this.showAllReviews ? this.appReview.length : Math.min(2, this.appReview.length);
+    this.displayedReviews = this.appReview.slice(0, maxReviewsToShow);
+  }
+
   appDetail: SpecificAppInfo[] = [];
   appReview: AppReviewsInfo[] = [];
+  displayedReviews : any[] = [];
+  showAllReviews = false;
   appInfo: AllAppsInfo[] = [];
   reviewForm: FormGroup;
   currentRating = 0;
   stars = Array(5);
   averageRating = 3;
   Downloads = 10000;
+  alreadyDownloaded = false;
   // rating function for the user to rate the specific app.
-  rating(value: number) {
+  public rating(value: number) {
     this.currentRating = value;
     this.reviewForm.patchValue({ rating: value });
     console.log(this.currentRating);

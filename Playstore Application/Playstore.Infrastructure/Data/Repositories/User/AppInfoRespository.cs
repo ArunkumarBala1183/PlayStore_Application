@@ -45,8 +45,7 @@ namespace Playstore.Infrastructure.Data.Repositories
                     return response.AppData;
                     
                 }
-                throw new EntityNotFoundException($"App Already Downloded");
- 
+                throw new InvalidRequestBodyException();
             }
  
             throw new EntityNotFoundException($"No App Found");

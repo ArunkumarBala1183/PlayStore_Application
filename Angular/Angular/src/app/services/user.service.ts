@@ -22,19 +22,19 @@ export class UserService {
 
   getAppsById(appId:Guid)
   {
-    const url = `${this.apiBaseAddress}/AppInfo/GetAppById?id=${appId}`;
+    const url = `${this.apiBaseAddress}/AppInfo/GetAppById?appId=${appId}`;
     return this.http.get<SpecificAppInfo[]>(url);
   }
 
 
   getDeveloperApps(userId : Guid)
   {
-  return this.http.get<DeveloperAppInfo[]>(`${this.apiBaseAddress}/AppInfo/DeveloperMyAppDetails?id=${userId}`);
+  return this.http.get<DeveloperAppInfo[]>(`${this.apiBaseAddress}/AppInfo/DeveloperMyAppDetails?userId=${userId}`);
   } 
 
   getReviews(appId:Guid)
   {
-    return this.http.get<AppReviewsInfo[]>(`${this.apiBaseAddress}/AppInfo/ReviewDetails?id=${appId}`);
+    return this.http.get<AppReviewsInfo[]>(`${this.apiBaseAddress}/AppInfo/ReviewDetails?appId=${appId}`);
   }
 
   postReview(formData : any)
@@ -46,7 +46,7 @@ export class UserService {
   getDownloadedApps(userId : Guid)
   {
     console.log(userId)
-    return this.http.get<DownloadedAppsInfo[]>(`${this.apiBaseAddress}/AppInfo/DownloadsDetails?Userid=${userId}`);
+    return this.http.get<DownloadedAppsInfo[]>(`${this.apiBaseAddress}/AppInfo/DownloadsDetails?userId=${userId}`);
   }
 
   PostAppFile(appId:Guid,userId:Guid)

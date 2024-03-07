@@ -24,7 +24,6 @@ namespace Playstore.Infrastructure.Data.Repositories
         public async Task<object> GetAppDetails(Guid id)
         {
             var response = await this.databaseContext.AppInfo.Include(obj=>obj.Category).Include(obj=>obj.AppImages).Where(obj=>obj.AppId==id).ToListAsync();
-            
             var appImages = await this.databaseContext.AppImages.Where(obj => obj.AppId== id).ToListAsync();
             var AppRating=await this.databaseContext.AppReviews.Where(obj=>obj.AppId==id).ToListAsync();
             var Value=await this.databaseContext.AppDownloads.Where(obj=>obj.AppId==id).ToListAsync();

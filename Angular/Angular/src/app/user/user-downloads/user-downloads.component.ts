@@ -37,7 +37,7 @@ export class UserDownloadsComponent implements OnInit {
   
   }
 
-  redirectTospecificApp(appId : string) 
+  public redirectTospecificApp(appId : string) 
   {
     this.router.navigate(['user/specificApp',appId]);
   }

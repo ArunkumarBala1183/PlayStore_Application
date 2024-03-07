@@ -32,7 +32,7 @@ averageRating = 3;
 
 Downloads = 10000;
 
-redirectTospecificApp(appId: Guid) 
+public redirectTospecificApp(appId: Guid) 
 {
   this.router.navigate(['user/specificApp',appId]);
   
@@ -40,7 +40,7 @@ redirectTospecificApp(appId: Guid)
 
 searchInput : string = '';
 
-filterItems()
+public filterItems()
 {
   return this.application.filter((app:AllAppsInfo) => 
       app.name.toLowerCase().includes(this.searchInput.toLowerCase()) || 

@@ -31,7 +31,7 @@ export class DeveloperMyAppsComponent implements OnInit {
   }
   appDetails : AllAppsInfo[] = [];
   developedApps : DeveloperAppInfo[] = [];
-  redirectTospecificApp(appId : Guid) 
+  public redirectTospecificApp(appId : Guid) 
   {
     this.router.navigate(['user/specificApp',appId]);
   }

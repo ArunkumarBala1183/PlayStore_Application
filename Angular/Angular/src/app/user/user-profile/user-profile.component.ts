@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class UserProfileComponent {
 
 constructor(private router:Router) {}
-resetPassword() {
+public resetPassword() {
   this.router.navigate(['user/resetPassword'])
 }
 

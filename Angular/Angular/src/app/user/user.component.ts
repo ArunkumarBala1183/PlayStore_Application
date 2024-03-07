@@ -18,21 +18,21 @@ export class UserComponent {
   userProfilePage = environment.userProfileRoute;
   specificAppPage = environment.specificAppRoute;
   resetPasswordPage = environment.resetPasswordRoute;
+  
   constructor(private router : Router) {
   }
 
   isHighlightComponent: string = this.homePage;
-  highlightSelectedComponent(component: string) 
+  public highlightSelectedComponent(component: string) 
   {
       this.isHighlightComponent = component;
   }
 
-logout() {
+public logout() {
   this.router.navigate([''])
 }
 navbar = false;
-showMenu() {
+public showMenu() {
 this.navbar = !this.navbar;
 }
-
 }
