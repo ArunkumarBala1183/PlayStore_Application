@@ -19,6 +19,13 @@ namespace Playstore.Core.Data.Repositories
         {
             return await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
         }
+        public async Task<List<UserRole>> GetUserRolesAsync(Guid userId)
+        {
+            return await _context.UserRole
+                .Include(ur => ur.Role)
+                .Where(ur => ur.UserId == userId)
+                .ToListAsync();
+        }
         // public async Task<List<Users>> GetAll()
         // {
         //     return await _context.Users.ToListAsync();

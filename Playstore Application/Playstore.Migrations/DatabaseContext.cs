@@ -34,6 +34,7 @@ namespace Playstore.Migrations
         public DbSet<AppReview> AppReviews { get; set; }
         public DbSet<AppDownloads> AppDownloads { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<UserRole> UserRole { get; set; }
         public DbSet<AdminRequests> AdminRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
