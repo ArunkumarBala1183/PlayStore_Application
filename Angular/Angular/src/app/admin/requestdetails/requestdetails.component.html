@@ -61,8 +61,8 @@
     <h3>APP IMAGES</h3>
 </div>
 <div class="mt-4 md:ml-36 flex justify-evenly space-x-5 w-fit ">
-    <div *ngFor="let request of appdetails[0]?.appImages" class="hover:scale-105">
-        <img [src]="request" alt="logo" class=" mr-2 mb-2 h-72">
+    <div *ngFor="let request of requestDetails[0].appImages" class="hover:scale-105">
+        <img src="data:image/png;base64,{{request.image}}" alt="logo" class=" mr-2 mb-2 h-60 w25">
     </div>
 </div>
 
