@@ -15,7 +15,7 @@ export class AppInfoService {
 
   GetAllApps()
   {
-      return this.http.get(this.baseUrl + "AppInfo/GetAllApps" , {observe: "response"});
+      return this.http.get(this.baseUrl + "AppInfo/GetAllApp" , {observe: "response"});
   }
 
   getAppData(appId : string)

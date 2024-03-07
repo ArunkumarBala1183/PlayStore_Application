@@ -12,13 +12,8 @@ using Playstore.Migrations;
 namespace Playstore.Migrations.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-<<<<<<<< HEAD:Playstore Application/Playstore.Migrations/Migrations/20240222043957_Additemmigrations.Designer.cs
-    [Migration("20240222043957_Additemmigrations")]
-    partial class Additemmigrations
-========
-    [Migration("20240222082659_Database Changed to SSMS from SQLITE3")]
-    partial class DatabaseChangedtoSSMSfromSQLITE3
->>>>>>>> f86041e24b1c3a134d6c39b89b3b16b65d72c6c2:Playstore Application/Playstore.Migrations/Migrations/20240222082659_Database Changed to SSMS from SQLITE3.Designer.cs
+    [Migration("20240307101457_Updateed Migration")]
+    partial class UpdateedMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -131,12 +126,6 @@ namespace Playstore.Migrations.Migrations
 
                     b.Property<Guid>("AppId")
                         .HasColumnType("uniqueidentifier");
-<<<<<<<< HEAD:Playstore Application/Playstore.Migrations/Migrations/20240222043957_Additemmigrations.Designer.cs
-
-                    b.Property<Guid?>("AppInfoAppId")
-                        .HasColumnType("uniqueidentifier");
-========
->>>>>>>> f86041e24b1c3a134d6c39b89b3b16b65d72c6c2:Playstore Application/Playstore.Migrations/Migrations/20240222082659_Database Changed to SSMS from SQLITE3.Designer.cs
 
                     b.Property<byte[]>("Image")
                         .HasColumnType("varbinary(max)");
@@ -240,11 +229,7 @@ namespace Playstore.Migrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-<<<<<<<< HEAD:Playstore Application/Playstore.Migrations/Migrations/20240222043957_Additemmigrations.Designer.cs
-                    b.Property<string>("RefreshId")
-========
                     b.Property<string>("RefreshKey")
->>>>>>>> f86041e24b1c3a134d6c39b89b3b16b65d72c6c2:Playstore Application/Playstore.Migrations/Migrations/20240222082659_Database Changed to SSMS from SQLITE3.Designer.cs
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
@@ -345,11 +330,7 @@ namespace Playstore.Migrations.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateOfBirth")
-<<<<<<<< HEAD:Playstore Application/Playstore.Migrations/Migrations/20240222043957_Additemmigrations.Designer.cs
                         .HasColumnType("datetime2");
-========
-                        .HasColumnType("date");
->>>>>>>> f86041e24b1c3a134d6c39b89b3b16b65d72c6c2:Playstore Application/Playstore.Migrations/Migrations/20240222082659_Database Changed to SSMS from SQLITE3.Designer.cs
 
                     b.Property<string>("EmailId")
                         .HasColumnType("nvarchar(max)");
@@ -432,7 +413,7 @@ namespace Playstore.Migrations.Migrations
                         .IsRequired();
 
                     b.HasOne("Playstore.Contracts.Data.Entities.Users", "Users")
-                        .WithMany()
+                        .WithMany("AppInfo")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -535,6 +516,8 @@ namespace Playstore.Migrations.Migrations
                     b.Navigation("AdminRequests");
 
                     b.Navigation("AppDownloads");
+
+                    b.Navigation("AppInfo");
 
                     b.Navigation("AppReview");
 

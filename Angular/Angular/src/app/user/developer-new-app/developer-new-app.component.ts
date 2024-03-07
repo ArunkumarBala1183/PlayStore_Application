@@ -7,8 +7,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { AllAppsInfo, CategoryInfo } from 'src/app/interface/user';
+import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -32,7 +34,9 @@ export class DeveloperNewAppComponent implements OnInit {
   constructor(
     public router: Router,
     public formbuilder: FormBuilder,
-    private service: UserService
+    private service: UserService,
+    private loginService:LoginService,
+    private toastr : ToastrService
   ) {}
   ngOnInit(): void {
     this.initForm();
@@ -41,14 +45,14 @@ export class DeveloperNewAppComponent implements OnInit {
         this.category = response;
       },
     });
-    this.service.getAllApps().subscribe({
-      next: (response) => {
-        this.appInfo = response;
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
+    // this.service.getAllApps().subscribe({
+    //   next: (response) => {
+    //     this.appInfo = response;
+    //   },
+    //   error: (error) => {
+    //     console.log(error);
+    //   },
+    // });
   }
   public initForm() {
     this.appData = this.formbuilder.group({
@@ -138,11 +142,13 @@ export class DeveloperNewAppComponent implements OnInit {
       event.target.value = '';
     }
   }
+ 
   public onSubmit() {
     if (this.appData.valid) {
-      const userId = this.appInfo[0].userId;
+      const userData =  this.loginService.getUserId();
+      
       const formData = new FormData();
-      formData.append('UserId', userId.toString());
+      formData.append('UserId', userData);
       formData.append('Logo', this.Logo!);
       formData.append('AppFile', this.AppFile!);
       formData.append('Name', this.appData.get('Name')?.value);
@@ -159,10 +165,10 @@ export class DeveloperNewAppComponent implements OnInit {
         next: (response : any) => {
           if(response === 400)
           {
-            alert('App Name already exist , try different Name');
+            this.toastr.error('App Name already exist , try different Name');
           }
           else{
-          alert('Form Submitted',);
+          this.toastr.success('Form Submitted',);
           }
         },
         error: (error) => {

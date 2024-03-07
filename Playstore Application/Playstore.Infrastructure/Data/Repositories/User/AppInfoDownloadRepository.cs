@@ -24,10 +24,10 @@ namespace Playstore.Infrastructure.Data.Repositories
             var response = await databaseContext.AppDownloads
             .Include(data=>data.AppInfo)
             .Include(data=>data.AppInfo.Category)
-            .Where(appId => appId.UserId == Userid)
+            .Where(userId=>userId.UserId==Userid)
             .ToListAsync();
-          
-            if (response.Any())
+            Console.WriteLine("////..................//////"+response.Count);
+            if (response.Count > 0)
             {
                var myappDetails = response.Select(appInfo =>
         {

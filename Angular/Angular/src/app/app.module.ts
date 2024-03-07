@@ -15,10 +15,7 @@ import { HomeModule } from './home/home.module';
 import { JwtInterceptor } from './jwt.interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
-
-import { HttpClientModule } from '@angular/common/http';
 import { UserModule } from './user/user.module';
-import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -38,14 +35,12 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     LoginModule,
     HomeModule,
+    UserModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: () => localStorage.getItem('token')
       }}),
       ToastrModule.forRoot()
-    HttpClientModule,
-    UserModule,
-    FormsModule
   ],
   providers: [
     {

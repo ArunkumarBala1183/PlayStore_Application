@@ -328,7 +328,7 @@ namespace Playstore.Migrations.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("date");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("EmailId")
                         .HasColumnType("nvarchar(max)");

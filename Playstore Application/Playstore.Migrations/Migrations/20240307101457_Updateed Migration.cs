@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Playstore.Migrations.Migrations
 {
-    public partial class AddReviewmigrations : Migration
+    public partial class UpdateedMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -104,7 +104,7 @@ namespace Playstore.Migrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RefreshId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -218,7 +218,7 @@ namespace Playstore.Migrations.Migrations
                         column: x => x.AppId,
                         principalTable: "AppInfo",
                         principalColumn: "AppId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -238,7 +238,7 @@ namespace Playstore.Migrations.Migrations
                         column: x => x.AppId,
                         principalTable: "AppInfo",
                         principalColumn: "AppId",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AppDownloads_Users_UserId",
                         column: x => x.UserId,
@@ -253,17 +253,17 @@ namespace Playstore.Migrations.Migrations
                 {
                     AppImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Image = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    AppId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AppInfoAppId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    AppId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AppImages", x => x.AppImageId);
                     table.ForeignKey(
-                        name: "FK_AppImages_AppInfo_AppInfoAppId",
-                        column: x => x.AppInfoAppId,
+                        name: "FK_AppImages_AppInfo_AppId",
+                        column: x => x.AppId,
                         principalTable: "AppInfo",
-                        principalColumn: "AppId");
+                        principalColumn: "AppId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -315,9 +315,9 @@ namespace Playstore.Migrations.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppImages_AppInfoAppId",
+                name: "IX_AppImages_AppId",
                 table: "AppImages",
-                column: "AppInfoAppId");
+                column: "AppId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppInfo_CategoryId",

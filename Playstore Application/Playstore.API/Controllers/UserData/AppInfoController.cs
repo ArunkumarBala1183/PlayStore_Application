@@ -83,7 +83,8 @@ namespace Playstore.Controllers.UserData
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> Post([FromForm] CreateAppInfoDTO model)
         {
-
+        Console.WriteLine("came.....................");
+         
             try
             {
                 var command = new CreateAppInfoCommand(model);
@@ -177,12 +178,12 @@ namespace Playstore.Controllers.UserData
         [Route("DownloadFile")]
         [ProducesResponseType(typeof(AppDownloadsDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DownloadFile(AppDownloadsDto appDownloadsDto)
+        public async Task<IActionResult> DownloadFile(Guid appId , Guid userId)
         {
             try
             {
 
-                var query = new GetAppDataQuery(appDownloadsDto);
+                var query = new GetAppDataQuery(appId , userId);
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }

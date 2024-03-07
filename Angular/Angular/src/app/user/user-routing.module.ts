@@ -12,6 +12,7 @@ import { SpecificAppComponent } from './specific-app/specific-app.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { UserSearchComponent } from './user-search/user-search.component';
 import { AbbreviateNumberPipe } from './abbreviate-number.pipe';
+import { AuthGuard } from '../auth.guard';
 
 const routes : Routes = [
   {
@@ -19,28 +20,28 @@ const routes : Routes = [
     children:[
       
         {
-          path:'home', component : UserHomeComponent
+          path:'home', component : UserHomeComponent, canActivate:[AuthGuard],data:{role:'User'}
         },
         {
-          path:'downloads', component : UserDownloadsComponent
+          path:'downloads', component : UserDownloadsComponent, canActivate:[AuthGuard],data:{role:'User'}
         },
         {
-          path:'aboutUs', component : AboutUsComponent
+          path:'aboutUs', component : AboutUsComponent, canActivate:[AuthGuard],data:{role:'User'}
         },
         {
-          path:'myApps', component : DeveloperMyAppsComponent
+          path:'myApps', component : DeveloperMyAppsComponent, canActivate:[AuthGuard],data:{role:'User'}
         },
         {
-          path:'newApp', component : DeveloperNewAppComponent
+          path:'newApp', component : DeveloperNewAppComponent, canActivate:[AuthGuard],data:{role:'User'}
         },
         {
-          path:'userProfile', component : UserProfileComponent
+          path:'userProfile', component : UserProfileComponent, canActivate:[AuthGuard],data:{role:'User'}
         },
         {
-          path: 'specificApp/:appId', component : SpecificAppComponent
+          path: 'specificApp/:appId', component : SpecificAppComponent, canActivate:[AuthGuard],data:{role:'User'}
         },
         {
-          path:'resetPassword', component : ResetPasswordComponent
+          path:'resetPassword', component : ResetPasswordComponent, canActivate:[AuthGuard],data:{role:'User'}
         }
     ]
   }

@@ -1,16 +1,11 @@
 using MediatR;
-using Playstore.Contracts.Data;
 using Playstore.Contracts.DTO;
 using Playstore.Contracts.Data.Entities;
 using FluentValidation;
-using System.Text.Json;
 using Playstore.Core.Exceptions;
 using Microsoft.AspNetCore.Identity;
-using Playstore.Core.Validators;
 using Playstore.Contracts.Data.Repositories;
 using AutoMapper;
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -63,7 +58,7 @@ namespace Playstore.Providers.Handlers.Commands
             {
                 Name = model.Name,
                 EmailId = model.EmailId,
-                DateOfBirth = DateOnly.FromDateTime(model.DateOfBirth),
+                DateOfBirth = model.DateOfBirth.Date,
                 MobileNumber = model.MobileNumber
             };
             //var userEntity = this.mapper.Map<Users>(model);

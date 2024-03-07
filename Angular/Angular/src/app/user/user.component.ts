@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
+import { LoginService } from '../services/login.service';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user',
@@ -17,7 +19,7 @@ export class UserComponent {
   specificAppPage = environment.specificAppRoute;
   resetPasswordPage = environment.resetPasswordRoute;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private loginService:LoginService,private toastr:ToastrService) {}
 
   isHighlightComponent: string = this.homePage;
   public highlightSelectedComponent(component: string) {
@@ -25,7 +27,12 @@ export class UserComponent {
   }
 
   public logout() {
-    this.router.navigate(['']);
+    const response=this.loginService.logout();
+     if(response)
+     {
+       this.toastr.show('Logout Successful')
+       this.router.navigate(['']);
+     }
   }
   navbar = false;
   public showMenu() {

@@ -23,7 +23,7 @@ namespace Playstore.Controllers.Admin
             this._mediator = mediator;
         }
 
-        [HttpGet("GetAllApps")]
+        [HttpGet("GetAllApp")]
         [ProducesResponseType(typeof(IEnumerable<ListAppInfoDto>), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetAllApps()

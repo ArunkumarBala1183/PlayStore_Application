@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { AllAppsInfo, DeveloperAppInfo, SpecificAppInfo } from 'src/app/interface/user';
 import { AppService } from 'src/app/services/app.service';
+import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -11,21 +12,22 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./developer-my-apps.component.scss']
 })
 export class DeveloperMyAppsComponent implements OnInit {
-  constructor(private router:Router, private service : UserService){}
+  constructor(private router:Router, private service : UserService , private loginService:LoginService){}
 
   ngOnInit(): void {
-    this.service.getAllApps().subscribe(
-      {
-        next : response => {
-          this.appDetails = response;
-          const userId = this.appDetails[0].userId;
-          this.service.getDeveloperApps(userId).subscribe(response => {
-            this.developedApps = response;
-          })
-        }
-      }
-    )
+    const userId = this.loginService.getUserId();
+
+    this.service.getDeveloperApps(userId).subscribe({
+      next: (response) => {
+        this.developedApps = response;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
   }
+      
+    
   appDetails : AllAppsInfo[] = [];
   developedApps : DeveloperAppInfo[] = [];
   public redirectTospecificApp(appId : Guid) 

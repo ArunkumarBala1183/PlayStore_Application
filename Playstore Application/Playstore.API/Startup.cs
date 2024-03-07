@@ -11,24 +11,6 @@ using Playstore.Core.Security;
 using Serilog;
 using Playstore.JsonSerialize;
 using System;
-using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Playstore.Infrastructure;
-using Playstore.Core;
-using Microsoft.AspNetCore.Mvc;
-using Playstore.Core.Security;
-using Playstore.Migrations;
-using System;
-using Playstore.JsonSerialize;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Playstore.Contracts.DTO;
 
 namespace Playstore
 {

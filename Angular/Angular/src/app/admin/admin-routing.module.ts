@@ -22,46 +22,46 @@ const routes: Routes = [
     path: 'admin', component: AdminComponent, children:
       [
         {
-          path: 'dashboard', component: DashboardComponent, title: 'Admin Dashboard', canActivate:[AuthGuard],data:{role:'User'},
+          path: 'dashboard', component: DashboardComponent, title: 'Admin Dashboard', canActivate:[AuthGuard],data:{role:'Admin'},
         },
         // {
-        //   path:'home', redirectTo : '/admin' , pathMatch : 'full'
+        //   path:'home', redirectTo : '/admin' , pathMatch : 'fAdmin
         // },
        
         {
-          path: 'apps', component: AppsComponent, title: 'Admin apps', canActivate:[AuthGuard],data:{role:'User'},
+          path: 'apps', component: AppsComponent, title: 'Admin apps', canActivate:[AuthGuard],data:{role:'Admin'},
         },
        
         {
-          path: 'users', component: UsersComponent, title: 'Users', canActivate:[AuthGuard],data:{role:'User'},
+          path: 'users', component: UsersComponent, title: 'Users', canActivate:[AuthGuard],data:{role:'Admin'},
         },
         
         {
-          path: 'myDownloads', component: MyDownloadsComponent, title: 'MyDownloads', canActivate:[AuthGuard],data:{role:'User'},
+          path: 'myDownloads', component: MyDownloadsComponent, title: 'MyDownloads', canActivate:[AuthGuard],data:{role:'Admin'},
         },
         {
-          path: 'category', component: CategoryComponent, title: 'category', canActivate:[AuthGuard],data:{role:'User'},
+          path: 'category', component: CategoryComponent, title: 'category', canActivate:[AuthGuard],data:{role:'Admin'},
         },
         {
-          path: 'logs', component: LogsComponent, title: 'Logs', canActivate:[AuthGuard],data:{role:'User'},
+          path: 'logs', component: LogsComponent, title: 'Logs', canActivate:[AuthGuard],data:{role:'Admin'},
         },
         {
-          path: 'profile', component: ProfileComponent, title: 'Profile', canActivate:[AuthGuard],data:{role:'User'},
+          path: 'profile', component: ProfileComponent, title: 'Profile', canActivate:[AuthGuard],data:{role:'Admin'},
         },
         {
-          path: 'apprequests', component: ApprequestsComponent, title: 'apprequests', canActivate:[AuthGuard],data:{role:'User'},
-        },
-
-        {
-          path: 'requestdetails/:id', component: RequestdetailsComponent, title: 'requestdetails', canActivate:[AuthGuard],data:{role:'User'},
+          path: 'apprequests', component: ApprequestsComponent, title: 'apprequests', canActivate:[AuthGuard],data:{role:'Admin'},
         },
 
         {
-          path: 'about', component: AboutComponent, title: 'about', canActivate:[AuthGuard],data:{role:'User'},
+          path: 'requestdetails/:id', component: RequestdetailsComponent, title: 'requestdetails', canActivate:[AuthGuard],data:{role:'Admin'},
         },
 
         {
-          path: 'changePassword', component: ChangePasswordComponent, title: 'changePassword', canActivate:[AuthGuard],data:{role:'User'},
+          path: 'about', component: AboutComponent, title: 'about', canActivate:[AuthGuard],data:{role:'Admin'},
+        },
+
+        {
+          path: 'changePassword', component: ChangePasswordComponent, title: 'changePassword', canActivate:[AuthGuard],data:{role:'Admin'},
         }
       ]
   }

@@ -9,8 +9,6 @@ using Playstore.Contracts.DTO.AppReview;
 using Playstore.Contracts.DTO.Category;
 using Playstore.Contracts.DTO.UserInfo;
 using Playstore.Contracts.DTO.UserRole;
-using Playstore.Contracts.DTO.AppDownloads;
-using Playstore.Contracts.DTO.Category;
 
 namespace Playstore.Core.Mapper
 {

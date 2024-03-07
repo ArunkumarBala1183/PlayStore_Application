@@ -83,12 +83,25 @@ public  checkUser(email: EmailExists) {
     {
       // console.log('..................'+ token);
       const decodedToken=this.jwtHelper.decodeToken(token);
+      console.log(decodedToken);
       const role=decodedToken['role'];
       // console.log('...............'+ role)
       return role;
     }
     return null;
   }
+  public getUserId()
+  {
+    const token=localStorage.getItem('accessToken');
+    
+  if(token)  {
+    const decodedToken=this.jwtHelper.decodeToken(token);
+    const userId = decodedToken ? decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata'] : null;
+    console.log(userId)
+    return userId;
+  }
+}
+
  public isTokenExpired():boolean
   { 
     console.log('token expired called')

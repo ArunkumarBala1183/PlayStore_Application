@@ -9,6 +9,8 @@ import {
   SpecificAppInfo,
 } from 'src/app/interface/user';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LoginService } from 'src/app/services/login.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-specific-app',
@@ -19,7 +21,9 @@ export class SpecificAppComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private service: UserService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private loginService : LoginService,
+    private toastr : ToastrService
   ) {
     this.reviewForm = this.formBuilder.group({
       commands: ['', Validators.required],
@@ -32,16 +36,16 @@ export class SpecificAppComponent implements OnInit {
       const appId: Guid = params['appId'];
       this.getSpecificApp(appId)
     });
-
-    this.service.getAllApps().subscribe({
-      next: (response) => {
-        this.appInfo = response;
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
   }
+    // this.service.getAllApps().subscribe({
+    //   next: (response) => {
+    //     this.appInfo = response;
+    //   },
+    //   error: (error) => {
+    //     console.log(error);
+    //   },
+    // });
+
 
   getSpecificApp(appId : Guid)
   {
@@ -71,8 +75,7 @@ export class SpecificAppComponent implements OnInit {
   public Downloadfile() {
     this.route.params.subscribe((params) => {
       const appId: Guid = params['appId'];
-      const userId = this.appInfo[0].userId;
-
+      const userId = this.loginService.getUserId();
       this.service.PostAppFile(appId, userId).subscribe({
         next: (response) => {
           const blob = new Blob([response]);
@@ -83,9 +86,7 @@ export class SpecificAppComponent implements OnInit {
           anchor.download = new Date().toISOString() + '.zip';
           anchor.click();
           anchor.remove();
-
           this.getSpecificApp(appId)
-
         },
         error: (error) => {
           console.error('Error Occurred :', error);
@@ -108,21 +109,23 @@ export class SpecificAppComponent implements OnInit {
     if (this.reviewForm.valid) {
       const formData = this.reviewForm.value;
       const appId = this.route.snapshot.params['appId'];
-      const userId = this.appInfo[0].userId;
+      const userId = this.loginService.getUserId();
       formData.appId = appId;
       formData.userId = userId;
 
       formData.additionalValue = this.service.postReview(formData).subscribe({
         next: (response) => {
           console.log('Form Submitted', response);
+          this.getSpecificApp(appId);
         },
         error: (error) => {
           console.log(error);
         },
       });
-      alert('Form Submitted');
-    } else {
-      alert('enter valid details');
+      this.toastr.success('Form Submitted');
+    } 
+    else {
+      this.toastr.error('Enter Valid Details');
     }
   }
 
@@ -132,9 +135,7 @@ export class SpecificAppComponent implements OnInit {
   }
 
   public updateDisplayedReviews() {
-    const maxReviewsToShow = this.showAllReviews
-      ? this.appReview.length
-      : Math.min(2, this.appReview.length);
+    const maxReviewsToShow = this.showAllReviews ? this.appReview.length : Math.min(3, this.appReview.length);
     this.displayedReviews = this.appReview.slice(0, maxReviewsToShow);
   }
 
@@ -142,7 +143,7 @@ export class SpecificAppComponent implements OnInit {
   appReview: AppReviewsInfo[] = [];
   displayedReviews: any[] = [];
   showAllReviews = false;
-  appInfo: AllAppsInfo[] = [];
+  // appInfo: AllAppsInfo[] = [];
   reviewForm: FormGroup;
   currentRating = 0;
   stars = Array(5);

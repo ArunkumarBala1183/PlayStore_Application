@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
+import { ToastrService } from 'ngx-toastr';
 import { AllAppsInfo } from 'src/app/interface/user';
 import { UserService } from 'src/app/services/user.service';
 
@@ -10,7 +11,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./user-home.component.scss']
 })
 export class UserHomeComponent implements OnInit {  
-constructor(private router : Router, private service: UserService)
+constructor(private router : Router, private service: UserService, private toastr : ToastrService)
 {
 }
 

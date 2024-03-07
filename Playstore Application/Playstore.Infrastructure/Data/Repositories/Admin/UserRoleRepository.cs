@@ -6,6 +6,7 @@ using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories.Admin;
 using Playstore.Contracts.Data.RoleConfig;
 using Playstore.Contracts.DTO.AppPublishRequest;
+using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
 
 namespace Playstore.Core.Data.Repositories.Admin

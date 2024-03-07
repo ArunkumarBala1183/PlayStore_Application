@@ -13,30 +13,30 @@ using Playstore.Contracts.DTO.AppDownloads;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
-    public class AppInfoRespository : Repository<AppInfo>, IAppValueRepository
+    public class AppValueRepository : Repository<AppInfo>, IAppValueRepository
     {
         private readonly DatabaseContext context;
-        public AppInfoRespository(DatabaseContext context) : base(context)
+        public AppValueRepository(DatabaseContext context) : base(context)
         {
             this.context = context;
         }
 
-        public async Task<AppData> GetAppData(AppDownloadsDto appDownloadsDto)
+        public async Task<AppData> GetAppData(Guid appId , Guid userId)
         {
             var response = await context.AppInfo
             .Include(data => data.AppData)
-            .FirstOrDefaultAsync(appId => appId.AppId == appDownloadsDto.AppId);
+            .FirstOrDefaultAsync(id => id.AppId == appId);
  
             if (response != null)
             {
-                var fileEntity = this.context.AppDownloads.FirstOrDefault(app => app.AppId == appDownloadsDto.AppId && app.UserId == appDownloadsDto.UserId);
+                var fileEntity = this.context.AppDownloads.FirstOrDefault(app => app.AppId == appId && app.UserId == userId); //use userId here
  
                 if (fileEntity == null)
                 {
                     var entity = new AppDownloads
                     {
-                        AppId = appDownloadsDto.AppId,
-                        UserId = appDownloadsDto.UserId,
+                        AppId = appId,
+                        UserId = userId, //use userId here
                         DownloadedDate = DateTime.Today,
  
                     };
