@@ -38,7 +38,7 @@ export interface SpecificAppInfo
     categoryId : Guid
     downloads : number;
     publisherName : string;
-    publishedDate : Date;
+    publishedDate : string;
 }
 
 export interface AppReviewsInfo

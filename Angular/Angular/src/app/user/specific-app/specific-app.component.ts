@@ -48,6 +48,9 @@ export class SpecificAppComponent implements OnInit {
     this.service.getAppsById(appId).subscribe({
       next: (responses) => {
         this.appDetail = responses;
+        console.log(this.appDetail)
+        const publishedDate = this.appDetail[0].publishedDate.toString().split('T')[0];//2024-03-01
+        this.appDetail[0].publishedDate = publishedDate;
       },
       error: (error) => {
         console.log(error);
