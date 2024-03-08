@@ -11,6 +11,7 @@ using Playstore.Core.Security;
 using Serilog;
 using Playstore.JsonSerialize;
 using System;
+using Playstore.Contracts.DTO;
 
 namespace Playstore
 {
@@ -41,6 +42,7 @@ namespace Playstore
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+            services.Configure<EmailConfig>(Configuration.GetSection("EmailConfig"));
 
             services.AddControllers().AddJsonOptions(option => {
                 option.JsonSerializerOptions.Converters.Add(new JsonConvertor());

@@ -14,12 +14,12 @@ namespace Playstore.Providers.Handlers.Queries.UserData
     public class GetAllAppInfoQueryHandler : IRequestHandler<GetAllAppInfoQuery, IEnumerable<AppsdetailsDTO>>
     {
         private readonly IUnitOfWork _repository;
-        private readonly IMapper _mapper;
+       
 
-        public GetAllAppInfoQueryHandler(IUnitOfWork repository, IMapper mapper)
+        public GetAllAppInfoQueryHandler(IUnitOfWork repository)
         {
             _repository = repository;
-            _mapper = mapper;
+         
         }
 
         public async Task<IEnumerable<AppsdetailsDTO>> Handle(GetAllAppInfoQuery request, CancellationToken cancellationToken)

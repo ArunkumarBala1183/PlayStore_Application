@@ -21,13 +21,14 @@ namespace Playstore.Providers.Handlers.Commands
 {
     public class LoginUsersCommandHandler : IRequestHandler<LoginUsersCommand, TokenResponse>
     {
+        private readonly IRoleRepository _roleRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IValidator<LoginUsersDTO> _validator;
         private readonly IUserCredentialsRepository _credentialsRepository;
         private readonly IPasswordHasher<UserCredentials> _passwordHasher;
         private readonly IConfiguration _configuration;
  
-        public LoginUsersCommandHandler(IUserCredentialsRepository credentialsRepository,
+        public LoginUsersCommandHandler(IRoleRepository roleRepository,IUserCredentialsRepository credentialsRepository,
         IRefreshTokenRepository refreshTokenRepository, IConfiguration configuration,
             IValidator<LoginUsersDTO> validator, IPasswordHasher<UserCredentials> passwordHasher)
         {
@@ -35,6 +36,7 @@ namespace Playstore.Providers.Handlers.Commands
             _passwordHasher = passwordHasher;
             _validator = validator;
             _configuration = configuration;
+            _roleRepository = roleRepository;
             _refreshTokenRepository = refreshTokenRepository;
         }
  
@@ -51,7 +53,7 @@ namespace Playstore.Providers.Handlers.Commands
                     Errors = errors
                 };
             }
- 
+            
             var userCredentials = await _credentialsRepository.GetByEmailAsync(model.EmailId);
             var refreshTokenEntity = await _refreshTokenRepository.GetRefreshTokenAsync(userCredentials.UserId);
  
@@ -66,16 +68,23 @@ namespace Playstore.Providers.Handlers.Commands
             {
                 throw new InvalidcredentialsException("Invalid password");
             }
- 
+            var userRoles = await _roleRepository.GetUserRolesAsync(userCredentials.UserId);
+            var roleCodes = userRoles.Select(ur => ur.Role.RoleCode).ToList();
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Authentication:Jwt:Secret"));
  
             var claims = new List<Claim>
             {
+                
                 new Claim(ClaimTypes.UserData, userCredentials.UserId.ToString()),
-                new Claim(ClaimTypes.Role , model.RoleCode),
+                //new Claim(ClaimTypes.Role , model.RoleCode),
                 // new Claim(ClaimTypes.Expired, refreshTokenEntity.RefreshKey)
             };
+            foreach (var roleCode in roleCodes)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, roleCode));
+            }
             if (refreshTokenEntity != null)
             {
                 claims.Add(new Claim(ClaimTypes.Expired, refreshTokenEntity.RefreshKey));
@@ -89,11 +98,13 @@ namespace Playstore.Providers.Handlers.Commands
                 Expires = accessTokenExpires,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            var refreshToken = refreshTokenEntity!= null ? GenerateRefreshToken() : null;
-            if(refreshToken != null)
-            {
-                await StoreRefreshTokenAsync(userCredentials.UserId, refreshToken);
-            }
+            // var refreshToken = refreshTokenEntity!= null ? GenerateRefreshToken() : null;
+            // if(refreshToken != null)
+            // {
+            //     await StoreRefreshTokenAsync(userCredentials.UserId, refreshToken);
+            // }
+            var refreshToken = GenerateRefreshToken();
+            await StoreRefreshTokenAsync(userCredentials.UserId, refreshToken);
            
             var token = tokenHandler.CreateToken(tokenDescriptor);
  
@@ -120,3 +131,5 @@ namespace Playstore.Providers.Handlers.Commands
         }
     }
 }
+
+

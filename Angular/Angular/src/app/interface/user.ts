@@ -87,3 +87,10 @@ export interface CategoryInfo
     categoryName : string;
     categoryId : Guid;
 }
+export interface userInfo
+{
+    name:string;
+    role:string[];
+    email:string;
+    phoneNumber:string;
+}

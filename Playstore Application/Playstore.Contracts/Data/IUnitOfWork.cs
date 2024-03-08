@@ -7,9 +7,10 @@ namespace Playstore.Contracts.Data
     {
        
         IUserRepository User { get; }
-
-        IDeveloperRole UserRole {get;}
+        IUserDetailsRepository UserData{get;}
         
+        IDeveloperRole UserRole {get;}
+        IUserInfoRepository UserInfo{get;}
         IAppRepository App{get;}
         IAppReviewRepository AppReview{get;}
         IAppValueRepository AppValue{get;}
