@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { SearchUser } from '../interface/search-user';
-import { AllAppsInfo, AppReviewsInfo, CategoryInfo, DeveloperAppInfo, DownloadedAppsInfo, SpecificAppInfo } from '../interface/user';
+import { AllAppsInfo, AppReviewsInfo, CategoryInfo, DeveloperAppInfo, DownloadedAppsInfo, SpecificAppInfo, userInfo } from '../interface/user';
 import { Observable } from 'rxjs';
 import { Guid } from 'guid-typescript';
 
@@ -36,6 +36,11 @@ export class UserService {
   {
     const url = `${this.baseUrl}AppInfo/GetAppById?appId=${appId}`;
     return this.http.get<SpecificAppInfo[]>(url);
+  }
+  getUserData(userId:Guid)
+  {
+    const url=`${this.baseUrl}AppInfo/GetUserDetails?userId=${userId}`;
+    return this.http.get<userInfo[]>(url);
   }
 
 

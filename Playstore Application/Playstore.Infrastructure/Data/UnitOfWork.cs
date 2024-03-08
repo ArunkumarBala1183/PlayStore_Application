@@ -25,7 +25,7 @@ namespace Playstore.Infrastructure.Data
         }
         public IAppRepository App => new AppRepository(_context);
 
-        public IUserRepository User => new UserRepository(_context);
+        
 
         public IDeveloperRole UserRole => new DeveloperRoleRepository(_context , roleConfig);
         
@@ -43,6 +43,17 @@ namespace Playstore.Infrastructure.Data
         public IAppDetailsRepository AppDetails=>new AppDetailsRepository(_context);
 
         public IGetCategory GetCategory=>new GetCategoryRepository(_context);
+        public IUserDetailsRepository UserData=>new GetUsersDetailsRepository(_context);
+
+        public IUserRepository User => throw new NotImplementedException();
+
+        public IUserInfoRepository UserInfo => throw new NotImplementedException();
+
+
+
+
+
+
 
         // public IAppInfoRepository AppInfo=new AppInfoRepository();
         // public IAppInfoRepository AppInfo => new AppInfoRepository();
