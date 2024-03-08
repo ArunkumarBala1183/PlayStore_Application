@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { LoginService } from 'src/app/services/login.service';
+import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
@@ -10,10 +13,10 @@ export class ResetPasswordComponent {
 
   changePasswordForm : FormGroup;
 
-  constructor(private formBuilder : FormBuilder){
+  constructor(private formBuilder : FormBuilder, private loginService : LoginService, private service : UserService, private toastr : ToastrService){
     this.changePasswordForm = this.formBuilder.group({
       password : ['',Validators.required],
-      confirmPassword : ['',[Validators.required,Validators.minLength(8)]]
+      confirmPassword : ['',Validators.required]
     })
   }
 
@@ -27,10 +30,21 @@ export class ResetPasswordComponent {
   
   public onSubmit() {
     if(this.changePasswordForm.valid){
-      alert("Form Submitted");     
+      const userId = this.loginService.getUserId();
+      const password = this.changePasswordForm.get('password')?.value;
+      this.service.postPassword(userId , password).subscribe({
+        next: (response : any) => {
+          // if(response == 'Password Changed Successfully')
+          console.log(response);
+          this.toastr.success('Password Changed',);
+          console.log(response);
+        },
+        error : error =>
+        {
+          console.error(error);
+        }
+      });
     }
-    else{
-      alert("Enter all the details");
-    }
+   
   }
 }

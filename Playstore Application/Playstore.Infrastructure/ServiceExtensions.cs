@@ -64,6 +64,7 @@ namespace Playstore.Infrastructure
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IPasswordHasher<Users>, PasswordHasher<Users>>();
             services.AddScoped<IPasswordHasher<UserCredentials>, PasswordHasher<UserCredentials>>();
+            services.AddScoped<IPasswordHasher<object>, PasswordHasher<object>>();
             return services.AddDatabaseContext(configuration).AddUnitOfWork();
         }
     }

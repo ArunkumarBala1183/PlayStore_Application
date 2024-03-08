@@ -1,4 +1,4 @@
-import { APP_ID, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -34,28 +34,25 @@ export class SpecificAppComponent implements OnInit {
     window.scrollTo(0, 0);
     this.route.params.subscribe((params) => {
       const appId: Guid = params['appId'];
-      this.getSpecificApp(appId)
+      const userId =  this.loginService.getUserId()
+      this.getSpecificApp(appId , userId)
     });
   }
-    // this.service.getAllApps().subscribe({
-    //   next: (response) => {
-    //     this.appInfo = response;
-    //   },
-    //   error: (error) => {
-    //     console.log(error);
-    //   },
-    // });
 
-
-  getSpecificApp(appId : Guid)
+  getSpecificApp(appId : Guid , userId : Guid)
   {
-    this.service.getAppsById(appId).subscribe({
+    this.service.getAppsById(appId,userId).subscribe({
       next: (responses) => {
         this.appDetail = responses;
-        console.log(this.appDetail)
-        const publishedDate = this.appDetail[0].publishedDate.toString().split('T')[0];//2024-03-01
-        this.appDetail[0].publishedDate = publishedDate;
-      },
+        const Count =  this.appDetail[0].particularUserDownloadCount;
+        if(Count === 1)
+        {
+          this.particularDownloadCount = true;
+        }       
+        this.appDetail.forEach(app=>
+          {app.publishedDate=this.convertDateFormat(app.publishedDate);
+          });
+        },
       error: (error) => {
         console.log(error);
       },
@@ -63,13 +60,28 @@ export class SpecificAppComponent implements OnInit {
     
     this.service.getReviews(appId).subscribe({
       next: (response) => {
-        this.appReview = response;
+        this.appReview = response;   
+        console.log(this.appReview[0].ratings);             
         this.updateDisplayedReviews();
       },
       error: (error) => {
         console.log(error);
       },
     });
+  }
+
+
+   convertDateFormat(dateString: string): string {
+   if(dateString.includes('T'))
+   {
+    const parts = dateString.split('T')[0].split('-')
+    if(parts.length===3)
+    {
+      const[year,month,day]=parts
+      return `${day}/${month}/${year}`;
+    }
+   }
+   return dateString;
   }
 
   public Downloadfile() {
@@ -86,17 +98,13 @@ export class SpecificAppComponent implements OnInit {
           anchor.download = new Date().toISOString() + '.zip';
           anchor.click();
           anchor.remove();
-          this.getSpecificApp(appId)
+          this.getSpecificApp(appId,userId)
         },
         error: (error) => {
           console.error('Error Occurred :', error);
           if (error instanceof HttpErrorResponse) {
             if (error.status === 400) {
-              this.alreadyDownloaded = true;
-              const errorMessage =
-                error.error instanceof Blob
-                  ? 'Already Downloaded'
-                  : error.error;
+              const errorMessage = error.error instanceof Blob ? 'Already Downloaded' : error.error;
               console.error(errorMessage);
             }
           }
@@ -112,11 +120,10 @@ export class SpecificAppComponent implements OnInit {
       const userId = this.loginService.getUserId();
       formData.appId = appId;
       formData.userId = userId;
-
       formData.additionalValue = this.service.postReview(formData).subscribe({
         next: (response) => {
           console.log('Form Submitted', response);
-          this.getSpecificApp(appId);
+          this.getSpecificApp(appId,userId);
         },
         error: (error) => {
           console.log(error);
@@ -143,14 +150,15 @@ export class SpecificAppComponent implements OnInit {
   appReview: AppReviewsInfo[] = [];
   displayedReviews: any[] = [];
   showAllReviews = false;
-  // appInfo: AllAppsInfo[] = [];
   reviewForm: FormGroup;
   currentRating = 0;
   stars = Array(5);
-  alreadyDownloaded = false;
+  particularDownloadCount = false;
 
   public rating(value: number) {
     this.currentRating = value;
     this.reviewForm.patchValue({ rating: value });
   }
 }
+
+

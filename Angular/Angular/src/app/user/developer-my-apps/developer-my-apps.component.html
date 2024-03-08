@@ -1,6 +1,11 @@
 <div class="px-9 pt-12 pb-3 md:pl-48 h-full lg:pl-72 lg:pt-[4rem]">
     <!-- Main Body -->
-    <div *ngFor="let app of developedApps" class="p-3 mt-2 bg-white border border-gray-300 md:mt-5 md:mx-[5rem] lg:mx-[10rem] items-center rounded-lg flex flex-col md:flex-row hover:shadow-2xl duration-300">
+    <div *ngIf="developedApps.length == 0" class="flex justify-center mt-5 text-red-800">
+        <h2>
+            No records Found
+        </h2>
+    </div>
+    <div *ngFor="let app of developedApps " class="p-3 mt-2 bg-white border border-gray-300 md:mt-5 md:mx-[5rem] lg:mx-[10rem] items-center rounded-lg flex flex-col md:flex-row hover:shadow-2xl duration-300">
         <!-- Body Content -->
         <!-- specificApp function for Routing to that specific App Page -->
         <!-- <button (click)="redirectTospecificApp(app.appId)"> -->
@@ -57,9 +62,9 @@
                 <button *ngIf="app.status == 0" class="border p-2 bg-blue-700 rounded-md text-white">Pending</button>
                 <button *ngIf="app.status == -1" class="border p-2 bg-black rounded-md text-white">Declined</button>
             </div>
-        </div>
     </div>
     </div>
+</div>
     
     
     

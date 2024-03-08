@@ -19,14 +19,14 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./developer-new-app.component.scss'],
 })
 export class DeveloperNewAppComponent implements OnInit {
-  public appData!: FormGroup;
-  fileSize = false;
-  multipleFile = false;
-  category: CategoryInfo[] = [];
-  appInfo: AllAppsInfo[] = [];
-  AppFile: File | null = null;
-  Logo: File | null = null;
-  appImages: File[] = [];
+
+  public appData!: FormGroup; // Assigning the appData to the Form.
+  fileSize = false; // to check the size of the compressed file. not more than 2mb.
+  multipleFile = false; //  to check the selected images for App Screenshots. minimum 2 and maximum of 3 images.
+  category: CategoryInfo[] = [];     
+  AppFile: File | null = null; // to store the value of the App File from the form.
+  Logo: File | null = null; // to store the value of the App Logo from the form.
+  appImages: File[] = []; // to store the value of the App screenshots from the form.
   logoFileFormatCheck = false;
   screenshotFileFormatCheck = false;
   appFileFormatCheck = true;
@@ -38,22 +38,21 @@ export class DeveloperNewAppComponent implements OnInit {
     private loginService:LoginService,
     private toastr : ToastrService
   ) {}
+
   ngOnInit(): void {
     this.initForm();
+    // fetching the categories from the Database.
     this.service.getCategory().subscribe({
       next: (response) => {
         this.category = response;
       },
+      error : error => 
+      {
+        console.error(error);
+      }
     });
-    // this.service.getAllApps().subscribe({
-    //   next: (response) => {
-    //     this.appInfo = response;
-    //   },
-    //   error: (error) => {
-    //     console.log(error);
-    //   },
-    // });
   }
+
   public initForm() {
     this.appData = this.formbuilder.group({
       Name: ['', Validators.required],
@@ -65,6 +64,7 @@ export class DeveloperNewAppComponent implements OnInit {
       appImages: [null, Validators.required],
     });
   }
+  
   validationMessages = {
     Name: {
       required: 'App Name is required',
@@ -89,18 +89,19 @@ export class DeveloperNewAppComponent implements OnInit {
     },
   };
 
+  // to check the app File
   public handleFile(event: any): void {
     const files = event.target.files[0];
-    if (files) {
+    if (files) {      // is file is not Empty.
       const file = files;
       const filetype = file.type;
       const maxFileSize = 2 * 1024 * 1024; // 2 MB
-      if (file.size > maxFileSize) {
+      if (file.size > maxFileSize) {      // fileSize > 2MB
         this.fileSize = true;
         event.target.value = '';
         return;
       }
-      else if(filetype === 'application/x-zip-compressed')
+      else if(filetype === 'application/x-zip-compressed')      // check the file is of zip format.
       {
         this.appFileFormatCheck = true;
         this.fileSize = false;
@@ -114,16 +115,17 @@ export class DeveloperNewAppComponent implements OnInit {
       }     
     }
   }
+  // validating the App screenshots
   public multipleFiles(event: any): void {
     const files: FileList = event.target.files;
-    if (files.length > 3 || files.length <= 1) {
+    if (files.length > 3 || files.length <= 1) {      // file Length not more than 3 or less than 2.
       this.multipleFile = true;
       event.target.value = '';
       return;
     }
     this.multipleFile = false;
     for (let i = 0; i < files.length; i++) {
-      if (files[i] && ['image/jpeg', 'image/png'].includes(files[i].type)) {
+      if (files[i] && ['image/jpeg', 'image/png'].includes(files[i].type)) {      // file format should be image
         this.appImages.push(files.item(i)!);
         this.screenshotFileFormatCheck = false;
       } else {
@@ -133,9 +135,10 @@ export class DeveloperNewAppComponent implements OnInit {
     }
   }
 
+  // validating the App Logo.
   public handleLogo(event: any): void {
     this.Logo = event.target.files[0];
-    if (this.Logo && ['image/jpeg', 'image/png'].includes(this.Logo.type)) {
+    if (this.Logo && ['image/jpeg', 'image/png'].includes(this.Logo.type)) {      // file should be of Image format.
       this.logoFileFormatCheck = false;
     } else {
       this.logoFileFormatCheck = true;
@@ -143,32 +146,30 @@ export class DeveloperNewAppComponent implements OnInit {
     }
   }
  
+  // App Upload Form Submission.
   public onSubmit() {
     if (this.appData.valid) {
-      const userData =  this.loginService.getUserId();
-      
+      const userData =  this.loginService.getUserId();      // fetching userId from Tokens.
       const formData = new FormData();
       formData.append('UserId', userData);
       formData.append('Logo', this.Logo!);
       formData.append('AppFile', this.AppFile!);
       formData.append('Name', this.appData.get('Name')?.value);
       formData.append('CategoryId', this.appData.get('CategoryId')?.value);
-      formData.append(
-        'PublisherName',
-        this.appData.get('PublisherName')?.value
-      );
+      formData.append('PublisherName', this.appData.get('PublisherName')?.value);
       formData.append('Description', this.appData.get('Description')?.value);
       for (let i = 0; i < this.appImages.length; i++) {
         formData.append('appImages', this.appImages[i]);
       }
       this.service.postApplication(formData).subscribe({
         next: (response : any) => {
-          if(response === 400)
+          if(response === 400)      // 400 --> Returns if the The App already Exists.
           {
-            this.toastr.error('App Name already exist , try different Name');
+            this.toastr.error('App Name already exist , Try giving different Name');
           }
           else{
           this.toastr.success('Form Submitted',);
+          this.router.navigate(['user/myApps']);
           }
         },
         error: (error) => {
