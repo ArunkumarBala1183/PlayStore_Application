@@ -86,11 +86,10 @@ export interface CategoryInfo
     categoryName : string;
     categoryId : Guid;
 }
-
-export interface UserProfileInfo
+export interface userInfo
 {
-    Name : string;
-    Role : string;
-    Email : string;
-    PhoneNumber : number;
+    name:string;
+    role:string[];
+    email:string;
+    phoneNumber:string;
 }

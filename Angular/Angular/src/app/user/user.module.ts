@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { UserRoutingComponent, UserRoutingModule } from './user-routing.module';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbbreviateNumberPipe } from './abbreviate-number.pipe';
 
 @NgModule({
   declarations: [
@@ -15,5 +16,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     FormsModule
   ],
+  exports:[AbbreviateNumberPipe]
 })
 export class UserModule { }

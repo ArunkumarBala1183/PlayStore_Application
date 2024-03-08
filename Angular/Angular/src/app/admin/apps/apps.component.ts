@@ -1,6 +1,10 @@
 import { Component , OnInit} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Guid } from 'guid-typescript';
 import { ListApps } from 'src/app/interface/list-apps';
 import { AppInfoService } from 'src/app/services/app-info.service';
+import { LoginService } from 'src/app/services/login.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-apps',
@@ -12,10 +16,11 @@ export class AppsComponent implements OnInit{
 
   appDetails: ListApps[] | undefined
   searchTerm: string = '';
+ 
 
 
 
-  constructor(private service: AppInfoService) 
+  constructor(private service: AppInfoService, private route: Router) 
   {
       
   }
@@ -34,6 +39,11 @@ export class AppsComponent implements OnInit{
   get allApps()
   {
     return this.appDetails?.filter(app => app.name.toLowerCase().includes(this.searchTerm.toLowerCase()))
+  }
+
+  getDownloadPage(appId : Guid)
+  {
+    this.route.navigate(["admin/downloadPage" , appId]);
   }
 
   getAllApps() {

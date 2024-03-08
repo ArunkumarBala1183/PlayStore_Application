@@ -31,6 +31,27 @@ namespace Playstore.Controllers.UserData
 
 
         }
+        [HttpGet("GetUserDetails")]
+        [ProducesResponseType(typeof(IEnumerable<UsersDetailsDTO>), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        public async Task<IActionResult> Getdetails(Guid userId)
+        {
+            try
+            {
+                var query = new GetAllUserInfoQuery(userId);
+                var response = await _mediator.Send(query);
+                return Ok(response);
+            }
+            catch (Exception exception)
+            {
+                return NotFound(new BaseResponseDTO
+                {
+                    IsSuccess = false,
+                    Errors = new string[] { exception.Message }
+                });
+            }
+
+        }
 
         // To Get All the apps  
         [HttpGet("GetAllApps")]
@@ -44,12 +65,12 @@ namespace Playstore.Controllers.UserData
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new string[] { ex.Message }
+                    Errors = new string[] { exception.Message }
                 });
             }
         }
@@ -67,12 +88,12 @@ namespace Playstore.Controllers.UserData
                 Console.WriteLine(response);
                 return Ok(response);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new string[] { ex.Message }
+                    Errors = new string[] { exception.Message }
                 });
             }
 
@@ -84,7 +105,7 @@ namespace Playstore.Controllers.UserData
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> Post([FromForm] CreateAppInfoDTO model)
         {
-        Console.WriteLine("came.....................");
+       
          
             try
             {
@@ -95,12 +116,12 @@ namespace Playstore.Controllers.UserData
                 return Ok(response);
 
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 return BadRequest(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new string[] { ex.Message }
+                    Errors = new string[] { exception.Message }
                 });
             }
         }
@@ -116,12 +137,12 @@ namespace Playstore.Controllers.UserData
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
-            catch (EntityNotFoundException ex)
+            catch (Exception exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new string[] { ex.Message }
+                    Errors = new string[] { exception.Message }
                 });
             }
         }
@@ -161,12 +182,12 @@ namespace Playstore.Controllers.UserData
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
-            catch (EntityNotFoundException ex)
+            catch (Exception exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new string[] { ex.Message }
+                    Errors = new string[] { exception.Message }
                 });
             }
 
@@ -198,12 +219,12 @@ namespace Playstore.Controllers.UserData
                 });
             }
             
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new string[] { ex.Message }
+                    Errors = new string[] { exception.Message }
                 });
                 
 
@@ -223,12 +244,12 @@ namespace Playstore.Controllers.UserData
 
                 return StatusCode((int)HttpStatusCode.Created, await _mediator.Send(command));
             }
-            catch (InvalidRequestBodyException ex)
+            catch (Exception exception)
             {
                 return BadRequest(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = ex.Errors
+                    Errors = new string[] { exception.Message }
                 });
             }
 
@@ -244,12 +265,12 @@ namespace Playstore.Controllers.UserData
                 var response = await _mediator.Send(category);
                 return Ok(response);
             }
-            catch (InvalidRequestBodyException ex)
+            catch (Exception exception)
             {
                 return BadRequest(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = ex.Errors
+                    Errors = new string[] { exception.Message }
                 });
             }
         }

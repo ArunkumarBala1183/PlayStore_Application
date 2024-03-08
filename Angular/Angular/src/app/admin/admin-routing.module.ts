@@ -15,6 +15,7 @@ import { RequestdetailsComponent } from './requestdetails/requestdetails.compone
 import { AboutComponent } from './about/about.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { AuthGuard } from '../auth.guard';
+import { DownloadpageComponent } from './downloadpage/downloadpage.component';
 
 
 const routes: Routes = [
@@ -22,52 +23,68 @@ const routes: Routes = [
     path: 'admin', component: AdminComponent, children:
       [
         {
-          path: 'dashboard', component: DashboardComponent, title: 'Admin Dashboard', canActivate:[AuthGuard],data:{role:'Admin'},
+          path: 'dashboard', component: DashboardComponent, title: 'Admin Dashboard'
+          , 
         },
         // {
         //   path:'home', redirectTo : '/admin' , pathMatch : 'fAdmin
         // },
        
         {
-          path: 'apps', component: AppsComponent, title: 'Admin apps', canActivate:[AuthGuard],data:{role:'Admin'},
+          path: 'apps', component: AppsComponent, title: 'Admin apps'
+          ,
         },
        
         {
-          path: 'users', component: UsersComponent, title: 'Users', canActivate:[AuthGuard],data:{role:'Admin'},
+          path: 'users', component: UsersComponent, title: 'Users'
+          , 
         },
         
         {
-          path: 'myDownloads', component: MyDownloadsComponent, title: 'MyDownloads', canActivate:[AuthGuard],data:{role:'Admin'},
+          path: 'myDownloads', component: MyDownloadsComponent, title: 'MyDownloads'
+          , 
         },
         {
-          path: 'category', component: CategoryComponent, title: 'category', canActivate:[AuthGuard],data:{role:'Admin'},
+          path: 'category', component: CategoryComponent, title: 'category'
+          , 
         },
         {
-          path: 'logs', component: LogsComponent, title: 'Logs', canActivate:[AuthGuard],data:{role:'Admin'},
+          path: 'logs', component: LogsComponent, title: 'Logs'
+          , 
         },
         {
-          path: 'profile', component: ProfileComponent, title: 'Profile', canActivate:[AuthGuard],data:{role:'Admin'},
+          path: 'profile', component: ProfileComponent, title: 'Profile'
+          , 
         },
         {
-          path: 'apprequests', component: ApprequestsComponent, title: 'apprequests', canActivate:[AuthGuard],data:{role:'Admin'},
-        },
-
-        {
-          path: 'requestdetails/:id', component: RequestdetailsComponent, title: 'requestdetails', canActivate:[AuthGuard],data:{role:'Admin'},
-        },
-
-        {
-          path: 'about', component: AboutComponent, title: 'about', canActivate:[AuthGuard],data:{role:'Admin'},
+          path: 'apprequests', component: ApprequestsComponent, title: 'apprequests'
+          , 
         },
 
         {
-          path: 'changePassword', component: ChangePasswordComponent, title: 'changePassword', canActivate:[AuthGuard],data:{role:'Admin'},
+          path: 'requestdetails/:id', component: RequestdetailsComponent, title: 'requestdetails'
+          , 
+        },
+
+        {
+          path: 'about', component: AboutComponent, title: 'about'
+          ,
+        },
+
+        {
+          path: 'changePassword', component: ChangePasswordComponent, title: 'changePassword'
+          , 
+        },
+
+        {
+          path: 'downloadPage/:appId', component: DownloadpageComponent, title: 'changePassword'
+          , 
         }
       ]
   }
 ]
 
-
+// canActivate:[AuthGuard],data:{role:'Admin'},
 
 @NgModule({
   declarations: [],

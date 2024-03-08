@@ -23,16 +23,18 @@ namespace Playstore.Providers.Handlers.Commands
  
     public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, TokenResponse>
     {
+        private readonly IRoleRepository _roleRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IUserCredentialsRepository _credentialsRepository;
         private readonly IConfiguration _configuration;
  
-        public RefreshTokenCommandHandler(IRefreshTokenRepository refreshTokenRepository,
+        public RefreshTokenCommandHandler(IRoleRepository roleRepository,IRefreshTokenRepository refreshTokenRepository,
             IUserCredentialsRepository credentialsRepository, IConfiguration configuration)
         {
             _refreshTokenRepository = refreshTokenRepository;
             _credentialsRepository = credentialsRepository;
             _configuration = configuration;
+            _roleRepository = roleRepository;
         }
  
         public async Task<TokenResponse> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
@@ -56,13 +58,20 @@ namespace Playstore.Providers.Handlers.Commands
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Authentication:Jwt:Secret"));
             var refreshTokenEntity = await _refreshTokenRepository.GetRefreshTokenAsync(userCredentials.UserId);
+            var userRoles = await _roleRepository.GetUserRolesAsync(userCredentials.UserId);
+            var roleCodes = userRoles.Select(ur => ur.Role.RoleCode).ToList();
+
             //var userRoles = await _credentialsRepository.GetUserRolesAsync(userCredentials.UserId);
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.UserData, userCredentials.UserId.ToString()),
-                new Claim(ClaimTypes.Role, "User"),
+                //new Claim(ClaimTypes.Role, "User"),
                 //new Claim(ClaimTypes.Expired, refreshTokenEntity.RefreshKey)
             };
+            foreach (var roleCode in roleCodes)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, roleCode));
+            }
             if (refreshTokenEntity != null)
             {
                 claims.Add(new Claim(ClaimTypes.Expired, refreshTokenEntity.RefreshKey));
@@ -89,28 +98,28 @@ namespace Playstore.Providers.Handlers.Commands
                 RefreshToken = newRefreshToken
             };
         }
- 
+
         private (Guid userId, string refreshToken) GetClaimsFromExpiredToken(string expiredToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var readToken = tokenHandler.ReadToken(expiredToken) as JwtSecurityToken;
- 
-            if (readToken.Claims != null)
+
+            if (readToken?.Claims != null)
             {
                 var userIdClaim = readToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData);
                 var refreshTokenClaim = readToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Expired);
- 
-                if (userIdClaim != null && refreshTokenClaim != null)
+
+                if (userIdClaim != null)
                 {
                     var userId = Guid.Parse(userIdClaim.Value);
-                    var refreshToken = refreshTokenClaim.Value;
- 
+                    var refreshToken = refreshTokenClaim?.Value;
+
                     return (userId, refreshToken);
                 }
             }
- 
             throw new ArgumentException("Invalid or missing claims in the expired token");
         }
+
  
         private string GenerateRefreshToken()
         {

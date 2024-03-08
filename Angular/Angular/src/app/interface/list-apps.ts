@@ -1,7 +1,8 @@
+import { Guid } from "guid-typescript";
 import { Category } from "./category";
 
 export interface ListApps {
-    appId: string,
+    appId: Guid,
     name: string,
     logo: string,
     description: string,

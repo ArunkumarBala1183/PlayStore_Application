@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { AdminModule } from './admin/admin.module';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from './shared/shared.module';
 import { FormsModule } from '@angular/forms';
@@ -16,18 +15,21 @@ import { JwtInterceptor } from './jwt.interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
 import { UserModule } from './user/user.module';
+import { AdminModule } from './admin/admin.module';
+
+
 
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AdminModule,
+   AdminModule,
     RouterModule,
     SharedModule,
     FormsModule,

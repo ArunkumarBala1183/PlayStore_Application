@@ -23,6 +23,10 @@ import { RequestdetailsComponent } from './requestdetails/requestdetails.compone
 import { AboutComponent } from './about/about.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { HomeModule } from '../home/home.module';
+import { DownloadpageComponent } from './downloadpage/downloadpage.component';
+import { UserModule } from '../user/user.module';
+
+
 
 
 
@@ -43,7 +47,10 @@ import { HomeModule } from '../home/home.module';
     ApprequestsComponent,
     RequestdetailsComponent,
     AboutComponent,
-    ChangePasswordComponent,     
+    ChangePasswordComponent,
+    DownloadpageComponent,
+    
+        
   ],
   imports: [
     CommonModule,
@@ -57,7 +64,8 @@ import { HomeModule } from '../home/home.module';
     MatPaginatorModule,
     MatTableModule,
     ReactiveFormsModule,
-    HomeModule
+    HomeModule,
+    UserModule
     
   ],
   exports:[
