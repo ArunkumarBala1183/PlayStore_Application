@@ -175,6 +175,9 @@ export class DeveloperNewAppComponent implements OnInit {
         error: (error) => {
           console.log(error);
         },
+        complete:()=>{
+          this.appData.reset();
+        }
       });
     }
   }

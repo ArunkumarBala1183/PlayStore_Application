@@ -42,6 +42,9 @@ export class ResetPasswordComponent {
         error : error =>
         {
           console.error(error);
+        },
+        complete:()=>{
+          this.changePasswordForm.reset();
         }
       });
     }
