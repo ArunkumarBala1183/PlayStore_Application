@@ -79,7 +79,6 @@ export class LoginComponent implements OnInit {
             this.loginService.getUserId();
             console.log(role);
             if (role !== null) {
-
               if (role === 'User') {
                 this.router.navigate(['user/home']);
 
@@ -90,8 +89,9 @@ export class LoginComponent implements OnInit {
               }
             }
             else {
-              return;
+              console.log("else part")
               this.toastr.info('Unable to fetch role .Please Login')
+              return;
             }
           },
           error: error => {

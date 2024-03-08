@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
       {
         name: ['', Validators.required],
         emailId: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
-        mobileNumber: ['', [Validators.required, Validators.maxLength(10)]],
+        mobileNumber: ['', [Validators.required, Validators.maxLength(10), Validators.pattern('^[0-9]{10}$')]],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
         dateOfBirth: ['', Validators.required]
@@ -69,7 +69,15 @@ export class RegisterComponent implements OnInit {
     
   }
   
-
+public mobileCheck():boolean
+{
+  const mobileNumber=this.register.get('mobileNumber').value;
+  if(mobileNumber==='')
+  {
+   return true;
+  }
+   return false;
+}
 
  public checkEmail(event: any): void {
     console.log(event.target.value);

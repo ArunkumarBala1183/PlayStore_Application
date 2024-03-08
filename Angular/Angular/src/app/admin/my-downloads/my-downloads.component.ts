@@ -11,6 +11,7 @@ import { UserService } from 'src/app/services/user.service';
 export class MyDownloadsComponent implements OnInit {
 
   downloadedApps!: DownloadedAppsInfo[]
+  isDownloaded : boolean = false;
 
   constructor(private service : UserService , private loginService : LoginService)
   {
@@ -36,9 +37,10 @@ export class MyDownloadsComponent implements OnInit {
     .subscribe({
       next : response =>{
         this.downloadedApps = response
-        console.log(this.downloadedApps)
+        this.isDownloaded = true
       },
       error : error => {
+        this.isDownloaded = false
         console.log(error)
       }
     })

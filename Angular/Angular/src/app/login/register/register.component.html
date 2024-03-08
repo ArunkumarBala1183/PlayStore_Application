@@ -34,11 +34,12 @@
       <input class="bg-gray-100 px-3   h-7 rounded-md placeholder-sky-600" type="text" id="mobileNumber" name="mobileNumber" 
         placeholder="Mobile Number *" formControlName="mobileNumber" required pattern="[6-9]\d{9}">
     </div>
-     <span class="text-center text-red-400 mt-1"
+     <!-- <span class="text-center text-red-400 mt-1"
       *ngIf="register.get('mobileNumber').hasError('maxlength') && register.get('mobileNumber').dirty">
-      {{ validationMessages.mobileNumber.valid }}
-    </span> 
-    <span *ngIf="register.get('mobileNumber').hasError('required') && register.get('mobileNumber').touched " class="text-red-400 text-center mt-1">{{validationMessages.mobileNumber.required}}</span>
+      
+    </span>  -->
+    <span class="text-center text-red-400 mt-1" *ngIf="!register.get('mobileNumber').valid && !mobileCheck()">{{ validationMessages.mobileNumber.valid }}</span>
+     <span *ngIf="mobileCheck() && register.get('mobileNumber').touched "class="text-red-400 text-center mt-1">{{validationMessages.mobileNumber.required}}</span>
 
     <div class="mt-3 md:mt-3">
       <!-- <label for="Password">Password</label><br> -->
