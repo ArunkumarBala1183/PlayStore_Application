@@ -5,7 +5,7 @@ namespace Playstore.Contracts.DTO;
 public class AppStoreDTO
 {
 
-    public Guid FileId { get; set; }
+    public Guid AppId { get; set; }
     public string FileName { get; set; }
     public byte[] Logo { get; set; }
     public string Description { get; set; }

@@ -52,5 +52,19 @@ namespace Playstore.Core.Data.Repositories
         //             .ThenInclude(ur => ur.Role)
         //         .FirstOrDefaultAsync(x => x.UserId == id);
         // }
+        public async Task<string> ChangePassword(Guid userId, string hashedPassword)
+        {
+            var user=await _context.UserCredentials.Where(user=>user.UserId==userId).FirstOrDefaultAsync();
+            if(user!=null)
+            {
+                user.Password=hashedPassword;
+                 _context.UserCredentials.Update(user);
+                 await _context.SaveChangesAsync();
+                 return "Password Changed Successfully";
+            }
+            else{
+                return "User not found";
+            }
+        }
     }
 }

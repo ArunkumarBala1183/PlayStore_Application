@@ -93,6 +93,34 @@ namespace Playstore.Core.Data.Repositories
             }
         }
 
+        public async Task<HttpStatusCode> GetUserDownloadedOrNot(Guid userId , Guid appId)
+        {
+            try
+            {
+                var appDetails = await this._database.AppInfo
+                .Include(downloads => downloads.AppDownloads)
+                .Where(downloads => downloads.AppDownloads.Any(user => user.UserId == userId && user.AppId == appId))
+                .FirstOrDefaultAsync();
+    
+                if (appDetails != null)
+                {
+                    return HttpStatusCode.Found;
+                }
+                else
+                {
+                    return HttpStatusCode.NotFound;
+                }
+            }
+            catch (SqlException)
+            {
+                return HttpStatusCode.ServiceUnavailable;
+            }
+            catch (Exception)
+            {
+                return HttpStatusCode.InternalServerError;
+            }
+        }
+
         private int CalculateAverageRatings(List<AppReview> appReviews)
         {
             if(appReviews != null && appReviews.Count > 0)

@@ -21,14 +21,18 @@ namespace Playstore.Infrastructure.Data.Repositories
             this.databaseContext=context;
         }
 
-        public async Task<object> GetAppDetails(Guid id)
+        public async Task<object> GetAppDetails(Guid id,Guid userId)
         {
             var response = await this.databaseContext.AppInfo.Include(obj=>obj.Category).Include(obj=>obj.AppImages).Where(obj=>obj.AppId==id).ToListAsync();
             var appImages = await this.databaseContext.AppImages.Where(obj => obj.AppId== id).ToListAsync();
             var AppRating=await this.databaseContext.AppReviews.Where(obj=>obj.AppId==id).ToListAsync();
             var Value=await this.databaseContext.AppDownloads.Where(obj=>obj.AppId==id).ToListAsync();
+            var AppDownloadCount=await databaseContext.AppDownloads.Where(obj=>obj.UserId==userId&&obj.AppId==id).ToListAsync();
             int Count=Value.Count();
             int Totalvalue=response.Count();
+            int ParticularAppDownloadCount=AppDownloadCount.Count();
+            
+
             if(response.Any())
             {
                 var appinfoDetails=response.Select(response=> new AppInfoDetailsDTO
@@ -45,12 +49,15 @@ namespace Playstore.Infrastructure.Data.Repositories
                     CategoryId=response.Category.CategoryId,
                     CategoryName=response.Category.CategoryName,
                     Downloads=Count,
+                    ParticularUserDownloadCount = ParticularAppDownloadCount,
                     PublisherName = response.PublisherName,
                     PublishedDate = response.PublishedDate                    
                 });
                 return appinfoDetails;
             }
              throw new EntityNotFoundException($"No AppInfo found for Id {id}"); 
+            
+            
         }
     }
 }

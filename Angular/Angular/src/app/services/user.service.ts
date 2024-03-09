@@ -32,9 +32,10 @@ export class UserService {
      return this.http.get<AllAppsInfo[]>(this.baseUrl + "AppInfo/GetAllApps");
   }
 
-  getAppsById(appId:Guid)
+  getAppsById(appId:Guid , userId : Guid)
   {
-    const url = `${this.baseUrl}AppInfo/GetAppById?appId=${appId}`;
+    const data = {appId : appId , userId : userId}
+    const url = `${this.baseUrl}AppInfo/GetAppById?appId=${appId}&userId=${userId}`;
     return this.http.get<SpecificAppInfo[]>(url);
   }
   getUserData(userId:Guid)
@@ -62,7 +63,6 @@ export class UserService {
   
   getDownloadedApps(userId : Guid)
   {
-    console.log(userId)
     return this.http.get<DownloadedAppsInfo[]>(`${this.baseUrl}AppInfo/DownloadsDetails?userId=${userId}`);
   }
 
@@ -82,14 +82,17 @@ export class UserService {
 
   postApplication(formData : FormData) 
   {
-    // const headers = new HttpHeaders({
-    //   'Content-Type': 'application/json',
-    // });
     const url = (`${this.baseUrl}AppInfo/AppDetails`);
-    console.log(formData);    
-    // console.log(formData.value);    
+    console.log(formData);      
     return this.http.post(url , formData);
   }
 
+
+  postPassword(userId : Guid , password : string)
+  {
+    const url = (`${this.baseUrl}Login/changePassword`);
+    const data = {userId:userId ,password:password}
+    return this.http.patch(url , data);
+  }
 }
 

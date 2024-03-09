@@ -24,15 +24,15 @@
             </div>
             <!-- Download Button -->
             <div class="py-7 px-2 md:py-14 md:px-3 lg:py-12 lg:px-10">
-                <button *ngIf="!this.alreadyDownloaded"
+                <button *ngIf="!particularDownloadCount"
                     class="w-24 md:w-24 lg:w-60 rounded-lg md:rounded-full bg-blue-500 text-white md:p-2 lg:p-3 hover:bg-blue-700"
                     type="submit" (click)="Downloadfile()">
                     Download
                 </button>
-                <button *ngIf="this.alreadyDownloaded" disabled
+                <button *ngIf="particularDownloadCount" disabled
                     class="w-24 md:w-24 lg:w-60 rounded-lg md:rounded-full bg-blue-500 text-white md:p-2 lg:p-3 hover:bg-blue-700"
                     type="submit" (click)="Downloadfile()">
-                    Already Installed
+                    Installed
                 </button>
             </div>
         </div>

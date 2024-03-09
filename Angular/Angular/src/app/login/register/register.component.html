@@ -48,7 +48,7 @@
     </div>
     <span class="text-center text-red-400 mt-1"
       *ngIf="register.get('password').hasError('required') &&  register.get('password').touched">
-      {{ validationMessages.password.required }}
+      {{ validationMessages.password.required}}
     </span>
 
     <span class="text-center text-red-400 mt-1"
@@ -61,7 +61,7 @@
         placeholder="Confirm Password *" formControlName="confirmPassword" required minlength="7" maxlength="12" >
     </div>
    
-    <span class="text-center text-red-400 mt-1" *ngIf="!PasswordMatch() && register.get('confirmPassword').touched && register.get('password').valid "> {{validationMessages.confirmPassword.required}}
+    <span class="text-center text-red-400 mt-1" *ngIf="!PasswordMatch() && register.get('confirmPassword').touched && register.get('password').valid"> {{validationMessages.confirmPassword.required}}
 
       <!-- *ngIf="register.get('ConfirmPassword').hasError('required') &&  register.get('ConfirmPassword').touched">
       {{ validationMessages.ConfirmPassword.required }} -->

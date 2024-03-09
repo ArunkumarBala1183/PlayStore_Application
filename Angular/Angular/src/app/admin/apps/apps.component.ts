@@ -20,7 +20,7 @@ export class AppsComponent implements OnInit{
 
 
 
-  constructor(private service: AppInfoService, private route: Router) 
+  constructor(private service: AppInfoService, private route: Router, private loginService : LoginService) 
   {
       
   }
@@ -56,6 +56,11 @@ export class AppsComponent implements OnInit{
           console.log(error)
         }
       })
+  }
+
+  IsAlreadyInstalled(appId : Guid) : boolean
+  {
+    return true
   }
 
 }

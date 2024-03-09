@@ -7,5 +7,6 @@ namespace Playstore.Contracts.Data.Repositories
         Task<object> ViewAllApps();
 
         Task<HttpStatusCode> RemoveApp(Guid id);
+        Task<HttpStatusCode> GetUserDownloadedOrNot(Guid userId , Guid appId);
     }
 }

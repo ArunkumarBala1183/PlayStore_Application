@@ -32,3 +32,4 @@ export class UserProfileComponent implements OnInit {
     this.router.navigate(['user/resetPassword'])
   }
 }
+

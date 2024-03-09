@@ -91,6 +91,24 @@ namespace Playstore.Controllers.Admin
             }
 
         }
+
+        [HttpGet("UserDownloaded")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(ApiResponseException))]
+        public async Task<IActionResult> GetTotalDownloads(GetUserDownloadQuery downloadDetails)
+        {
+            try
+            {
+                var response = await this._mediator.Send(downloadDetails);
+
+                return Ok(new {downloaded = response});
+            }
+            catch (ApiResponseException error)
+            {
+                return NotFound(new { message = error.Message });
+            }
+
+        }
     }
 
 

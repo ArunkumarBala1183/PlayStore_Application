@@ -85,6 +85,7 @@ namespace Playstore.Controllers.UserData
             {
                 var query = new GetAllAppReviewDetails(appId);
                 var response = await _mediator.Send(query);
+                Console.WriteLine(response);
                 return Ok(response);
             }
             catch (Exception exception)
@@ -128,11 +129,11 @@ namespace Playstore.Controllers.UserData
         [HttpGet("GetAppById")]
         [ProducesResponseType(typeof(AppInfoDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-        public async Task<IActionResult> GetById(Guid appId)
+        public async Task<IActionResult> GetById(Guid appId,Guid userId)
         {
             try
             {
-                var query = new GetAppByIdValueQuery(appId);
+                var query = new GetAppByIdValueQuery(appId,userId);
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
@@ -159,12 +160,12 @@ namespace Playstore.Controllers.UserData
 
                 return response;
             }
-            catch (Exception exception)
+            catch (EntityNotFoundException)
             {
                 return NotFound(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new string[] { exception.Message }
+                    Errors = new string[] { "No App Uploaded" }
                 });
             }
         }

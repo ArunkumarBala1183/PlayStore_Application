@@ -10,9 +10,11 @@ namespace Playstore.Providers.Handlers.Queries.UserData
     public class GetAppByIdValueQuery : IRequest<IEnumerable<AppInfoDetailsDTO>>
     {
         public Guid AppId { get; }
-        public GetAppByIdValueQuery(Guid appId)
+        public Guid UserId{get; }
+        public GetAppByIdValueQuery(Guid appId,Guid userId)
         {
             AppId = appId;
+            UserId=userId;
         }
     }
 
@@ -29,7 +31,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
 
         public async Task<IEnumerable<AppInfoDetailsDTO>> Handle(GetAppByIdValueQuery request, CancellationToken cancellationToken)
         {
-            var app = await _repository.AppDetails.GetAppDetails(request.AppId);
+            var app = await _repository.AppDetails.GetAppDetails(request.AppId,request.UserId);
 
             if (app == null)
             {
