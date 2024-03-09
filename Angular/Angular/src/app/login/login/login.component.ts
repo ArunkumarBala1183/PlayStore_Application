@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit {
             this.loginService.getUserId();
             console.log(role);
             if (role !== null) {
-              if (role === 'User') {
+              if (role === 'User' || role === 'Developer') {
                 this.router.navigate(['user/home']);
 
               }

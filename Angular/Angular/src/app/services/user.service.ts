@@ -40,7 +40,7 @@ export class UserService {
   getUserData(userId:Guid)
   {
     const url=`${this.baseUrl}AppInfo/GetUserDetails?userId=${userId}`;
-    return this.http.get<userInfo[]>(url);
+    return this.http.get<userInfo>(url);
   }
 
 

@@ -1,7 +1,9 @@
 using System.Net;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.Data.RoleConfig;
 using Playstore.Contracts.DTO;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
@@ -11,10 +13,12 @@ namespace Playstore.Infrastructure.Data.Repositories
     public class AppFilesRepository : Repository<AppInfo>, IAppFilesRepository
     {
         private readonly DatabaseContext databaseContext;
+        private readonly RoleConfig role;
 
-        public AppFilesRepository(DatabaseContext context) : base(context)
+        public AppFilesRepository(DatabaseContext context , IOptions<RoleConfig> roleConfig) : base(context)
         {
             databaseContext = context;
+            this.role = roleConfig.Value;
         }
 
 
@@ -99,7 +103,7 @@ namespace Playstore.Infrastructure.Data.Repositories
                 if (user != null)
                 {
                     Console.WriteLine(user.UserRoles.Count);
-                    if (user.UserRoles.Count > 1)
+                    if (user.UserRoles.Where(id => id.RoleId == role.DeveloperId).Any())
                     {
                         appInfo.Status = RequestStatus.Approved;
                     }

@@ -20,28 +20,28 @@ const routes : Routes = [
     children:[
       
         {
-          path:'home', component : UserHomeComponent, canActivate:[AuthGuard],data:{role:'User'}
+          path:'home', component : UserHomeComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
         {
-          path:'downloads', component : UserDownloadsComponent, canActivate:[AuthGuard],data:{role:'User'}
+          path:'downloads', component : UserDownloadsComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
         {
-          path:'aboutUs', component : AboutUsComponent, canActivate:[AuthGuard],data:{role:'User'}
+          path:'aboutUs', component : AboutUsComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
         {
-          path:'myApps', component : DeveloperMyAppsComponent, canActivate:[AuthGuard],data:{role:'User'}
+          path:'myApps', component : DeveloperMyAppsComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
         {
-          path:'newApp', component : DeveloperNewAppComponent, canActivate:[AuthGuard],data:{role:'User'}
+          path:'newApp', component : DeveloperNewAppComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
         {
-          path:'userProfile', component : UserProfileComponent, canActivate:[AuthGuard],data:{role:'User'}
+          path:'userProfile', component : UserProfileComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
         {
-          path: 'specificApp/:appId', component : SpecificAppComponent, canActivate:[AuthGuard],data:{role:'User'}
+          path: 'specificApp/:appId', component : SpecificAppComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
         {
-          path:'resetPassword', component : ResetPasswordComponent, canActivate:[AuthGuard],data:{role:'User'}
+          path:'resetPassword', component : ResetPasswordComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         }
     ]
   }

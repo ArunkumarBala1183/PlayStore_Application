@@ -64,17 +64,12 @@ namespace Playstore.Core.Data.Repositories.Admin
 
             if (developerDetails != null)
             {
-                var isAlreadyDeveloper = developerDetails.UserRoles.Any(id => id.RoleId == role.DeveloperId);
-
-                if (!isAlreadyDeveloper)
+                var developerRole = developerDetails.UserRoles.Where(id => id.RoleId != role.DeveloperId).FirstOrDefault();
+                if (developerRole != null)
                 {
-                    var userRoles = new UserRole()
-                    {
-                        RoleId = role.DeveloperId,
-                        UserId = userId
-                    };
+                    developerRole.RoleId = role.DeveloperId;
 
-                    Add(userRoles);
+                    Update(developerRole);
 
                     await database.SaveChangesAsync();
                 }
