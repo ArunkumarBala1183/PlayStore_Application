@@ -311,6 +311,34 @@ namespace Playstore.Controllers
                 });
             }
         }
+     [HttpPatch("changePassword")]
+     [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+     [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+     public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordQuery command)
+     {
+        Console.WriteLine("...................."+ command.userId);
+        Console.WriteLine("................."+ command.password);
+        
+            try
+            {
+                
+                var response = await _mediator.Send(command);
+                Console.WriteLine(response);
+                return Ok(new {message = response});
+ 
+            }
+            catch (Exception exception)
+            {
+                return NotFound(new BaseResponseDTO
+                {
+                    IsSuccess = false,
+                    Errors = new string[] { exception.Message }
+                });
+            }
+ 
+ 
+ 
+        }
 
     }
 }

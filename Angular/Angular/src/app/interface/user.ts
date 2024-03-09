@@ -39,14 +39,13 @@ export interface SpecificAppInfo
     downloads : number;
     publisherName : string;
     publishedDate : string;
+    particularUserDownloadCount : number;
 }
 
 export interface AppReviewsInfo
 {
     appId: Guid;
-    // commands : {
-    //     [key : string ] : string[]
-    // };
+    ratings : [];
     commands : [];
     appCount : number;
     username : [];
@@ -55,7 +54,7 @@ export interface AppReviewsInfo
 
 export interface DownloadedAppsInfo
 {
-    fileid : Guid;
+    appId : Guid;
     fileName : string;
     logo : Uint8Array;
     description : string;

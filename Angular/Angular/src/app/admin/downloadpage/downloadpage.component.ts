@@ -46,9 +46,10 @@ export class DownloadpageComponent implements OnInit {
   }
   ngOnInit(): void {
     window.scrollTo(0, 0);
+    const userId=this.loginService.getUserId();
     this.route.params.subscribe((params) => {
       const appId: Guid = params['appId'];
-      this.getSpecificApp(appId)
+      this.getSpecificApp(appId,userId)
     });
   }
     // this.service.getAllApps().subscribe({
@@ -61,9 +62,9 @@ export class DownloadpageComponent implements OnInit {
     // });
  
  
-  getSpecificApp(appId : Guid)
+  getSpecificApp(appId : Guid,userId:Guid)
   {
-    this.service.getAppsById(appId).subscribe({
+    this.service.getAppsById(appId,userId).subscribe({
       next: (responses) => {
         this.appDetail = responses;
         console.log(this.appDetail)       
@@ -120,7 +121,7 @@ export class DownloadpageComponent implements OnInit {
           anchor.download = new Date().toISOString() + '.zip';
           anchor.click();
           anchor.remove();
-          this.getSpecificApp(appId)
+          this.getSpecificApp(appId,userId)
         },
         error: (error) => {
           console.error('Error Occurred :', error);
@@ -150,7 +151,7 @@ export class DownloadpageComponent implements OnInit {
       formData.additionalValue = this.service.postReview(formData).subscribe({
         next: (response) => {
           console.log('Form Submitted', response);
-          this.getSpecificApp(appId);
+          this.getSpecificApp(appId,userId);
         },
         error: (error) => {
           console.log(error);

@@ -4,6 +4,6 @@ namespace Playstore.Contracts.Data.Repositories
 {
     public interface IAppDetailsRepository : IRepository<AppInfo>
     {
-     Task<object> GetAppDetails(Guid id);
+     Task<object> GetAppDetails(Guid id,Guid userId);
     }
 }

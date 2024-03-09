@@ -38,14 +38,13 @@ namespace Playstore.Infrastructure.Data.Repositories
             
             return new AppStoreDTO
             {
-                FileId = appInfo.AppId,
+                AppId = appInfo.AppId,
                 FileName = appInfo.AppInfo.Name,
                 Logo = appInfo.AppInfo.Logo,
                 Description=appInfo.AppInfo.Description,
                 Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
                 Category = appInfo.AppInfo.Category.CategoryName,
                 Downloads = AppDownload.Count(),
-                
             };
         }).ToList();
 
