@@ -23,6 +23,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LoginService } from 'src/app/services/login.service';
 import { ToastrService } from 'ngx-toastr';
 
+
  
 @Component({
   selector: 'app-downloadpage',
@@ -65,15 +66,20 @@ export class DownloadpageComponent implements OnInit {
     this.service.getAppsById(appId).subscribe({
       next: (responses) => {
         this.appDetail = responses;
+        console.log(this.appDetail)       
+        // const publishedDate = this.appDetail[0].publishedDate.toString().split('T')[0];//2024-03-01
+
+           this.appDetail.forEach(app => {
+            app.publishedDate = this.convertDateFormat(app.publishedDate);
+          });
+       
         console.log(this.appDetail)
-        const publishedDate = this.appDetail[0].publishedDate.toString().split('T')[0];//2024-03-01
-        this.appDetail[0].publishedDate = publishedDate;
       },
       error: (error) => {
         console.log(error);
       },
     });
-   
+  
     this.service.getReviews(appId).subscribe({
       next: (response) => {
         this.appReview = response;
@@ -84,7 +90,22 @@ export class DownloadpageComponent implements OnInit {
       },
     });
   }
+
+
+  convertDateFormat(dateString: string): string {
+    if (dateString.includes('T')) {
+      // Split by 'T' and '/'
+    const parts = dateString.split('T')[0].split('-');
+    if(parts.length===3)
+    {
+      const[year,month,day] = parts
+      return `${day}/${month}/${year}`;
+    }
+  }
+  return dateString; 
+  }
  
+
   public Downloadfile() {
     this.route.params.subscribe((params) => {
       const appId: Guid = params['appId'];
@@ -166,4 +187,8 @@ export class DownloadpageComponent implements OnInit {
     this.currentRating = value;
     this.reviewForm.patchValue({ rating: value });
   }
+}
+
+function convertDateFormat() {
+  throw new Error('Function not implemented.');
 }

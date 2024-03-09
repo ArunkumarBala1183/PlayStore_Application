@@ -26,9 +26,9 @@ export class DashboardComponent implements OnInit {
       type: 'bar',
       data: {
         // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        labels: this.dates,
+        labels: dates,
         datasets: [{
-          label: 'No of apps downloaded',
+          label: 'No of apps downloaded in a day',
           data: this.count,
           backgroundColor: [
             'rgba(0, 0, 0, 1)',
@@ -58,18 +58,32 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
-
   generateDates(): string[] {
     const today = new Date();
     const dates = [];
     for (let i = 6; i >= 0; i--) {
-      const day = new Date(today);
-      day.setDate(today.getDate() - i);
-      const formattedDate = day.toLocaleDateString('en-GB'); // Format: DD/MM/YYYY
-      dates.push(formattedDate);
+        const day = new Date(today);
+        day.setDate(today.getDate() - i);
+        const dayOfMonth = day.getDate();
+        let suffix = "";
+        if (dayOfMonth === 1 || dayOfMonth === 21 || dayOfMonth === 31) {
+            suffix = "st";
+        } else if (dayOfMonth === 2 || dayOfMonth === 22) {
+            suffix = "nd";
+        } else if (dayOfMonth === 3 || dayOfMonth === 23) {
+            suffix = "rd";
+        } else {
+            suffix = "th";
+        }
+        const month = day.toLocaleDateString('en-GB', { month: 'long' }); // Get full month name
+        const formattedDate = `${dayOfMonth}${suffix} ${month}`; // Format: DDDth MONTH
+        dates.push(formattedDate);
+        console.log(dates)
     }
     return dates;
-  }
+    
+}
+
 
   getAppDownloads() {
     this.service.getAllAppDownloadDetails()
@@ -77,7 +91,7 @@ export class DashboardComponent implements OnInit {
         next: response => {
           this.responseDetails = response.body
 
-          this.dates = this.responseDetails.dates as string[]
+          // this.dates = this.responseDetails.dates as string[]
           this.count = this.responseDetails.count as number[]
 
           this.createChart();
