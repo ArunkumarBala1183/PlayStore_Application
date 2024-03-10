@@ -47,7 +47,7 @@ namespace Playstore.Core.Data.Repositories
             }
         }
 
-        public async Task<object> ViewAllApps()
+        public async Task<object> ViewAllApps(Guid userId)
         {
             try
             {
@@ -72,6 +72,15 @@ namespace Playstore.Core.Data.Repositories
     
                         appInfoDto.Rating = this.CalculateAverageRatings((List<AppReview>)appInfo.AppReview);
                         appInfoDto.Downloads = appInfo.AppDownloads.Count;
+
+                        if(appInfo.AppDownloads.Where(id => id.UserId == userId).Any())
+                        {
+                            appInfoDto.UserDownloaded = true;
+                        }
+                        else
+                        {
+                            appInfoDto.UserDownloaded = false;
+                        }
     
                         appDetailsDto[i] = appInfoDto;
                     }

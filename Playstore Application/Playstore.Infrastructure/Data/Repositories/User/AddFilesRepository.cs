@@ -102,10 +102,10 @@ namespace Playstore.Infrastructure.Data.Repositories
 
                 if (user != null)
                 {
-                    Console.WriteLine(user.UserRoles.Count);
                     if (user.UserRoles.Where(id => id.RoleId == role.DeveloperId).Any())
                     {
                         appInfo.Status = RequestStatus.Approved;
+                        appInfo.PublishedDate = DateTime.Today;
                     }
                     else
                     {

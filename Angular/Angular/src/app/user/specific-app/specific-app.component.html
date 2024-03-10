@@ -83,7 +83,7 @@
         <!-- screenshots -->
         <div *ngIf="appDetail" class="flex">
             <div *ngFor="let images of appDetail[0]?.appImages" class="space-x-2 px-3">
-                <div class="flex flex-row border">
+                <div class="flex flex-row">
                     <img class="h-[13rem] w-[13rem] rounded-lg " [src]="'data:image/jpg;base64,' +images"
                         alt="screenshots">
                 </div>

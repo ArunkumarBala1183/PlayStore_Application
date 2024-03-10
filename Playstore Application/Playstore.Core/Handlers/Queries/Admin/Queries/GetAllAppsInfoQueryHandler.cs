@@ -19,7 +19,7 @@ namespace Playstore.Providers.Handlers.Queries.Admin
         {
             try
             {
-                var response = await this._repository.ViewAllApps();
+                var response = await this._repository.ViewAllApps(request.UserId);
     
                 if(response.GetType() == typeof(HttpStatusCode))
                 {

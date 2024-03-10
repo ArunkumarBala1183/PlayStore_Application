@@ -13,9 +13,9 @@ export class AppInfoService {
 
   constructor(private http : HttpClient) { }
 
-  GetAllApps()
+  GetAllApps(data : any)
   {
-      return this.http.get(this.baseUrl + "AppInfo/GetAllApp" , {observe: "response"});
+      return this.http.post(this.baseUrl + "AppInfo/GetAllApp", data , {observe: "response"});
   }
 
   getAppData(appId : string)
@@ -34,6 +34,5 @@ export class AppInfoService {
   {
     return this.http.get(this.baseUrl + "AppInfo/GetTotalDownloads" , {observe : "response"})
   }
-
   
 }

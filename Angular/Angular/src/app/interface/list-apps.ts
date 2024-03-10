@@ -8,5 +8,6 @@ export interface ListApps {
     description: string,
     rating: number,
     downloads: number,
-    category: Category
+    category: Category,
+    userDownloaded: boolean
 }

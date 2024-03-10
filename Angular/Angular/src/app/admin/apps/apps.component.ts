@@ -1,3 +1,4 @@
+import { HttpStatusCode } from '@angular/common/http';
 import { Component , OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
@@ -47,7 +48,8 @@ export class AppsComponent implements OnInit{
   }
 
   getAllApps() {
-    this.service.GetAllApps()
+    let data = {userId : this.loginService.getUserId()}
+    this.service.GetAllApps(data)
       .subscribe({
         next: response => {
           this.appDetails = response.body as ListApps[]
@@ -57,10 +59,4 @@ export class AppsComponent implements OnInit{
         }
       })
   }
-
-  IsAlreadyInstalled(appId : Guid) : boolean
-  {
-    return true
-  }
-
 }

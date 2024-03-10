@@ -23,14 +23,14 @@ namespace Playstore.Controllers.Admin
             this._mediator = mediator;
         }
 
-        [HttpGet("GetAllApp")]
+        [HttpPost("GetAllApp")]
         [ProducesResponseType(typeof(IEnumerable<ListAppInfoDto>), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(ApiResponseException))]
-        public async Task<IActionResult> GetAllApps()
+        public async Task<IActionResult> GetAllApps(GetAllAppsInfoQuery allApps)
         {
             try
             {
-                var response = await this._mediator.Send(new GetAllAppsInfoQuery());
+                var response = await this._mediator.Send(allApps);
 
                 return Ok(response);
             }
@@ -84,24 +84,6 @@ namespace Playstore.Controllers.Admin
                 var response = await this._mediator.Send(new GetTotalDownloadsQuery());
 
                 return Ok(response);
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new { message = error.Message });
-            }
-
-        }
-
-        [HttpGet("UserDownloaded")]
-        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        [ProducesErrorResponseType(typeof(ApiResponseException))]
-        public async Task<IActionResult> GetTotalDownloads(GetUserDownloadQuery downloadDetails)
-        {
-            try
-            {
-                var response = await this._mediator.Send(downloadDetails);
-
-                return Ok(new {downloaded = response});
             }
             catch (ApiResponseException error)
             {

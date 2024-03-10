@@ -15,7 +15,7 @@ import { AppInfoService } from 'src/app/services/app-info.service';
 export class LogsComponent implements OnInit {
   currentPage = 1;
   public values: any[] = [];
-  itemsPerPage = 2;
+  itemsPerPage = 5;
   filteredLogs: AppLogs[] = [];
   maxDate: string | undefined;
 
@@ -61,9 +61,8 @@ export class LogsComponent implements OnInit {
 
     if (page >= 1 && page <= this.getPages().length) {
       this.currentPage = page;
-      this.getAppLogs();
     }
-    
+    this.getAppLogs();
   }
 
   currentPageStartIndex(): number {
@@ -103,7 +102,6 @@ export class LogsComponent implements OnInit {
           if(this.values.length <= this.itemsPerPage)
           {
             this.currentPage = 1
-            this.updateFilteredLogs();
           }
         },
         error: error => {

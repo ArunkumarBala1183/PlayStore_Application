@@ -1,36 +1,51 @@
-
 <div class="flex ">
-    <input type="text" placeholder="Search" class="px-4  py-2 w-60 mt-3 ml-3 md:ml-56 rounded-2xl focus:outline-none focus:ring bg-gray-100 focus:border-blue-300 ngm" [(ngModel)]="searchTerm">
-    <button class=" text-white py-2 px-4 ml-2 rounded-md"><img src="https://cdn-icons-png.flaticon.com/128/3031/3031293.png" class="h-6 mt-3" alt=""></button>
-  </div>
-
-  
-  
-  <div *ngIf="allApps?.length==0" class="font-semibold text-xl text-red-800 flex items-center justify-center mt-32 ml-32 from-neutral-50">No such Apps Found! </div>
-
-   <div *ngFor="let app of allApps" class="mt-5  md:ml-40 mb-6 flex items-center p-4 rounded-lg hover:shadow-lg hover:scale-105 w-96 shadow-md bg-gray-100">
-    <div class="w-32 "> 
-      <img src="data:image/png;base64,{{app.logo}}" class="h-14 w-16">
-    </div>
-    <div class="ml-4 ">
-      <h2>{{app.name}}</h2>
-      <div class="flex flex-row items-center ">
-        <div class="flex items-center">
-        <p class="mr-2">{{app.rating}}</p>
-        <img src="https://cdn-icons-png.flaticon.com/128/2893/2893811.png" class="h-4  mb-3 mr-2">
-        <p class="w-24 "> {{app.category.categoryName}}</p>
-      </div>
-      <div *ngIf="IsAlreadyInstalled(app.appId)">
-        <button (click)="getDownloadPage(app.appId)" class="md:ml-36  bg-blue-300 px-2 mb-3 mr-0 rounded-lg hover:scale-110">Get</button>
-      </div>
-    </div>
-</div>
+  <input type="text" placeholder="Search"
+    class="px-4  py-2 w-60 mt-3 ml-3 md:ml-56 rounded-2xl focus:outline-none focus:ring bg-gray-100 focus:border-blue-300 ngm"
+    [(ngModel)]="searchTerm">
+  <button class=" text-white py-2 px-4 ml-2 rounded-md"><img
+      src="https://cdn-icons-png.flaticon.com/128/3031/3031293.png" class="h-6 mt-3" alt=""></button>
 </div>
 
 
 
-  
-  
+<div *ngIf="allApps?.length==0"
+  class="font-semibold text-xl text-red-800 flex items-center justify-center mt-32 ml-32 from-neutral-50">No such Apps
+  Found! </div>
+<div *ngFor="let app of allApps"
+  class="mt-5  md:ml-40 mb-6 flex justify-between items-center p-4 rounded-lg hover:shadow-lg hover:scale-105  shadow-md bg-gray-100">
+    <div class="flex space-between">
+      <div class="w-20 h-20 mt-3">
+        <img src="data:image/png;base64,{{app.logo}}" class="h-14 w-16">
+      </div>
+      <div class="ml-4">
+        <h2>{{app.name}}</h2>
+        <div class="flex flex-row items-center ">
+          <div class="flex items-center">
+            <p class="mr-2">{{app.rating}}</p>
+            <img src="https://cdn-icons-png.flaticon.com/128/2893/2893811.png" class="h-4  mb-3 mr-2">
+            <p class="w-24 "> {{app.category.categoryName}}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div>
+      <div *ngIf="!app.userDownloaded; else downloaded">
+        <button (click)="getDownloadPage(app.appId)"
+          class="md:ml-28  bg-gray-200 text-blue-700 font-medium px-3 py-1 mb-3 mr-0 rounded-lg hover:scale-110">Get</button>
+      </div>
+      <ng-template #downloaded>
+        <button (click)="getDownloadPage(app.appId)" class="md:ml-28 px-2 mb-3 mr-0 rounded-lg hover:scale-110"><img
+            src="https://cdn-icons-png.flaticon.com/128/4436/4436481.png" class="h-8" alt=""></button>
+      </ng-template>
+    </div>
+</div>
+
+
+
+
+
+
 <!--   
   <div class="mt-5  md:ml-40   flex items-center p-4 rounded-md shadow-md bg-white">
     <div>
@@ -80,7 +95,3 @@
       </div>
     </div>
   </div> -->
-  
-  
-   
-  
