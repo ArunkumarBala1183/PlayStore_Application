@@ -27,22 +27,16 @@ export class RegisterComponent implements OnInit {
     this.initForm();
   }
   initForm() {
-    this.register = this.formbuilder.group({
-      name: ['', Validators.required],
-      emailId: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(
-            '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'
-          ),
-        ],
-      ],
-      mobileNumber: ['', [Validators.required, Validators.maxLength(10)]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
-      dateOfBirth: ['', Validators.required],
-    });
+    this.register = this.formbuilder.group(
+      {
+        name: ['', Validators.required],
+        emailId: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')]],
+        mobileNumber: ['', [Validators.required, Validators.maxLength(10), Validators.pattern('^[0-9]{10}$')]],
+        password: ['', [Validators.required, Validators.minLength(8)]],
+        confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
+        dateOfBirth: ['', Validators.required]
+      }
+    )
   }
   validationMessages = {
     name: {
@@ -75,6 +69,16 @@ export class RegisterComponent implements OnInit {
     const confirmPassword = this.register.get('confirmPassword').value;
     return password === confirmPassword;
   }
+  
+public mobileCheck():boolean
+{
+  const mobileNumber=this.register.get('mobileNumber').value;
+  if(mobileNumber==='')
+  {
+   return true;
+  }
+   return false;
+}
 
   public checkEmail(event: any): void {
     console.log(event.target.value);

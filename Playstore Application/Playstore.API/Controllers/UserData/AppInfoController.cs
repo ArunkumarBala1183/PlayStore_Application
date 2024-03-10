@@ -32,7 +32,7 @@ namespace Playstore.Controllers.UserData
 
         }
         [HttpGet("GetUserDetails")]
-        [ProducesResponseType(typeof(IEnumerable<UsersDetailsDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(UsersDetailsDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> Getdetails(Guid userId)
         {

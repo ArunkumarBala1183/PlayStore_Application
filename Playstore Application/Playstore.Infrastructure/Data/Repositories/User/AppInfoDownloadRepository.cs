@@ -16,17 +16,16 @@ namespace Playstore.Infrastructure.Data.Repositories
         public readonly DatabaseContext databaseContext;
         public AppInfoDownloadRepository(DatabaseContext context) : base(context)
         {
-         this.databaseContext=context;   
+            this.databaseContext = context;
         }
 
         public async Task<object> GetData(Guid Userid)
         {
             var response = await databaseContext.AppDownloads
-            .Include(data=>data.AppInfo)
-            .Include(data=>data.AppInfo.Category)
-            .Where(userId=>userId.UserId==Userid)
+            .Include(data => data.AppInfo)
+            .Include(data => data.AppInfo.Category)
+            .Where(userId => userId.UserId == Userid)
             .ToListAsync();
-            Console.WriteLine("////..................//////"+response.Count);
             if (response.Count > 0)
             {
                var myappDetails = response.Select(appInfo =>
@@ -48,14 +47,9 @@ namespace Playstore.Infrastructure.Data.Repositories
             };
         }).ToList();
 
-        return myappDetails;
+                return myappDetails;
             }
             throw new EntityNotFoundException($"No AppDownloads found");
-
-           
-
-            // return response;
-
         }
 
     }

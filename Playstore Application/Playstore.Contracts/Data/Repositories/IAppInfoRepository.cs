@@ -4,8 +4,9 @@ namespace Playstore.Contracts.Data.Repositories
 {
     public interface IAppInfoRepository
     {
-        Task<object> ViewAllApps();
+        Task<object> ViewAllApps(Guid userId);
 
         Task<HttpStatusCode> RemoveApp(Guid id);
+        Task<HttpStatusCode> GetUserDownloadedOrNot(Guid userId , Guid appId);
     }
 }

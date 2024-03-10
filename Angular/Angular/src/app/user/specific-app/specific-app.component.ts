@@ -31,7 +31,6 @@ export class SpecificAppComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    window.scrollTo(0, 0);
     this.route.params.subscribe((params) => {
       const appId: Guid = params['appId'];
       const userId =  this.loginService.getUserId()
@@ -67,6 +66,11 @@ export class SpecificAppComponent implements OnInit {
       error: (error) => {
         console.log(error);
       },
+      complete : () =>
+      {
+        this.reviewForm.reset();
+        this.currentRating = 0;
+      }
     });
   }
 
@@ -133,7 +137,7 @@ export class SpecificAppComponent implements OnInit {
         this.reviewForm.reset();
       }
       });
-      this.toastr.success('Form Submitted');
+      this.toastr.success('Review Submitted');
     } 
     else {
       this.toastr.error('Enter Valid Details');

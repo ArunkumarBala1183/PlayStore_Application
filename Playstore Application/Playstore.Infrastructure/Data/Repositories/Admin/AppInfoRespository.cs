@@ -47,7 +47,7 @@ namespace Playstore.Core.Data.Repositories
             }
         }
 
-        public async Task<object> ViewAllApps()
+        public async Task<object> ViewAllApps(Guid userId)
         {
             try
             {
@@ -72,11 +72,48 @@ namespace Playstore.Core.Data.Repositories
     
                         appInfoDto.Rating = this.CalculateAverageRatings((List<AppReview>)appInfo.AppReview);
                         appInfoDto.Downloads = appInfo.AppDownloads.Count;
+
+                        if(appInfo.AppDownloads.Where(id => id.UserId == userId).Any())
+                        {
+                            appInfoDto.UserDownloaded = true;
+                        }
+                        else
+                        {
+                            appInfoDto.UserDownloaded = false;
+                        }
     
                         appDetailsDto[i] = appInfoDto;
                     }
     
                     return appDetailsDto;
+                }
+                else
+                {
+                    return HttpStatusCode.NotFound;
+                }
+            }
+            catch (SqlException)
+            {
+                return HttpStatusCode.ServiceUnavailable;
+            }
+            catch (Exception)
+            {
+                return HttpStatusCode.InternalServerError;
+            }
+        }
+
+        public async Task<HttpStatusCode> GetUserDownloadedOrNot(Guid userId , Guid appId)
+        {
+            try
+            {
+                var appDetails = await this._database.AppInfo
+                .Include(downloads => downloads.AppDownloads)
+                .Where(downloads => downloads.AppDownloads.Any(user => user.UserId == userId && user.AppId == appId))
+                .FirstOrDefaultAsync();
+    
+                if (appDetails != null)
+                {
+                    return HttpStatusCode.Found;
                 }
                 else
                 {

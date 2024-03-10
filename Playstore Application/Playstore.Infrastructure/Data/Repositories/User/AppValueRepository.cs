@@ -38,7 +38,6 @@ namespace Playstore.Infrastructure.Data.Repositories
                         AppId = appId,
                         UserId = userId, //use userId here
                         DownloadedDate = DateTime.Today,
- 
                     };
                     this.context.AppDownloads.Add(entity);
                     await this.context.SaveChangesAsync();

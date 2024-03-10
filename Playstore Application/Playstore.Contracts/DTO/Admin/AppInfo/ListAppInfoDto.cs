@@ -10,6 +10,7 @@ namespace Playstore.Contracts.DTO.AppInfo
       string Description,
       int Rating,
       int Downloads,
-      CategoryDto Category
+      CategoryDto Category,
+      bool UserDownloaded
   );
 }
