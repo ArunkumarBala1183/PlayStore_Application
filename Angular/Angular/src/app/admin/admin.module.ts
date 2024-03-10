@@ -66,7 +66,6 @@ import { UserModule } from '../user/user.module';
     ReactiveFormsModule,
     HomeModule,
     UserModule
-    
   ],
   exports:[
     // AdminComponent

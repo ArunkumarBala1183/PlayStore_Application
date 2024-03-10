@@ -14,7 +14,6 @@ const routes: Routes = [
   {
     path:'login',
     loadChildren:()=>import('./login/login.module').then(m=>m.LoginModule) 
-
   },
   {
     path:'user',
@@ -23,7 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes,{scrollPositionRestoration:'top'})],
+  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'top'})],  
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
