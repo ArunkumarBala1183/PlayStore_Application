@@ -25,7 +25,6 @@ export class DashboardComponent implements OnInit {
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
         labels: dates,
         datasets: [{
           label: 'No of apps downloaded in a day',
@@ -92,7 +91,7 @@ export class DashboardComponent implements OnInit {
           this.responseDetails = response.body
 
           // this.dates = this.responseDetails.dates as string[]
-          this.count = this.responseDetails.count as number[]
+          this.count = this.responseDetails.count
 
           this.createChart();
         },

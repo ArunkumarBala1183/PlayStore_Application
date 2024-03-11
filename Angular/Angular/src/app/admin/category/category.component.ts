@@ -53,6 +53,10 @@ export class CategoryComponent implements OnInit {
           error: error => {
             console.log(error)
             this.toast.error("Server Unavailable")
+          },
+          complete:()=>
+          {
+            form.reset();
           }
         }
       )
