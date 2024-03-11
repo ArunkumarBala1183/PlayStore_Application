@@ -4,6 +4,6 @@ namespace Playstore.Contracts.DTO
     {
         public string EmailId { get; set; }
         public string Password { get; set; }
-        public string RoleCode = "User"; 
+        //public string RoleCode = "User"; 
     }
 }
