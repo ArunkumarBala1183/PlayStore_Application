@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { LoginService } from 'src/app/services/login.service';
+import { UserService } from 'src/app/services/user.service';
 
 
 @Component({
@@ -10,36 +12,44 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 
 
-export class ChangePasswordComponent implements OnInit{
-  passwordForm!: FormGroup;
-
-
-  constructor(private formBuilder:FormBuilder) {}
-  
-
-  ngOnInit(): void {
-    this.passwordForm = this.formBuilder.group({
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    }, {
-      validator: this.passwordMatchValidator
-    });
-  
+export class ChangePasswordComponent{
+ changePasswordForm : FormGroup;
+ 
+  constructor(private formBuilder : FormBuilder, private loginService : LoginService, private service : UserService, private toastr : ToastrService){
+    this.changePasswordForm = this.formBuilder.group({
+      password : ['',Validators.required],
+      confirmPassword : ['',Validators.required]
+    })
   }
-  submitForm() {
-    if (this.passwordForm.valid) {
-      // Handle form submission
-      console.log(this.passwordForm.value);
-    
+ 
+  public checkPassword():boolean
+  {
+    const password = this.changePasswordForm.get('password')?.value;
+    const confirmPassword = this.changePasswordForm.get('confirmPassword')?.value;
+    return password === confirmPassword;
+  }
+ 
+ 
+  public onSubmit() {
+    if(this.changePasswordForm.valid){
+      const userId = this.loginService.getUserId();
+      const password = this.changePasswordForm.get('password')?.value;
+      this.service.postPassword(userId , password).subscribe({
+        next: (response : any) => {
+          // if(response == 'Password Changed Successfully')
+          console.log(response);
+          this.toastr.success('Password Changed',);
+          console.log(response);
+        },
+        error : error =>
+        {
+          console.error(error);
+        },
+        complete:()=>{
+          this.changePasswordForm.reset();
+        }
+      });
     }
+   
   }
-
-  passwordMatchValidator(group: FormGroup) {
-    const newPassword = group.get('newPassword')?.value;
-    const confirmPassword = group.get('confirmPassword')?.value;
-
-    return newPassword === confirmPassword ? null : { passwordsNotMatch: true };
-  }
-
-
 }

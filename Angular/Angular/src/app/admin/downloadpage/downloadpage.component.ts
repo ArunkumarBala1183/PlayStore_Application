@@ -160,6 +160,10 @@ export class DownloadpageComponent implements OnInit {
         error: (error) => {
           console.log(error);
         },
+        complete:()=>
+        {
+          this.reviewForm.reset();
+        }
       });
       this.toastr.success('Form Submitted');
     }

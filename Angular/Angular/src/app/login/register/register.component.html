@@ -61,17 +61,17 @@
         placeholder="Confirm Password *" formControlName="confirmPassword" required minlength="7" maxlength="12" >
     </div>
    
-    <span class="text-center text-red-400 mt-1" *ngIf="!PasswordMatch() && register.get('confirmPassword').touched && register.get('password').valid"> {{validationMessages.confirmPassword.required}}
+    <span class="text-center text-red-400 mt-1" *ngIf="!PasswordMatch() && register.get('confirmPassword').touched "> {{validationMessages.confirmPassword.required}}
 
       <!-- *ngIf="register.get('ConfirmPassword').hasError('required') &&  register.get('ConfirmPassword').touched">
       {{ validationMessages.ConfirmPassword.required }} -->
     </span>
  
 
-    <span class="text-center text-red-400 mt-1"
+    <!-- <span class="text-center text-red-400 mt-1"
       *ngIf="register.get('confirmPassword').hasError('minlength') && (register.get('confirmPassword').dirty )">
       {{ validationMessages.confirmPassword.required }}
-    </span>
+    </span> -->
     <div class="date mt-3 md:mt-3">
       <label class="pl-1 text-sky-600" for="Date">Date of Birth *</label><br>
       <input class="bg-gray-100 px-3   h-7 rounded-md" id="dateOfBirth" name="dateOfBirth" formControlName="dateOfBirth" type="date" (change)="checkdateOfBirth($event)"
