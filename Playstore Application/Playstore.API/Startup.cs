@@ -12,6 +12,7 @@ using Serilog;
 using Playstore.JsonSerialize;
 using System;
 using Playstore.Contracts.DTO;
+using Playstore.Contracts.Middleware;
 
 namespace Playstore
 {
@@ -27,6 +28,7 @@ namespace Playstore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<JwtAuthenticationMiddleware>();
             services.AddSession(options => // Session Configuration
             {
                 options.IdleTimeout = TimeSpan.FromSeconds(60);
@@ -82,7 +84,7 @@ namespace Playstore
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseMiddleware<JwtAuthenticationMiddleware>();
             app.UseHttpsRedirection();
 
 
