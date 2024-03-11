@@ -75,11 +75,11 @@ namespace Playstore.Providers.Handlers.Commands
             }
             //var userEntity = this.mapper.Map<Users>(model);
             _repository.Add(userEntity);
-            await _repository.CommitAsync();
-            await this.GenerateUserCredentials(userEntity.EmailId, request);
+            await GenerateUserCredentials(userEntity.EmailId, request);
             Guid defaultRoleId = await _roleRepository.GetDefaultRoleId();
-            await this.GenerateUserRole(userEntity, defaultRoleId);
+            await GenerateUserRole(userEntity, defaultRoleId);
             _emailService.SendUserCredentialsAsync(model.EmailId, model.Name, model.MobileNumber, DateOnly.FromDateTime(model.DateOfBirth));
+            await _repository.CommitAsync();
             return userEntity.UserId;
         }
         private async Task GenerateUserRole(Users userEntity, Guid defaultRoleId)
@@ -102,15 +102,11 @@ namespace Playstore.Providers.Handlers.Commands
         private async Task GenerateUserCredentials(string emailId, RegisterUsersCommand request)
         {
             var userDetails = await _repository.GetByEmailId(emailId);
-
-
-
             if (userDetails != null)
             {
 
                 var userCredentialsEntity = new UserCredentials
                 {
-                    //Password = userCredentialsEntity.Password,
                     EmailId = userDetails.EmailId,
                     UserId = userDetails.UserId
                 };
@@ -119,9 +115,6 @@ namespace Playstore.Providers.Handlers.Commands
 
                 _repository1.Add(userCredentialsEntity);
                 await _repository1.CommitAsync();
-
-                //await SendEmail(userCredentials, userDetails.EmailId);
-
 
             }
         }

@@ -41,7 +41,7 @@ public class EmailService : IEmailService
         {
             smtp.Send(message);
         }
-        
+        await Task.Delay(0);
         Console.WriteLine($"Sending OTP to {email}: {otp}");
     }
     public async Task SendUserCredentialsAsync(string email, string name, string mobileNumber,DateOnly dateOfBirth)
@@ -68,6 +68,7 @@ public class EmailService : IEmailService
         {
             smtp.Send(message);
         }
+        await Task.Delay(0);
         Console.WriteLine($"Sending user credentials email to {email}");
     }
 

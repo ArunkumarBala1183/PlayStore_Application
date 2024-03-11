@@ -16,7 +16,7 @@ namespace Playstore.Core.Mapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<Users, AllUsersDTO>().ReverseMap();
+           // CreateMap<Users, AllUsersDTO>().ReverseMap();
             CreateMap<Users, RegisterUsersDTO>().ReverseMap();
             CreateMap<UserCredentials, RegisterUsersDTO>().ReverseMap();
             CreateMap<App, AppDTO>();
