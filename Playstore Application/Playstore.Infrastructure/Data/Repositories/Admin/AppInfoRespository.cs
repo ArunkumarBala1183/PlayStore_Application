@@ -73,7 +73,7 @@ namespace Playstore.Core.Data.Repositories
                         appInfoDto.Rating = this.CalculateAverageRatings((List<AppReview>)appInfo.AppReview);
                         appInfoDto.Downloads = appInfo.AppDownloads.Count;
 
-                        if(appInfo.AppDownloads.Where(id => id.UserId == userId).Any())
+                        if(appInfo.AppDownloads.Any(id => id.UserId == userId))
                         {
                             appInfoDto.UserDownloaded = true;
                         }

@@ -57,6 +57,7 @@ namespace Playstore
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
             .WriteTo.Console()
+            .WriteTo.File($"Logs/{DateOnly.FromDateTime(DateTime.Today).ToString()}.txt" , rollingInterval : RollingInterval.Day)
             .CreateLogger();
 
             services.AddCors(options =>

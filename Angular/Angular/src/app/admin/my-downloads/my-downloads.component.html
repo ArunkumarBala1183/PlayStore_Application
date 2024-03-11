@@ -14,14 +14,14 @@
       <h2 class="px-1">{{app.fileName}}</h2>
       <div class="flex items-center">
         <p class="mr-2">{{app.rating | number : '1.1-1' }}</p>
-        <img src="https://cdn-icons-png.flaticon.com/128/2893/2893811.png" class="h-4  mb-3 mr-2">
+        <img src="https://cdn-icons-png.flaticon.com/128/2893/2893811.png" alt="logo" class="h-4  mb-3 mr-2">
         <p>| {{app.category}}</p>
 
       </div>
     </div>
   </div></button>
   </div>
-  <div *ngIf="!isDownloaded" class="text-3xl text-red-900 font-bold flex justify-center mt-36 ml-44">
+  <div *ngIf="!(downloadedApps.length > 0)" class="text-3xl text-red-900 font-bold flex justify-center mt-36 ml-44">
     No Records Found
   </div>
 </div>

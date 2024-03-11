@@ -2,13 +2,14 @@
     <h2>App Requests</h2>
 </div>
 
-<div *ngIf="!appRequests || appRequests.length===0" class="font-semibold text-lg text-red-700 mt-40 ml-72">No Records found!!</div>
+<div *ngIf="!(appRequests.length > 0)" class="font-semibold text-lg text-red-700 mt-40 ml-72">No Records found!!</div>
 
-<div *ngFor="let app of appRequests" class="mt-5 md:ml-40 mb-6  flex items-center p-4 rounded-lg hover:shadow-lg hover:scale-105 shadow-md bg-gray-100">
-    
+<div *ngFor="let app of appRequests"
+    class="mt-5 md:ml-40 mb-6  flex items-center p-4 rounded-lg hover:shadow-lg hover:scale-105 shadow-md bg-gray-100">
+
     <!-- Image -->
-    <div class=" flex-none mr-4"> 
-        <img src="data:image/png;base64,{{app.logo}}" class="md:h-20 h-10">
+    <div class=" flex-none mr-4">
+        <img src="data:image/png;base64,{{app.logo}}" alt="logo" class="md:h-20 h-10">
     </div>
 
     <!-- App Info -->
@@ -17,7 +18,7 @@
         <div class="ml-12">
             <h2>{{app.name}}</h2>
         </div>
-        
+
         <!-- Category -->
         <div class="mt-1">
             <p class="font-semibold">Category: {{app.category}}</p>
@@ -29,10 +30,11 @@
         </div>
 
         <div class="mt-1 ml-16">
-            <button (click)="viewRequest(app.appId)" class="bg-blue-300 px-2 mb-3 mr-0 rounded-lg hover:scale-110">View</button>
+            <button (click)="viewRequest(app.appId)"
+                class="bg-blue-300 px-2 mb-3 mr-0 rounded-lg hover:scale-110">View</button>
         </div>
     </div>
 
     <!-- View Button -->
-  
+
 </div>

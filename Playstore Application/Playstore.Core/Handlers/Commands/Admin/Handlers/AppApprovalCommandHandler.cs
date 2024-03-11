@@ -19,23 +19,16 @@ namespace Playstore.Providers.Handlers.Commands
         }
         public async Task<HttpStatusCode> Handle(AppApprovalCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var response = await repository.UserRole.ApproveApp(request.AppPublishDto);
+            var response = await repository.UserRole.ApproveApp(request.AppPublishDto);
 
-                Console.WriteLine(response);
-    
-                if(response != HttpStatusCode.NoContent && response != HttpStatusCode.Created)
-                {
-                    statusCodeHandler.HandleStatusCode(response);
-                }
-    
-                return response;
-            }
-            catch (ApiResponseException)
+            Console.WriteLine(response);
+
+            if (response != HttpStatusCode.NoContent && response != HttpStatusCode.Created)
             {
-                throw;
+                statusCodeHandler.HandleStatusCode(response);
             }
+
+            return response;
         }
     }
 }

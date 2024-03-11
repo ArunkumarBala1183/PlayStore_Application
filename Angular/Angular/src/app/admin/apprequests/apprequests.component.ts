@@ -11,7 +11,7 @@ import { AppRequestsService } from 'src/app/services/app-requests.service';
 
 export class ApprequestsComponent implements OnInit {
 
-  appRequests : Apprequests[] | undefined 
+  appRequests! : Apprequests[]
   
   constructor(private router: Router , private service : AppRequestsService){}
   
@@ -29,6 +29,7 @@ export class ApprequestsComponent implements OnInit {
           this.appRequests = response.body as Apprequests[]
         },
         error: error => {
+          this.appRequests = []
           console.log(error)
         }
       })

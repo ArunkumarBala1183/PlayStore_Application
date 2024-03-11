@@ -20,7 +20,12 @@ namespace Playstore.Contracts.Middleware
         }
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            var token = context.Request.Headers["Authorization"].ToString().Split(" ").Last();
+            var headerValue = context.Request.Headers["Authorization"]
+                .ToString()
+                .Split(" ");
+
+            var token = headerValue[headerValue.Length - 1];
+            
             Console.WriteLine($"From Middlewaretoken : {token}\n");
             if (!string.IsNullOrEmpty(token))
             {
@@ -31,6 +36,7 @@ namespace Playstore.Contracts.Middleware
 
         private void GetUserIdByToken(string token , HttpContext context)
         {
+            JwtSecurityToken securityToken = new JwtSecurityToken();
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(configuration.GetValue<string>("Authentication:Jwt:Secret"));
 
@@ -42,11 +48,17 @@ namespace Playstore.Contracts.Middleware
                 ClockSkew = TimeSpan.Zero
             } , out var validatedToken);
 
-            var securityToken = validatedToken as JwtSecurityToken;
+            if(validatedToken != null)
+            {
+                securityToken = validatedToken as JwtSecurityToken;
+            }
 
-            var userId = securityToken.Claims.FirstOrDefault(id => id.Type == ClaimTypes.UserData).Value;
+            var claims = securityToken.Claims.FirstOrDefault(id => id.Type == ClaimTypes.UserData);
 
-            context.Items["userId"] = userId;
+            if (claims != null)
+            {
+                context.Items["userId"] = claims.Value;
+            }
         }
     }
 }
