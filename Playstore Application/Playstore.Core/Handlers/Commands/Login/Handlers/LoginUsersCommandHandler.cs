@@ -82,7 +82,7 @@ namespace Playstore.Providers.Handlers.Commands
             {
                 claims.Add(new Claim(ClaimTypes.Expired, refreshTokenEntity.RefreshKey));
             }
-            var accessTokenExpires = DateTime.Now.AddMinutes(15);
+            var accessTokenExpires = DateTime.Now.AddMinutes(2);
  
             var tokenDescriptor = new SecurityTokenDescriptor
             {

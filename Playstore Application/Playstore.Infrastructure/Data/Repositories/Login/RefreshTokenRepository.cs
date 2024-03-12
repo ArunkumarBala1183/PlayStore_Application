@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
 
@@ -56,7 +57,7 @@ namespace Playstore.Core.Data.Repositories
             var userid = await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
             if (userid == null)
             {
-                throw new Exception("userid is null");
+                throw new EntityNotFoundException($"User with id {userid} not found.");
             }
             return userid;
         }

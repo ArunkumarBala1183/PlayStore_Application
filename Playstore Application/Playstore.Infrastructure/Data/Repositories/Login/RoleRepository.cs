@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
 
@@ -18,7 +19,7 @@ namespace Playstore.Core.Data.Repositories
             var emailid = await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
             if (emailid == null)
             {
-                throw new Exception("Email is null");
+                throw new EntityNotFoundException($"User with email {emailid} not found.");
             }
             return emailid;
         }
@@ -47,7 +48,7 @@ namespace Playstore.Core.Data.Repositories
             var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleCode == roleCode);
             if (role == null)
             {
-                throw new Exception("Role is null");
+                throw new EntityNotFoundException($"User with role {role} not found.");
             }
             return role;
         }
@@ -56,7 +57,7 @@ namespace Playstore.Core.Data.Repositories
             var roleid = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == roleId);
             if (roleid == null)
             {
-                throw new Exception("Role id is null");
+                throw new EntityNotFoundException($"User with roleid {roleid} not found.");
             }
             return roleid;
         }

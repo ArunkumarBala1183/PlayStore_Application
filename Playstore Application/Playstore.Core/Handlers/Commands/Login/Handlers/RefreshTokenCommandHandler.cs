@@ -44,12 +44,11 @@ namespace Playstore.Providers.Handlers.Commands
             var userId = GetClaimsFromExpiredToken(expiredToken);
 
             var userCredentials = await _credentialsRepository.GetByIdAsync(userId);
-
+            
             var tokenResponse = await GenerateToken(userCredentials);
 
             return tokenResponse;
         }
-
 
         private async Task<TokenResponse> GenerateToken(UserCredentials userCredentials)
         {
@@ -72,7 +71,7 @@ namespace Playstore.Providers.Handlers.Commands
                 claims.Add(new Claim(ClaimTypes.Expired, refreshTokenEntity.RefreshKey));
             }
 
-            var accessTokenExpires = DateTime.Now.AddMinutes(15);
+            var accessTokenExpires = DateTime.Now.AddMinutes(2);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),

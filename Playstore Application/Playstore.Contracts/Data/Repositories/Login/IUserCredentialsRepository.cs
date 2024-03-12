@@ -9,7 +9,7 @@ namespace Playstore.Contracts.Data.Repositories
         Task<UserCredentials> GetByIdAsync(Guid userId);
 
         Task CommitAsync();
-        Task<bool> Update(UserCredentials userCredentials);
+        Task<bool> UpdateCredentials(UserCredentials userCredentials);
         Task<bool> ChangePassword(Guid userId,string hashedPassword);
 
         Task<bool> checkPassword(Guid UserId, string Password);

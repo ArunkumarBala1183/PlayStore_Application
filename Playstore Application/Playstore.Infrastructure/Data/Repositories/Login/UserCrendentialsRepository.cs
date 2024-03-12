@@ -1,7 +1,4 @@
-using System.Linq.Expressions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Core.Exceptions;
@@ -17,7 +14,7 @@ namespace Playstore.Core.Data.Repositories
         {
             _context = context;
         }
-        public new async Task<bool> Update(UserCredentials userCredentials)
+        public async Task<bool> UpdateCredentials(UserCredentials userCredentials)
         {
 
             _context.UserCredentials.Update(userCredentials);
@@ -42,7 +39,7 @@ namespace Playstore.Core.Data.Repositories
             var id = await _context.UserCredentials.FirstOrDefaultAsync(u => u.UserId == userId);
             if (id == null)
             {
-                throw new Exception("Id is null");
+                throw new EntityNotFoundException($"User with id {id} not found.");
             }
             return id;
         }
@@ -52,14 +49,6 @@ namespace Playstore.Core.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        // public async Task<UserCredentials> GetByEmailWithRolesAsync(Guid id)
-        // {
-        //     return await _context.UserCredentials
-        //         .Include(uc => uc.User)  // Include the User entity if needed
-        //         .Include(uc => uc.User.UserRoles)
-        //             .ThenInclude(ur => ur.Role)
-        //         .FirstOrDefaultAsync(x => x.UserId == id);
-        // }
         public async Task<bool> ChangePassword(Guid userId, string password)
         {
             var user=await _context.UserCredentials.Where(user=>user.UserId==userId).FirstOrDefaultAsync();
