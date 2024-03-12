@@ -88,10 +88,18 @@ export class UserService {
   }
 
 
-  postPassword(userId : Guid , password : string)
+  getPassword(userId : Guid , password : string) 
+  {
+    {
+      console.log(password)
+      return this.http.get<boolean>(`${this.baseUrl}Login/checkPassword?UserId=${userId}&password=${password}`);
+    }
+  }
+
+  patchPassword(userId : Guid , newPassword : string) 
   {
     const url = (`${this.baseUrl}Login/changePassword`);
-    const data = {userId:userId ,password:password}
+    const data = {userId:userId ,password:newPassword}
     return this.http.patch(url , data);
   }
 }

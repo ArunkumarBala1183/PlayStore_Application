@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Infrastructure.Data.Repositories.Generic;
@@ -52,19 +54,25 @@ namespace Playstore.Core.Data.Repositories
         //             .ThenInclude(ur => ur.Role)
         //         .FirstOrDefaultAsync(x => x.UserId == id);
         // }
-        public async Task<string> ChangePassword(Guid userId, string hashedPassword)
+        public async Task<bool> ChangePassword(Guid userId, string password)
         {
             var user=await _context.UserCredentials.Where(user=>user.UserId==userId).FirstOrDefaultAsync();
-            if(user!=null)
+            if(user != null)
             {
-                user.Password=hashedPassword;
-                 _context.UserCredentials.Update(user);
-                 await _context.SaveChangesAsync();
-                 return "Password Changed Successfully";
+            Console.WriteLine("++++++++++++++++++password Not FOund+++++++++++++++++++");
+                user.Password=password;
+                _context.UserCredentials.Update(user);
+                _context.SaveChangesAsync();
+                 return true;
             }
-            else{
-                return "User not found";
-            }
+            return false;
+        }
+
+        public async Task<bool> checkPassword(Guid UserId , string hashedPassword)
+        {
+             bool isPasswordExist = _context.UserCredentials.Any(userId => userId.UserId == UserId&& userId.Password==hashedPassword);
+             return isPasswordExist;
+           
         }
     }
 }

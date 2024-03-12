@@ -14,7 +14,9 @@ namespace Playstore.Contracts.Data.Repositories
 
         Task CommitAsync();
         Task<bool> Update(UserCredentials userCredentials);
-        Task<string> ChangePassword(Guid userId,string hashedPassword);
+        Task<bool> ChangePassword(Guid userId,string hashedPassword);
+
+        Task<bool> checkPassword(Guid UserId, string Password);
 
     }
 }
