@@ -23,25 +23,16 @@ namespace Playstore.Core.Data.Repositories
             return true;
 
         }
-        public async Task<UserCredentials> GetByEmailAsync(string email)
+        public async Task<UserCredentials?> GetByEmailAsync(string email)
         {
-            var user = await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
-            if (user == null)
-            {
-                throw new EntityNotFoundException($"User with email {email} not found.");
-
-            }
-            return user;
+            return await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
+            
         }
 
-        public async Task<UserCredentials> GetByIdAsync(Guid userId)
+        public async Task<UserCredentials?> GetByIdAsync(Guid userId)
         {
-            var id = await _context.UserCredentials.FirstOrDefaultAsync(u => u.UserId == userId);
-            if (id == null)
-            {
-                throw new EntityNotFoundException($"User with id {id} not found.");
-            }
-            return id;
+            return await _context.UserCredentials.FirstOrDefaultAsync(u => u.UserId == userId);
+
         }
 
         public async Task CommitAsync()

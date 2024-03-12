@@ -9,13 +9,13 @@ using AutoMapper;
 
 namespace Playstore.Providers.Handlers.Commands
 {
-    
+
     public class RegisterUsersCommandHandler : IRequestHandler<RegisterUsersCommand, Guid>
     {
         private readonly IUsersRepository _repository;
         private readonly IUserCredentialsRepository _repository1;
         private readonly IValidator<RegisterUsersDTO> _validator;
-        private readonly IPasswordHasher<UserCredentials> _passwordHasher;        private readonly IEmailService _emailService;
+        private readonly IPasswordHasher<UserCredentials> _passwordHasher; private readonly IEmailService _emailService;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
 
@@ -70,9 +70,9 @@ namespace Playstore.Providers.Handlers.Commands
                 throw new DuplicateEmailException("MobileNumber is already registered.");
             }
             _repository.Add(userEntity);
-            await GenerateUserCredentials(userEntity.EmailId, request);
             Guid defaultRoleId = await _roleRepository.GetDefaultRoleId();
             await GenerateUserRole(userEntity, defaultRoleId);
+            await GenerateUserCredentials(userEntity.EmailId, request);
             _emailService.SendUserCredentialsAsync(model.EmailId, model.Name, model.MobileNumber, DateOnly.FromDateTime(model.DateOfBirth));
             await _repository.CommitAsync();
             return userEntity.UserId;
