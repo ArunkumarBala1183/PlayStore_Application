@@ -16,12 +16,11 @@ namespace Playstore.Providers.Handlers.Commands
         private readonly IUserCredentialsRepository _repository1;
         private readonly IValidator<RegisterUsersDTO> _validator;
         private readonly IPasswordHasher<UserCredentials> _passwordHasher;
-        private readonly IMapper mapper;
         private readonly IEmailService _emailService;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
 
-        public RegisterUsersCommandHandler(IMapper mapper,
+        public RegisterUsersCommandHandler(
         IRoleRepository roleRepository,
         IUserRoleRepository userRoleRepository,
         IEmailService emailService,
@@ -36,7 +35,6 @@ namespace Playstore.Providers.Handlers.Commands
             _passwordHasher = passwordHasher;
             _emailService = emailService;
             _userRoleRepository = userRoleRepository;
-            this.mapper = mapper;
         }
         public async Task<Guid> Handle(RegisterUsersCommand request, CancellationToken cancellationToken)
         {
@@ -61,7 +59,6 @@ namespace Playstore.Providers.Handlers.Commands
                 DateOfBirth = model.DateOfBirth.Date,
                 MobileNumber = model.MobileNumber
             };
-            //var userEntity = this.mapper.Map<Users>(model);
             var existingMobileNumber = await _repository.GetByPhoneNumber(model.MobileNumber);
             var existingUserInUsers = await _repository.GetByEmailId(model.EmailId);
 
@@ -73,7 +70,6 @@ namespace Playstore.Providers.Handlers.Commands
             {
                 throw new DuplicateEmailException("MobileNumber is already registered.");
             }
-            //var userEntity = this.mapper.Map<Users>(model);
             _repository.Add(userEntity);
             await GenerateUserCredentials(userEntity.EmailId, request);
             Guid defaultRoleId = await _roleRepository.GetDefaultRoleId();

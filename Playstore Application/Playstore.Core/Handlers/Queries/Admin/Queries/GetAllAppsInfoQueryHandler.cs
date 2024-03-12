@@ -17,22 +17,14 @@ namespace Playstore.Providers.Handlers.Queries.Admin
         }
         public async Task<IEnumerable<ListAppInfoDto>> Handle(GetAllAppsInfoQuery request, CancellationToken cancellationToken)
         {
-            try
+            var response = await this._repository.ViewAllApps(request.UserId);
+
+            if (response is HttpStatusCode code)
             {
-                var response = await this._repository.ViewAllApps(request.UserId);
-    
-                if(response.GetType() == typeof(HttpStatusCode))
-                {
-                    statusCodeHandler.HandleStatusCode((HttpStatusCode) response);
-                }
-    
-                return (IEnumerable<ListAppInfoDto>) response;
+                statusCodeHandler.HandleStatusCode(code);
             }
-            catch (ApiResponseException)
-            {
-                
-                throw;
-            }
+
+            return (IEnumerable<ListAppInfoDto>)response;
         }
     }
 }

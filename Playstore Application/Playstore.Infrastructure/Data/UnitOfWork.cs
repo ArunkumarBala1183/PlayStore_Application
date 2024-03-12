@@ -42,15 +42,6 @@ namespace Playstore.Infrastructure.Data
 
         public IUserRepository User => throw new NotImplementedException();
 
-
-
-
-
-
-
-        // public IAppInfoRepository AppInfo=new AppInfoRepository();
-        // public IAppInfoRepository AppInfo => new AppInfoRepository();
-
         public async Task CommitAsync()
         {
             await _context.SaveChangesAsync();

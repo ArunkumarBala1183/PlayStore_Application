@@ -1,21 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
-using Playstore.Providers.Handlers.Commands;
 
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -41,15 +33,18 @@ namespace Playstore.Providers.Handlers.Commands
         {
             var expiredToken = request.ExpiredToken;
 
-            var (userId, refreshToken) = GetClaimsFromExpiredToken(expiredToken);
+            if (expiredToken != null)
+            {
+                var userId = GetClaimsFromExpiredToken(expiredToken);
+    
+                var userCredentials = await _credentialsRepository.GetByIdAsync(userId);
+    
+                var tokenResponse = await GenerateToken(userCredentials);
+    
+                return tokenResponse;
+            }
 
-            var refreshTokenEntity = await _refreshTokenRepository.GetRefreshTokenAsync(userId);
-
-            var userCredentials = await _credentialsRepository.GetByIdAsync(userId);
-
-            var tokenResponse = await GenerateToken(userCredentials);
-
-            return tokenResponse;
+            throw new UnauthorizedAccessException("Not a Valid Token");
         }
 
 
@@ -96,7 +91,7 @@ namespace Playstore.Providers.Handlers.Commands
             };
         }
 
-        private (Guid userId, string? refreshToken) GetClaimsFromExpiredToken(string expiredToken)
+        private Guid GetClaimsFromExpiredToken(string expiredToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var readToken = tokenHandler.ReadToken(expiredToken) as JwtSecurityToken;
@@ -104,16 +99,14 @@ namespace Playstore.Providers.Handlers.Commands
             if (readToken?.Claims != null)
             {
                 var userIdClaim = readToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData);
-                var refreshTokenClaim = readToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Expired);
 
                 if (userIdClaim != null)
                 {
                     var userId = Guid.Parse(userIdClaim.Value);
-                    var refreshToken = refreshTokenClaim?.Value;
-
-                    return (userId, refreshToken);
+                    return userId;
                 }
             }
+            
             throw new ArgumentException("Invalid or missing claims in the expired token");
         }
 

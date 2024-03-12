@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 
 namespace Playstore.Core.Security
@@ -44,11 +45,6 @@ namespace Playstore.Core.Security
                     {
                         services.AddAuthorization(options =>
                         {
-                            //options.AddPolicy("AuthorizedUsersOnly", policy =>
-                            //{
-                            //    policy.RequireAuthenticatedUser();
-                            //    policy.RequireClaim("userId");
-                            //});
                         });
                         AddJwtAuthentication(authenticationBuilder, config);
                     }
@@ -56,16 +52,12 @@ namespace Playstore.Core.Security
             }
             catch (Exception ex)
             {
-
-
+                Log.Error("Error : {#err}" , ex.Message);
             }
 
         }
         private static void AddGoogleAuthentication(AuthenticationBuilder authenticationBuilder, IConfigurationSection configurationSection)
         {
-
-            //TODO  cheme to be handle 
-            //oogleDefaults.AuthenticationScheme;
 
             authenticationBuilder.AddCookie()
             .AddGoogle(options =>

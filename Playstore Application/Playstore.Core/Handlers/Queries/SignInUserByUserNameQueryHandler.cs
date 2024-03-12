@@ -28,7 +28,6 @@ namespace Playstore.Providers.Handlers.Queries
     public class SignInUserByUserNameQueryHandler : IRequestHandler<SignInUserByUserNameQuery, string>
     {
         private readonly IUnitOfWork _repository;
-        private readonly IMapper _mapper;
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IConfiguration _configuration;////Ioption to be changes 
    
@@ -37,7 +36,6 @@ namespace Playstore.Providers.Handlers.Queries
         public SignInUserByUserNameQueryHandler(IUnitOfWork repository, IMapper mapper, IPasswordHasher<User> passwordHasher, IConfiguration configuration)
         {
             _repository = repository;
-            _mapper = mapper;
             _passwordHasher = passwordHasher;
             _configuration = configuration;
             
@@ -45,7 +43,7 @@ namespace Playstore.Providers.Handlers.Queries
 
         public async Task<string> Handle(SignInUserByUserNameQuery request, CancellationToken cancellationToken)
         {
-            var user = await Task.FromResult(_repository.User.GetAll().Where(con=>con.Username.Equals(request.UserName)).FirstOrDefault());
+            var user = await Task.FromResult(_repository.User.GetAll().FirstOrDefault(con =>con.Username.Equals(request.UserName)));
 
             if (user == null)
             {

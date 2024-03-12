@@ -10,6 +10,7 @@ using Playstore.Contracts.DTO.TotalDownloads;
 using Playstore.Core.Exceptions;
 using Playstore.Providers.Handlers.Commands;
 using Playstore.Providers.Handlers.Queries.Admin;
+using Serilog;
 
 namespace Playstore.Controllers.Admin
 {

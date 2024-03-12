@@ -6,10 +6,10 @@ namespace Playstore.Providers.Handlers.Commands
 {
     public class UpdateCategoryCommand : IRequest<HttpStatusCode>
     {
-        public CategoryUpdateDto category;
+        public CategoryUpdateDto Category { get; set; }
         public UpdateCategoryCommand(CategoryUpdateDto category)
         {
-            this.category = category;
+            this.Category = category;
         }
     }
 }

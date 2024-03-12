@@ -17,22 +17,14 @@ namespace Playstore.Providers.Handlers.Queries.Admin
         }
         public async Task<IEnumerable<AppDownloadsDto>> Handle(GetAppLogsQuery request, CancellationToken cancellationToken)
         {
-            try
+            var response = await this.repository.GetAppLogs(request.AppSearch);
+
+            if (response is HttpStatusCode code)
             {
-                var response =  await this.repository.GetAppLogs(request.appSearch);
-    
-                if(response.GetType() == typeof(HttpStatusCode))
-                {
-                    statusCodeHandler.HandleStatusCode((HttpStatusCode) response);
-                }
-    
-                return (IEnumerable<AppDownloadsDto>) response;
+                statusCodeHandler.HandleStatusCode(code);
             }
-            catch (ApiResponseException)
-            {
-                
-                throw;
-            }
+
+            return (IEnumerable<AppDownloadsDto>)response;
         }
     }
 }

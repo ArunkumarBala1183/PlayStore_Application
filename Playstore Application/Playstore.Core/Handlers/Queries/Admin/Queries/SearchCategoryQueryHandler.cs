@@ -18,22 +18,14 @@ namespace Playstore.Providers.Handlers.Queries.Admin
         }
         public async Task<IEnumerable<string>> Handle(SearchCategoryQuery request, CancellationToken cancellationToken)
         {
-            try
+            var response = await this.repository.SearchCategory(request.Category);
+
+            if (response is HttpStatusCode code)
             {
-                var response = await this.repository.SearchCategory(request.category);
-    
-                if(response.GetType() == typeof(HttpStatusCode))
-                {
-                    statusCodeHandler.HandleStatusCode((HttpStatusCode) response);
-                }
-    
-                return (IEnumerable<string>) response;
+                statusCodeHandler.HandleStatusCode(code);
             }
-            catch (ApiResponseException)
-            {
-                
-                throw;
-            }
+
+            return (IEnumerable<string>)response;
         }
     }
 }

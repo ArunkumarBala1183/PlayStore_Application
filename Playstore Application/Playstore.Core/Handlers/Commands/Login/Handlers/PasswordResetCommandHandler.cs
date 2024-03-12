@@ -7,9 +7,6 @@ using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -17,14 +14,12 @@ namespace Playstore.Providers.Handlers.Commands
     {
         private readonly IValidator<PasswordResetDTO> _validator;
         private readonly IUserCredentialsRepository _credentialsRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPasswordHasher<UserCredentials> _passwordHasher;
         private readonly IMediator _mediator;
 
         public ResetPasswordCommandHandler(IMediator mediator, IUserCredentialsRepository credentialsRepository, IValidator<PasswordResetDTO> validator, IPasswordHasher<UserCredentials> passwordHasher, IHttpContextAccessor httpContextAccessor)
         {
             _credentialsRepository = credentialsRepository;
-            _httpContextAccessor = httpContextAccessor;
             _passwordHasher = passwordHasher;
             _validator = validator;
             _mediator = mediator;

@@ -10,13 +10,13 @@ namespace Playstore.Providers.Handlers.Queries.UserData
 {
     public class GetAppDataQuery : IRequest<IEnumerable<AppDownloadDataDto>>
     {
-        public Guid appId { get; set; }
-        public Guid userId {get;set;}
+        public Guid AppId { get; set; }
+        public Guid UserId {get;set;}
         public GetAppDataQuery(Guid appId, Guid userId)
         {
-            this.appId = appId;
+            this.AppId = appId;
 
-            this.userId = userId;
+            this.UserId = userId;
 
         }
     }
@@ -34,7 +34,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
 
         public async Task<IEnumerable<AppDownloadDataDto>> Handle(GetAppDataQuery request, CancellationToken cancellationToken)
         {
-            var app = await _repository.AppValue.GetAppData(request.appId , request.userId);
+            var app = await _repository.AppValue.GetAppData(request.AppId , request.UserId);
             if (app == null)
             {
                 throw new EntityNotFoundException($"No App found for Id");

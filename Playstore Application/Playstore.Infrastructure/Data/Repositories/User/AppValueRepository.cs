@@ -1,15 +1,12 @@
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.Data.Entities;
-
-
 using Playstore.Migrations;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
-using Microsoft.AspNetCore.Mvc;
-using Playstore.Contracts.DTO.AppDownloads;
+
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
@@ -62,37 +59,37 @@ namespace Playstore.Infrastructure.Data.Repositories
         public async Task<object> ViewAllApps()
         {
             var enetities = await this.context.AppInfo.Include(data => data.AppReview).Include(data => data.Category).Include(data => data.AppImages).Where(status => status.Status == RequestStatus.Approved).ToListAsync();
-            int count = enetities.Count();
+            int count = enetities.Count;
             if (enetities.Any())
             {
                 var myappDetails = enetities.Select(appInfo =>
-                 {
+                {
                      var appReview = this.context.AppReviews
-                         .Where(review => review.AppId == appInfo.AppId)
-                         .ToList();
-                     var AppDownload = this.context.AppDownloads.Where(download => download.AppId == appInfo.AppId).ToList();
+                        .Where(review => review.AppId == appInfo.AppId)
+                        .ToList();
+                    var AppDownload = this.context.AppDownloads.Where(download => download.AppId == appInfo.AppId).ToList();
 
-                     return new AppsdetailsDTO
-                     {
-                         AppId = appInfo.AppId,
-                         Name = appInfo.Name,
-                         Description = appInfo.Description,
-                         Logo = appInfo.Logo,
-                         UserId = appInfo.UserId,
-                         Apps = count,
-                         CategoryName = appInfo.Category.CategoryName,
-                         Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
-                         CategoryId = appInfo.Category.CategoryId,
-                         Downloads = AppDownload.Count(),
-                         Status = appInfo.Status
-                     };
-                 }).ToList();
+                    return new AppsdetailsDTO
+                    {
+                        AppId = appInfo.AppId,
+                        Name = appInfo.Name,
+                        Description = appInfo.Description,
+                        Logo = appInfo.Logo,
+                        UserId = appInfo.UserId,
+                        Apps = count,
+                        CategoryName = appInfo.Category.CategoryName,
+                        Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
+                        CategoryId = appInfo.Category.CategoryId,
+                        Downloads = AppDownload.Count,
+                        Status = appInfo.Status
+                    };
+                })
+                .ToList();
+
                 return myappDetails;
 
             }
             throw new EntityNotFoundException($"No Apps found");
         }
-
-
     }
 }

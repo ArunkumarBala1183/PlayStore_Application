@@ -24,7 +24,6 @@ namespace Playstore.Controllers.UserData
 
 
         private readonly IMediator _mediator;
-        public Guid Assignvalue;
         public AppInfoController(IMediator mediator)
         {
             _mediator = mediator;

@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +11,6 @@ using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
-using Playstore.Providers.Handlers.Commands;
  
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -57,11 +52,6 @@ namespace Playstore.Providers.Handlers.Commands
             var userCredentials = await _credentialsRepository.GetByEmailAsync(model.EmailId);
             var refreshTokenEntity = await _refreshTokenRepository.GetRefreshTokenAsync(userCredentials.UserId);
  
-            if (userCredentials == null)
-            {
-                throw new EntityNotFoundException("User not found");
-            }
- 
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(userCredentials, userCredentials.Password, model.Password);
  
             if (passwordVerificationResult != PasswordVerificationResult.Success)
@@ -88,7 +78,6 @@ namespace Playstore.Providers.Handlers.Commands
                 claims.Add(new Claim(ClaimTypes.Expired, refreshTokenEntity.RefreshKey));
             }
             var accessTokenExpires = DateTime.UtcNow.AddMinutes(15);
-            var refreshTokenExpires = DateTime.UtcNow.AddDays(7);
  
             var tokenDescriptor = new SecurityTokenDescriptor
             {

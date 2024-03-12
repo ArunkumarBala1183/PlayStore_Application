@@ -9,11 +9,9 @@ namespace Playstore.Core.Data.Repositories
     public class RoleRepository : Repository<Role>, IRoleRepository
     {
         private readonly DatabaseContext _context;
-        //private readonly DbSet<Users> _dbSet;
         public RoleRepository(DatabaseContext context) : base(context)
         {
             _context = context;
-            // _dbSet = _context.Set<Users>();
         }
         public async Task<UserCredentials> GetByEmailAsync(string email)
         {
@@ -26,12 +24,6 @@ namespace Playstore.Core.Data.Repositories
                 .Where(ur => ur.UserId == userId)
                 .ToListAsync();
         }
-        // public async Task<List<Users>> GetAll()
-        // {
-        //     return await _context.Users.ToListAsync();
-        // }
-
-        //public IUsersRepository Users => new UsersRepository(_context);
 
         public async Task CommitAsync()
         {
@@ -53,15 +45,5 @@ namespace Playstore.Core.Data.Repositories
         {
             return await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == roleId);
         }
-
-        
-        // public async Task<Users> GetByEmailId(string emailId)
-        // {
-        //     return await _context.Users.FirstOrDefaultAsync(u => u.EmailId == emailId);
-        // }
-        // public async Task<Users> GetByPhoneNumber(string mobileNumber)
-        // {
-        //     return await _context.Users.FirstOrDefaultAsync(x => x.MobileNumber == mobileNumber);
-        // }
     }
 }

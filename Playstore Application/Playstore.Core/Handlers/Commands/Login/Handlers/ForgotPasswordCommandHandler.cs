@@ -1,10 +1,6 @@
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Contracts.DTO;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+
  
 namespace Playstore.Providers.Handlers.Commands
 {
