@@ -19,7 +19,7 @@ namespace Playstore.Core.Data.Repositories
         {
             var response = await _context.Users.FindAsync(id);
 
-            if(response != null)
+            if (response != null)
             {
                 return response;
             }
@@ -46,9 +46,9 @@ namespace Playstore.Core.Data.Repositories
         public async Task<Users> GetByPhoneNumber(string mobileNumber)
         {
             var number = await _context.Users.FirstOrDefaultAsync(x => x.MobileNumber == mobileNumber);
-            if (number == null )
+            if (number == null)
             {
-                throw new EntityNotFoundException( $"User with mobile number {mobileNumber} not found." );
+                throw new EntityNotFoundException($"User with mobile number {mobileNumber} not found.");
             }
 
             return number;

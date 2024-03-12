@@ -17,20 +17,20 @@ namespace Playstore.Core.Data.Repositories
         }
         public new async Task<bool> Update(UserCredentials userCredentials)
         {
-            
-                _context.UserCredentials.Update(userCredentials);
-                await _context.SaveChangesAsync();
 
-                return true; 
-            
+            _context.UserCredentials.Update(userCredentials);
+            await _context.SaveChangesAsync();
+
+            return true;
+
         }
         public async Task<UserCredentials> GetByEmailAsync(string email)
         {
             var user = await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
             if (user == null)
             {
-                throw new EntityNotFoundException( $"User with email {email} not found." );
-            
+                throw new EntityNotFoundException($"User with email {email} not found.");
+
             }
             return user;
         }
@@ -51,15 +51,16 @@ namespace Playstore.Core.Data.Repositories
         }
         public async Task<string> ChangePassword(Guid userId, string hashedPassword)
         {
-            var user=await _context.UserCredentials.Where(user=>user.UserId==userId).FirstOrDefaultAsync();
-            if(user!=null)
+            var user = await _context.UserCredentials.Where(user => user.UserId == userId).FirstOrDefaultAsync();
+            if (user != null)
             {
-                user.Password=hashedPassword;
-                 _context.UserCredentials.Update(user);
-                 await _context.SaveChangesAsync();
-                 return "Password Changed Successfully";
+                user.Password = hashedPassword;
+                _context.UserCredentials.Update(user);
+                await _context.SaveChangesAsync();
+                return "Password Changed Successfully";
             }
-            else{
+            else
+            {
                 return "User not found";
             }
         }
