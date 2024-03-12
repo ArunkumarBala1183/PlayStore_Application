@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
 
@@ -16,30 +17,35 @@ namespace Playstore.Core.Data.Repositories
         {
             _context = context;
         }
-        public async Task<bool> Update(UserCredentials userCredentials)
+        public new async Task<bool> Update(UserCredentials userCredentials)
         {
-            
-                _context.UserCredentials.Update(userCredentials);
-                await _context.SaveChangesAsync();
 
-                return true; 
-            
+            _context.UserCredentials.Update(userCredentials);
+            await _context.SaveChangesAsync();
+
+            return true;
+
         }
-        // public async Task<UserCredentials> GetByConditionAsync(Expression<Func<UserCredentials, bool>> condition)
-        // {
-        //     return await _context.UserCredentials.Where(condition).FirstOrDefaultAsync();
-        // }
         public async Task<UserCredentials> GetByEmailAsync(string email)
         {
-            return await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
+            var user = await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
+            if (user == null)
+            {
+                throw new EntityNotFoundException($"User with email {email} not found.");
+
+            }
+            return user;
         }
 
         public async Task<UserCredentials> GetByIdAsync(Guid userId)
         {
-            return await _context.UserCredentials.FirstOrDefaultAsync(u => u.UserId == userId);
+            var id = await _context.UserCredentials.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (id == null)
+            {
+                throw new Exception("Id is null");
+            }
+            return id;
         }
-        
-        //public IUsersRepository Users => new UsersRepository(_context);
 
         public async Task CommitAsync()
         {

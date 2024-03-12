@@ -7,18 +7,14 @@ using Playstore.Contracts.DTO;
 
 public class EmailService : IEmailService
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly EmailConfig _config;
 
-    public EmailService(IHttpContextAccessor httpContextAccessor,IOptions<EmailConfig> config)
+    public EmailService(IOptions<EmailConfig> config)
     {
-        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _config = config.Value;
     }
     public async Task SendOtpAsync(string email, string otp)
     {
-        //string otp = GenerateRandomTOTPSecret(user.Email);
-        Console.WriteLine($"Generated OTP for {email}: {otp}");
         var senderEmail = new MailAddress(_config.Sender, _config.DisplayName);
         var receiverEmail = new MailAddress(email);
         var password = _config.Password;
@@ -41,16 +37,15 @@ public class EmailService : IEmailService
         {
             smtp.Send(message);
         }
-        
-        Console.WriteLine($"Sending OTP to {email}: {otp}");
+        await Task.Delay(0);
     }
-    public async Task SendUserCredentialsAsync(string email, string name, string mobileNumber,DateOnly dateOfBirth)
+    public async Task SendUserCredentialsAsync(string email, string name, string mobileNumber, DateOnly dateOfBirth)
     {
         var subject = _config.Registersubject;
         var body = $"Dear {name},\n\nCongratulations! You have successfully registered on our platform.\n\nYour credentials:\nEmail: {email}\nDateOfBirth: {dateOfBirth}\nMobile Number: {mobileNumber}\n\nThank you for joining!";
         var senderEmail = new MailAddress(_config.Sender, _config.DisplayName);
         var receiverEmail = new MailAddress(email);
-        var password =  _config.Password;
+        var password = _config.Password;
         var smtp = new SmtpClient
         {
             Host = _config.Host,
@@ -68,7 +63,7 @@ public class EmailService : IEmailService
         {
             smtp.Send(message);
         }
-        Console.WriteLine($"Sending user credentials email to {email}");
+        await Task.Delay(0);
     }
 
 }

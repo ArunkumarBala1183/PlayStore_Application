@@ -9,21 +9,16 @@ namespace Playstore.Core.Data.Repositories
     public class RefreshTokenRepository : Repository<RefreshToken>, IRefreshTokenRepository
     {
         private readonly DatabaseContext _context;
-        //private readonly DbSet<Users> _dbSet;
         public RefreshTokenRepository(DatabaseContext context) : base(context)
         {
             _context = context;
-            // _dbSet = _context.Set<Users>();
         }
-        
-
-        //public IUsersRepository Users => new UsersRepository(_context);
 
         public async Task CommitAsync()
         {
             await _context.SaveChangesAsync();
         }
-    public async Task StoreRefreshTokenAsync(Guid userId, string refreshToken)
+        public async Task StoreRefreshTokenAsync(Guid userId, string refreshToken)
         {
             var refreshTokenEntity = await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
 
@@ -58,7 +53,12 @@ namespace Playstore.Core.Data.Repositories
 
         public async Task<RefreshToken> GetRefreshTokenAsync(Guid userId)
         {
-            return await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
+            var userid = await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
+            if (userid == null)
+            {
+                throw new Exception("userid is null");
+            }
+            return userid;
         }
     }
 }

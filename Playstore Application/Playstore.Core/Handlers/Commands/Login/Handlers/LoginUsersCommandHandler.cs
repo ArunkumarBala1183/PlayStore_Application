@@ -77,9 +77,7 @@ namespace Playstore.Providers.Handlers.Commands
             var claims = new List<Claim>
             {
                 
-                new Claim(ClaimTypes.UserData, userCredentials.UserId.ToString()),
-                //new Claim(ClaimTypes.Role , model.RoleCode),
-                // new Claim(ClaimTypes.Expired, refreshTokenEntity.RefreshKey)
+                new Claim(ClaimTypes.UserData, userCredentials.UserId.ToString())
             };
             foreach (var roleCode in roleCodes)
             {
@@ -98,11 +96,6 @@ namespace Playstore.Providers.Handlers.Commands
                 Expires = accessTokenExpires,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            // var refreshToken = refreshTokenEntity!= null ? GenerateRefreshToken() : null;
-            // if(refreshToken != null)
-            // {
-            //     await StoreRefreshTokenAsync(userCredentials.UserId, refreshToken);
-            // }
             var refreshToken = GenerateRefreshToken();
             await StoreRefreshTokenAsync(userCredentials.UserId, refreshToken);
            
