@@ -29,6 +29,11 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetAllApps(GetAllAppsInfoQuery allApps)
         {
+            Log.Information("All Apps Needed");
+            Log.Verbose("All Apps Needed");
+            Log.Error("All Apps Needed");
+            Log.Fatal("All Apps Needed");
+            Log.Warning("All Apps Needed");
             try
             {
                 var response = await this._mediator.Send(allApps);

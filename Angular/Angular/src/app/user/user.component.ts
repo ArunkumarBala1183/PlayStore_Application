@@ -46,8 +46,7 @@ export class UserComponent implements OnInit {
   userProfilePage = environment.userProfileRoute;
   specificAppPage = environment.specificAppRoute;
   resetPasswordPage = environment.resetPasswordRoute;
-
-
+  
   // for highlighting the Selected/Current component.
   isHighlightComponent: string = this.homePage;
   public highlightSelectedComponent(component: string) {

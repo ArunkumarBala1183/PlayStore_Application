@@ -54,9 +54,10 @@ namespace Playstore.Infrastructure
 
         private static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
         {
-            return services.AddSqlServer<DatabaseContext>(configuration.GetConnectionString("SqlServerConnection"), (options) =>
+            return services.AddSqlServer<DatabaseContext>(configuration.GetConnectionString("SqlServerConnection"), options =>
             {
                 options.MigrationsAssembly("Playstore.Migrations");
+                options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
             })
             .Configure<RoleConfig>(configuration.GetSection("RoleConfig"));
         }

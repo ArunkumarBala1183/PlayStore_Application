@@ -1,11 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Providers.Handlers.Queries;
 
 namespace Playstore.Providers.Handlers.Commands
 {
-    public class ChangePasswordQueryHandler : IRequestHandler<ChangePasswordQuery, string>
+    public class ChangePasswordQueryHandler : IRequestHandler<ChangePasswordQuery, bool>
     {
         private readonly IPasswordHasher<object> passwordHasher;
         private readonly IUserCredentialsRepository userCredentialsRepository;
@@ -16,10 +15,10 @@ namespace Playstore.Providers.Handlers.Commands
             this.userCredentialsRepository = userCredentialsRepository;
         }
 
-        public async Task<string> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
         {
 
-            string hashedPassword = passwordHasher.HashPassword(null, request.Password);
+            string hashedPassword = passwordHasher.HashPassword(userCredentialsRepository, request.Password);
             return await userCredentialsRepository.ChangePassword(request.UserId, hashedPassword);
 
         }

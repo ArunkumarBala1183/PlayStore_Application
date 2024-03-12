@@ -13,11 +13,12 @@ namespace Playstore.Core.Data.Repositories
         {
             _context = context;
         }
+
         public async Task CommitAsync()
         {
             await _context.SaveChangesAsync();
         }
-    public async Task StoreRefreshTokenAsync(Guid userId, string refreshToken)
+        public async Task StoreRefreshTokenAsync(Guid userId, string refreshToken)
         {
             var refreshTokenEntity = await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
 
@@ -52,7 +53,12 @@ namespace Playstore.Core.Data.Repositories
 
         public async Task<RefreshToken> GetRefreshTokenAsync(Guid userId)
         {
-            return await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
+            var userid = await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
+            if (userid == null)
+            {
+                throw new Exception("userid is null");
+            }
+            return userid;
         }
     }
 }

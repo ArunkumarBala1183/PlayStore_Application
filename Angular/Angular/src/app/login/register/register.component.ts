@@ -85,7 +85,7 @@ public mobileCheck():boolean
     const emailId = event.target.value;
     const emailExists: EmailExists = { emailId: emailId };
     this.loginService.checkUser(emailExists).subscribe({
-      next: (response) => {
+      next: response => {
         console.log(response);
         if (response.body == false) {
           this.emailExists = false;

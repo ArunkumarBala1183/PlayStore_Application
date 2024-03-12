@@ -63,7 +63,7 @@ namespace Playstore.Providers.Handlers.Commands
 
             userCredentials.Password = _passwordHasher.HashPassword(userCredentials, request.Model.NewPassword); // Hash and save the new password
 
-            await _credentialsRepository.Update(userCredentials);
+            await _credentialsRepository.UpdateCredentials(userCredentials);
 
             return true;
         }

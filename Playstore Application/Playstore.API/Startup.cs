@@ -13,6 +13,7 @@ using Playstore.JsonSerialize;
 using System;
 using Playstore.Contracts.DTO;
 using Playstore.Contracts.Middleware;
+using Serilog.Sinks.MSSqlServer;
 
 namespace Playstore
 {
@@ -46,18 +47,27 @@ namespace Playstore
             });
             services.Configure<EmailConfig>(Configuration.GetSection("EmailConfig"));
 
-            services.AddControllers().AddJsonOptions(option => {
+            services.AddControllers().AddJsonOptions(option =>
+            {
                 option.JsonSerializerOptions.Converters.Add(new JsonConvertor());
             })
-            .AddNewtonsoftJson(option => {
+            .AddNewtonsoftJson(option =>
+            {
                 option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
 
-            //Configuring Serilog 
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
+            .WriteTo.File($"Logs/{DateOnly.FromDateTime(DateTime.Today)}.txt", rollingInterval: RollingInterval.Day)
             .WriteTo.Console()
-            .WriteTo.File($"Logs/{DateOnly.FromDateTime(DateTime.Today).ToString()}.txt" , rollingInterval : RollingInterval.Day)
+            .WriteTo.MSSqlServer(
+                connectionString: "data source = ASPLAP1695\\SQLEXPRESS; initial catalog= Playstore App; integrated security= SSPI; Trusted_Connection= true;Encrypt= true; Trust Server Certificate = true",
+                sinkOptions: new MSSqlServerSinkOptions
+                {
+                    TableName = "Logs",
+                    AutoCreateSqlTable = true,
+
+                })
             .CreateLogger();
 
             services.AddCors(options =>

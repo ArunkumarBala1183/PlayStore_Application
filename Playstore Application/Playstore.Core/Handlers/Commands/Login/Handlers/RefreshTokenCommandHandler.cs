@@ -69,7 +69,7 @@ namespace Playstore.Providers.Handlers.Commands
                 claims.Add(new Claim(ClaimTypes.Expired, refreshTokenEntity.RefreshKey));
             }
 
-            var accessTokenExpires = DateTime.UtcNow.AddMinutes(15);
+            var accessTokenExpires = DateTime.Now.AddMinutes(15);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
@@ -78,10 +78,7 @@ namespace Playstore.Providers.Handlers.Commands
             };
 
             var newRefreshToken = GenerateRefreshToken();
-            if (newRefreshToken != null)
-            {
-                await _refreshTokenRepository.StoreRefreshTokenAsync(userCredentials.UserId, newRefreshToken);
-            }
+            await _refreshTokenRepository.StoreRefreshTokenAsync(userCredentials.UserId, newRefreshToken);
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return new TokenResponse

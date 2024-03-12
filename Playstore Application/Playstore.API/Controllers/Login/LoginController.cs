@@ -11,6 +11,7 @@ using Playstore.Providers.Handlers.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Playstore.Core.Data.Repositories;
+using Playstore.Providers.Handlers.Queries.Admin;
 
 namespace Playstore.Controllers
 {
@@ -221,25 +222,36 @@ namespace Playstore.Controllers
             }
         }
         [HttpPatch("changePassword")]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordQuery command)
         {
             try
             {
-
                 var response = await _mediator.Send(command);
-                return Ok(new { message = response });
-
+                Console.WriteLine(response);
+                return Ok(new {message = response}); 
             }
             catch (Exception exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
+                    
                     IsSuccess = false,
                     Errors = new string[] { exception.Message }
                 });
             }
         }
+        
+        [HttpGet("checkPassword")]
+        public async Task<IActionResult> CheckPassword(Guid UserId , string password)
+        {
+            var value=new GetPasswordQuery(UserId ,password);
+            var response= await _mediator.Send(value);
+            return Ok(response);
+            
+        }
+       
+
     }
 }
