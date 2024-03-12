@@ -41,9 +41,7 @@ namespace Playstore.Providers.Handlers.Commands
         {
             var expiredToken = request.ExpiredToken;
 
-            var (userId, refreshToken) = GetClaimsFromExpiredToken(expiredToken);
-
-            var refreshTokenEntity = await _refreshTokenRepository.GetRefreshTokenAsync(userId);
+            var userId = GetClaimsFromExpiredToken(expiredToken);
 
             var userCredentials = await _credentialsRepository.GetByIdAsync(userId);
 
@@ -74,7 +72,7 @@ namespace Playstore.Providers.Handlers.Commands
                 claims.Add(new Claim(ClaimTypes.Expired, refreshTokenEntity.RefreshKey));
             }
 
-            var accessTokenExpires = DateTime.UtcNow.AddMinutes(15);
+            var accessTokenExpires = DateTime.Now.AddMinutes(15);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
@@ -83,10 +81,7 @@ namespace Playstore.Providers.Handlers.Commands
             };
 
             var newRefreshToken = GenerateRefreshToken();
-            if (newRefreshToken != null)
-            {
-                await _refreshTokenRepository.StoreRefreshTokenAsync(userCredentials.UserId, newRefreshToken);
-            }
+            await _refreshTokenRepository.StoreRefreshTokenAsync(userCredentials.UserId, newRefreshToken);
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return new TokenResponse
@@ -96,7 +91,7 @@ namespace Playstore.Providers.Handlers.Commands
             };
         }
 
-        private (Guid userId, string? refreshToken) GetClaimsFromExpiredToken(string expiredToken)
+        private Guid  GetClaimsFromExpiredToken(string expiredToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var readToken = tokenHandler.ReadToken(expiredToken) as JwtSecurityToken;
@@ -104,14 +99,11 @@ namespace Playstore.Providers.Handlers.Commands
             if (readToken?.Claims != null)
             {
                 var userIdClaim = readToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData);
-                var refreshTokenClaim = readToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Expired);
-
                 if (userIdClaim != null)
                 {
                     var userId = Guid.Parse(userIdClaim.Value);
-                    var refreshToken = refreshTokenClaim?.Value;
 
-                    return (userId, refreshToken);
+                    return userId;
                 }
             }
             throw new ArgumentException("Invalid or missing claims in the expired token");

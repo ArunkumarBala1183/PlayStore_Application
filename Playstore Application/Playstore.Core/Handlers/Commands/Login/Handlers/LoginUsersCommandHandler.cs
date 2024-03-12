@@ -57,11 +57,6 @@ namespace Playstore.Providers.Handlers.Commands
             var userCredentials = await _credentialsRepository.GetByEmailAsync(model.EmailId);
             var refreshTokenEntity = await _refreshTokenRepository.GetRefreshTokenAsync(userCredentials.UserId);
  
-            if (userCredentials == null)
-            {
-                throw new EntityNotFoundException("User not found");
-            }
- 
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(userCredentials, userCredentials.Password, model.Password);
  
             if (passwordVerificationResult != PasswordVerificationResult.Success)
@@ -87,8 +82,7 @@ namespace Playstore.Providers.Handlers.Commands
             {
                 claims.Add(new Claim(ClaimTypes.Expired, refreshTokenEntity.RefreshKey));
             }
-            var accessTokenExpires = DateTime.UtcNow.AddMinutes(15);
-            var refreshTokenExpires = DateTime.UtcNow.AddDays(7);
+            var accessTokenExpires = DateTime.Now.AddMinutes(15);
  
             var tokenDescriptor = new SecurityTokenDescriptor
             {

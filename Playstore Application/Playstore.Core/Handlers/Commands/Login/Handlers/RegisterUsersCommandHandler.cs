@@ -61,7 +61,6 @@ namespace Playstore.Providers.Handlers.Commands
                 DateOfBirth = model.DateOfBirth.Date,
                 MobileNumber = model.MobileNumber
             };
-            //var userEntity = this.mapper.Map<Users>(model);
             var existingMobileNumber = await _repository.GetByPhoneNumber(model.MobileNumber);
             var existingUserInUsers = await _repository.GetByEmailId(model.EmailId);
 
@@ -73,7 +72,6 @@ namespace Playstore.Providers.Handlers.Commands
             {
                 throw new DuplicateEmailException("MobileNumber is already registered.");
             }
-            //var userEntity = this.mapper.Map<Users>(model);
             _repository.Add(userEntity);
             await GenerateUserCredentials(userEntity.EmailId, request);
             Guid defaultRoleId = await _roleRepository.GetDefaultRoleId();
