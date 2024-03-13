@@ -17,14 +17,12 @@ namespace Playstore.Providers.Handlers.Commands
     {
         private readonly IValidator<PasswordResetDTO> _validator;
         private readonly IUserCredentialsRepository _credentialsRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPasswordHasher<UserCredentials> _passwordHasher;
         private readonly IMediator _mediator;
 
-        public ResetPasswordCommandHandler(IMediator mediator, IUserCredentialsRepository credentialsRepository, IValidator<PasswordResetDTO> validator, IPasswordHasher<UserCredentials> passwordHasher, IHttpContextAccessor httpContextAccessor)
+        public ResetPasswordCommandHandler(IMediator mediator, IUserCredentialsRepository credentialsRepository, IValidator<PasswordResetDTO> validator, IPasswordHasher<UserCredentials> passwordHasher)
         {
             _credentialsRepository = credentialsRepository;
-            _httpContextAccessor = httpContextAccessor;
             _passwordHasher = passwordHasher;
             _validator = validator;
             _mediator = mediator;
@@ -68,7 +66,7 @@ namespace Playstore.Providers.Handlers.Commands
 
             userCredentials.Password = _passwordHasher.HashPassword(userCredentials, request.Model.NewPassword); // Hash and save the new password
 
-            await _credentialsRepository.Update(userCredentials);
+            await _credentialsRepository.UpdateCredentials(userCredentials);
 
             return true;
         }

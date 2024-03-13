@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
@@ -15,7 +14,7 @@ namespace Playstore.Core.Data.Repositories
         {
             _context = context;
         }
-        public new async Task<bool> Update(UserCredentials userCredentials)
+        public async Task<bool> UpdateCredentials(UserCredentials userCredentials)
         {
 
             _context.UserCredentials.Update(userCredentials);
@@ -24,45 +23,42 @@ namespace Playstore.Core.Data.Repositories
             return true;
 
         }
-        public async Task<UserCredentials> GetByEmailAsync(string email)
+        public async Task<UserCredentials?> GetByEmailAsync(string email)
         {
-            var user = await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
-            if (user == null)
-            {
-                throw new EntityNotFoundException($"User with email {email} not found.");
-
-            }
-            return user;
+            return await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
+            
         }
 
-        public async Task<UserCredentials> GetByIdAsync(Guid userId)
+        public async Task<UserCredentials?> GetByIdAsync(Guid userId)
         {
-            var id = await _context.UserCredentials.FirstOrDefaultAsync(u => u.UserId == userId);
-            if (id == null)
-            {
-                throw new Exception("Id is null");
-            }
-            return id;
+            return await _context.UserCredentials.FirstOrDefaultAsync(u => u.UserId == userId);
+
         }
 
         public async Task CommitAsync()
         {
             await _context.SaveChangesAsync();
         }
-        public async Task<string> ChangePassword(Guid userId, string hashedPassword)
+
+        public async Task<bool> ChangePassword(Guid userId, string password)
         {
-            var user = await _context.UserCredentials.Where(user => user.UserId == userId).FirstOrDefaultAsync();
-            if (user != null)
+            var user=await _context.UserCredentials.Where(user=>user.UserId==userId).FirstOrDefaultAsync();
+            if(user != null)
             {
-                user.Password = hashedPassword;
+            Console.WriteLine("++++++++++++++++++password Not FOund+++++++++++++++++++");
+                user.Password=password;
                 _context.UserCredentials.Update(user);
-                await _context.SaveChangesAsync();
-                return "Password Changed Successfully";
+                _context.SaveChangesAsync();
+                 return true;
             }
-            else
-            {
-                return "User not found";
-            }
+            return false;
+        }
+
+        public async Task<bool> checkPassword(Guid UserId , string hashedPassword)
+        {
+             bool isPasswordExist = _context.UserCredentials.Any(userId => userId.UserId == UserId&& userId.Password==hashedPassword);
+             return isPasswordExist;
+           
         }
     }
 }
