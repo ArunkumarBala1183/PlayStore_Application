@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
 
@@ -13,14 +14,9 @@ namespace Playstore.Core.Data.Repositories
         {
             _context = context;
         }
-        public async Task<UserCredentials> GetByEmailAsync(string email)
+        public async Task<UserCredentials?> GetByEmailAsync(string email)
         {
-            var emailid = await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
-            if (emailid == null)
-            {
-                throw new Exception("Email is null");
-            }
-            return emailid;
+            return await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
         }
         public async Task<List<UserRole>> GetUserRolesAsync(Guid userId)
         {
@@ -42,23 +38,15 @@ namespace Playstore.Core.Data.Repositories
         }
 
 
-        public async Task<Role> GetByRoleCode(string roleCode)
+        public async Task<Role?> GetByRoleCode(string roleCode)
         {
-            var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleCode == roleCode);
-            if (role == null)
-            {
-                throw new Exception("Role is null");
-            }
-            return role;
+            return await _context.Roles.FirstOrDefaultAsync(r => r.RoleCode == roleCode);
+            
         }
-        public async Task<Role> GetByRoleId(Guid roleId)
+        public async Task<Role?> GetByRoleId(Guid roleId)
         {
-            var roleid = await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == roleId);
-            if (roleid == null)
-            {
-                throw new Exception("Role id is null");
-            }
-            return roleid;
+            return await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == roleId);
+        
         }
     }
 }
