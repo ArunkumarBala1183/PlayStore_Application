@@ -15,7 +15,7 @@ import { UserService } from 'src/app/services/user.service';
 export class AppsComponent implements OnInit{
   menu = false;
 
-  appDetails: ListApps[] | undefined
+  appDetails!: ListApps[]
   searchTerm: string = '';
  
 
@@ -55,6 +55,7 @@ export class AppsComponent implements OnInit{
           this.appDetails = response.body as ListApps[]
         },
         error: error => {
+          this.appDetails = []
           console.log(error)
         }
       })

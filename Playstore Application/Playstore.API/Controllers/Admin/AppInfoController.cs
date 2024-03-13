@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Playstore.ActionFilters;
 using Playstore.Contracts.DTO.AppDownloads;
 using Playstore.Contracts.DTO.AppInfo;
 using Playstore.Contracts.DTO.TotalDownloads;
@@ -14,6 +15,7 @@ using Serilog;
 
 namespace Playstore.Controllers.Admin
 {
+    [ServiceFilter(typeof(ControllerFilter))]
     [ApiController]
     [Route("[controller]")]
     public class AppInfoController : ControllerBase
@@ -29,15 +31,9 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetAllApps(GetAllAppsInfoQuery allApps)
         {
-            Log.Information("All Apps Needed");
-            Log.Verbose("All Apps Needed");
-            Log.Error("All Apps Needed");
-            Log.Fatal("All Apps Needed");
-            Log.Warning("All Apps Needed");
             try
             {
                 var response = await this._mediator.Send(allApps);
-
                 return Ok(response);
             }
             catch (ApiResponseException error)

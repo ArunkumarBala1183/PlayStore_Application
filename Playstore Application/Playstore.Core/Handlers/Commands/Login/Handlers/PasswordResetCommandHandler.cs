@@ -17,7 +17,7 @@ namespace Playstore.Providers.Handlers.Commands
         private readonly IPasswordHasher<UserCredentials> _passwordHasher;
         private readonly IMediator _mediator;
 
-        public ResetPasswordCommandHandler(IMediator mediator, IUserCredentialsRepository credentialsRepository, IValidator<PasswordResetDTO> validator, IPasswordHasher<UserCredentials> passwordHasher, IHttpContextAccessor httpContextAccessor)
+        public ResetPasswordCommandHandler(IMediator mediator, IUserCredentialsRepository credentialsRepository, IValidator<PasswordResetDTO> validator, IPasswordHasher<UserCredentials> passwordHasher)
         {
             _credentialsRepository = credentialsRepository;
             _passwordHasher = passwordHasher;

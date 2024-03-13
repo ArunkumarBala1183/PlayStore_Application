@@ -14,6 +14,8 @@ using System;
 using Playstore.Contracts.DTO;
 using Playstore.Contracts.Middleware;
 using Serilog.Sinks.MSSqlServer;
+using System.Collections.ObjectModel;
+using Playstore.ActionFilters;
 
 namespace Playstore
 {
@@ -29,7 +31,8 @@ namespace Playstore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<JwtAuthenticationMiddleware>();
+            services.AddTransient<JwtAuthenticationMiddleware>();//Custom MiddleWare
+            services.AddScoped<ControllerFilter>(); //Adding ActionFilter for Logging Controller-Action Flow
             services.AddSession(options => // Session Configuration
             {
                 options.IdleTimeout = TimeSpan.FromSeconds(60);
@@ -56,18 +59,40 @@ namespace Playstore
                 option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
 
+            var columnOptions = new ColumnOptions();
+            columnOptions.Store.Remove(StandardColumn.Properties);
+            columnOptions.Store.Remove(StandardColumn.MessageTemplate);
+
+            columnOptions.AdditionalColumns = new Collection<SqlColumn>
+            {
+                new SqlColumn
+                {
+                    ColumnName = "UserId",
+                    AllowNull = true,
+                    DataType = System.Data.SqlDbType.UniqueIdentifier,
+                    PropertyName = "userId"
+                },
+                new SqlColumn
+                {
+                    ColumnName = "Location",
+                    AllowNull = true,
+                    DataType = System.Data.SqlDbType.VarChar,
+                }
+            };
+
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
             .WriteTo.File($"Logs/{DateOnly.FromDateTime(DateTime.Today)}.txt", rollingInterval: RollingInterval.Day)
             .WriteTo.Console()
             .WriteTo.MSSqlServer(
-                connectionString: "data source = ASPLAP1695\\SQLEXPRESS; initial catalog= Playstore App; integrated security= SSPI; Trusted_Connection= true;Encrypt= true; Trust Server Certificate = true",
+                connectionString: Configuration.GetConnectionString("SqlServerConnection"),
                 sinkOptions: new MSSqlServerSinkOptions
                 {
                     TableName = "Logs",
                     AutoCreateSqlTable = true,
 
-                })
+                },
+                columnOptions: columnOptions)
             .CreateLogger();
 
             services.AddCors(options =>

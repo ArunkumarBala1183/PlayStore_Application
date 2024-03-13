@@ -1,6 +1,5 @@
 using Playstore.Contracts.DTO;
 using FluentValidation;
-using System;
 using System.Text.RegularExpressions;
 
 namespace Playstore.Core.Validators
@@ -32,10 +31,9 @@ namespace Playstore.Core.Validators
 
         private bool BeValidDate(DateTime date)
         {
-            // Calculate age based on the provided date of birth
+           
             int age = CalculateAge(date);
 
-            // Check if age is between 18 and 80
             return age >= 18 && age <= 80;
         }
 
@@ -53,8 +51,6 @@ namespace Playstore.Core.Validators
         {
             DateTime currentDate = DateTime.Now;
             int age = currentDate.Year - birthDate.Year;
-
-            // Adjust age if birthday hasn't occurred yet this year
             if (currentDate.Month < birthDate.Month || (currentDate.Month == birthDate.Month && currentDate.Day < birthDate.Day))
             {
                 age--;

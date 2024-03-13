@@ -1,8 +1,6 @@
 
 using Playstore.Contracts.DTO;
 using FluentValidation;
-using System;
-using System.Text.RegularExpressions;
 
 namespace Playstore.Core.Validators
 {
