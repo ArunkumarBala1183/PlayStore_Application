@@ -18,7 +18,7 @@ export class ResetPasswordComponent {
   constructor(private formBuilder : FormBuilder, private loginService : LoginService, private service : UserService, private toastr : ToastrService){
     this.changePasswordForm = this.formBuilder.group({
       password : ['' , Validators.required],
-      newPassword : ['',Validators.required],
+      newPassword : ['',[Validators.required]],
       confirmPassword : ['',Validators.required]
     })
   }

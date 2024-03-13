@@ -1,6 +1,6 @@
 <!-- <div class="px-9 pt-12 pb-3 md:pl-48 lg:pl-72 lg:pt-[4rem]"> -->
 <div
-    class="md:bg-gray-100 md:ml-44 lg:ml-56 flex items-center justify-center rounded-md md:flex md:flex-col md:items-center md:justify-center">
+    class="flex items-center justify-center rounded-md md:flex md:flex-col md:items-center md:justify-center">
     <form [formGroup]="appData" (ngSubmit)="onSubmit()"
         class="bg-white shadow-2xl hover:bg-gray-100 h-auto mx-4 mt-[4.5rem] mb-3 pb-2 md:w-[80%]  md:mb-5 md:mt-20 rounded-md ">
 
@@ -65,7 +65,8 @@
                     <!-- <span class="pb-1  text-red-400"
                         *ngIf="appData.get('AppFile')?.dirty ">{{validationMessages.AppFile.required}}</span> -->
                     <span *ngIf="!this.appFileFormatCheck" class="text-red-400">App File should be Zip</span>
-                    <span *ngIf="fileSize" class="text-red-400 text-center">File should be less than 2mb!!!!</span>
+                    <span *ngIf="fileSize" class="text-red-400 text-center">File exceeds more than 2mb . Please upload file
+                        with less than 2mb!!!!</span>
                 </div>
                 
 

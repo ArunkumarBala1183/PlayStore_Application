@@ -34,7 +34,7 @@ export class ChangePasswordComponent{
     if(this.changePasswordForm.valid){
       const userId = this.loginService.getUserId();
       const password = this.changePasswordForm.get('password')?.value;
-      this.service.postPassword(userId , password).subscribe({
+      this.service.patchPassword(userId , password).subscribe({
         next: (response : any) => {
           // if(response == 'Password Changed Successfully')
           console.log(response);
