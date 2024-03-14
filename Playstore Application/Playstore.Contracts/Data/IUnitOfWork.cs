@@ -15,6 +15,7 @@ namespace Playstore.Contracts.Data
         IAppValueRepository AppValue{get;}
         IAppInfoDownloadRepository AppDownload{get;}
         IAppImagesRepository AppImages{get;}
+        IUserCredentialsRepository UserCredentials{get;}
         IAppFilesRepository AppFiles{get;}
         IAppAdminRequestRepository AdminRequest{get;}
         IAppDeveloperMyAppDetailsRepository MyAppDetails{get;}

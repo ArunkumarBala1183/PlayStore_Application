@@ -6,7 +6,6 @@ namespace Playstore.Contracts.Data.Repositories
     {
         Task CommitAsync();
         Task StoreRefreshTokenAsync(Guid userId, string refreshToken);
-        Task DeleteRefreshTokenAsync(Guid userId, string refreshToken);
         Task<RefreshToken> GetRefreshTokenAsync(Guid userId);
 
         

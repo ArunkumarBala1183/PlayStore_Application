@@ -6,8 +6,8 @@ namespace Playstore.Providers.Handlers.Commands
 {
     public class TokenResponse
     {
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
+        public string? AccessToken { get; set; }
+        public string? RefreshToken { get; set; }
     }
     public class LoginUsersCommand : IRequest<TokenResponse>
     {
@@ -15,7 +15,7 @@ namespace Playstore.Providers.Handlers.Commands
 
         public LoginUsersCommand(LoginUsersDTO model)
         {
-            this.Model = model;
+            Model = model;
         }
     }
 }

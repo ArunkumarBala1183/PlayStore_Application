@@ -1,16 +1,15 @@
 <!-- Alignment Div for fixed navbars -->
-<div class="md:px-3 pt-12 md:pl-48 lg:pl-72 lg:pt-[4rem] ">
+<div class="md:px-3 pt-12 lg:pt-[4rem] ">
     <!-- Main Div -->
     <div class="mt-2 shadow-2xl p-3 mx-4 md:mx-[5rem] lg:mx-[10rem] flex flex-col">
         <!-- Logo, App Name, Category, Download -->
-        <div class="flex justify-between p-2">
+        <div class="flex justify-between items-center px-24">
             <!-- Logo -->
             <div class="flex items-center">
                 <img class="rounded-md md:rounded-2xl bg-gray-100 h-[5rem] shadow-2xl w-[5rem] md:h-[6rem] md:w-[6rem]"
                     [src]="'data:image/jpg;base64,'+ (appDetail[0]?.logo)" alt="Instagram Logo">
-            </div>
-            <!-- App Name and Category -->
-            <div class="flex flex-col pl-2 py-3 md:pl-2 md:py-10 ">
+                     <!-- App Name and Category -->
+                <div class="flex flex-col pl-2 py-3 md:pl-2 md:py-10 ">
                 <div class="">
                     <h1 class="instagram h-4 lg:font-medium md:text-3xl">
                         {{appDetail[0]?.name}}
@@ -22,8 +21,10 @@
                     </span>
                 </div>
             </div>
+            </div>
+           
             <!-- Download Button -->
-            <div class="py-7 px-2 md:py-14 md:px-3 lg:py-12 lg:px-10">
+            <div class="">
                 <button *ngIf="!particularDownloadCount"
                     class="w-24 md:w-24 lg:w-60 rounded-lg md:rounded-full bg-blue-500 text-white md:p-2 lg:p-3 hover:bg-blue-700"
                     type="submit" (click)="Downloadfile()">
@@ -81,9 +82,9 @@
             </h3>
         </div>
         <!-- screenshots -->
-        <div *ngIf="appDetail" class="flex">
-            <div *ngFor="let images of appDetail[0]?.appImages" class="space-x-2 px-3">
-                <div class="flex flex-row">
+        <div *ngIf="appDetail" class="flex justify-between px-16">
+            <div *ngFor="let images of appDetail[0]?.appImages" class="">
+                <div class="flex flex-row px-4"> 
                     <img class="h-[13rem] w-[13rem] rounded-lg " [src]="'data:image/jpg;base64,' +images"
                         alt="screenshots">
                 </div>
@@ -144,7 +145,7 @@
                     <div class="p-2 flex flex-col items-center">
                         <div>
                             <textarea formControlName="commands"
-                                class="p-2 rounded-xl w-48 md:w-64 focus:outline-none hover:bg-gray-200" type="text"
+                                class="p-2 rounded-xl w-48 md:w-64 focus:outline-none hover:bg-gray-200 border" type="text"
                                 placeholder="Add your Review" rows="4" cols="4"></textarea>
                         </div>
 
@@ -153,7 +154,7 @@
                             <span>Please review the App</span>
                         </div>
                     </div>
-                    <div class="flex justify-center md:mx-20 lg:mx-36 border rounded-md hover:bg-gray-200">
+                    <div class="flex justify-center md:mx-20 lg:mx-36 rounded-md hover:bg-gray-200">
                         <div class="flex items-center">
                             <span>Rate this App</span>
                         </div>

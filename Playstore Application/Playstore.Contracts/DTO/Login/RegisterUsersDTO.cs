@@ -3,7 +3,7 @@ namespace Playstore.Contracts.DTO
     public record struct RegisterUsersDTO
     (
          string Name,
-         DateTime DateOfBirth, //1944 to 2006
+         DateTime DateOfBirth, 
          string EmailId,
          string MobileNumber,
          string Password,
