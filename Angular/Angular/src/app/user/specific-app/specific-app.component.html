@@ -84,7 +84,7 @@
         <!-- screenshots -->
         <div *ngIf="appDetail" class="flex justify-between px-16">
             <div *ngFor="let images of appDetail[0]?.appImages" class="">
-                <div class="flex flex-row">
+                <div class="flex flex-row px-4"> 
                     <img class="h-[13rem] w-[13rem] rounded-lg " [src]="'data:image/jpg;base64,' +images"
                         alt="screenshots">
                 </div>

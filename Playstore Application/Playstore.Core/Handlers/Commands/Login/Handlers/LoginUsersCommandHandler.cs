@@ -85,7 +85,7 @@ namespace Playstore.Providers.Handlers.Commands
 
             }
             await StoreRefreshTokenAsync(userCredentials.UserId, refreshToken);
-            var accessTokenExpires = DateTime.Now.AddMinutes(2);
+            var accessTokenExpires = DateTime.Now.AddMinutes(15);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
