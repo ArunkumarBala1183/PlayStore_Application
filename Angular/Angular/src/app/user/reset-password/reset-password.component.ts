@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/services/login.service';
@@ -15,7 +16,7 @@ export class ResetPasswordComponent {
   userId !: Guid;
   changePasswordForm : FormGroup;
 
-  constructor(private formBuilder : FormBuilder, private loginService : LoginService, private service : UserService, private toastr : ToastrService){
+  constructor(private formBuilder : FormBuilder, private loginService : LoginService, private service : UserService, private toastr : ToastrService, private router : Router){
     this.changePasswordForm = this.formBuilder.group({
       password : ['' , Validators.required],
       newPassword : ['',[Validators.required]],
@@ -63,12 +64,11 @@ export class ResetPasswordComponent {
           if(response.message ==true )
           {
             this.toastr.success('Password Changed');
-            this.changePasswordForm.reset();
+            this.router.navigate(['user/userProfile']);
           }
           else{
             this.toastr.info("Password already Exists")
           }
-         
         },
         error : error =>
         {

@@ -94,8 +94,6 @@ namespace Playstore.Infrastructure.Data.Repositories
 
                 appInfo.AppImages = appImages;
 
-                Console.WriteLine("Saved App Data");
-
                 var user = await databaseContext.Users
                 .Include(data => data.UserRoles)
                 .FirstOrDefaultAsync(id => id.UserId == createAppInfoDTO.UserId);
@@ -123,10 +121,8 @@ namespace Playstore.Infrastructure.Data.Repositories
                 }
                 return HttpStatusCode.BadRequest;
             }
-            catch (Exception error)
+            catch (Exception)
             {
-                Console.WriteLine(error.Message);
-
                 return HttpStatusCode.InternalServerError;
             }
         }

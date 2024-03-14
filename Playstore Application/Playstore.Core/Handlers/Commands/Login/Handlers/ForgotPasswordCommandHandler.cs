@@ -1,6 +1,5 @@
 using MediatR;
 using Playstore.Contracts.Data.Repositories;
-
  
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -30,7 +29,7 @@ namespace Playstore.Providers.Handlers.Commands
  
         private string GenerateOtp()
         {
-            Random random = new Random();
+            Random random = new();
             return random.Next(100000, 999999).ToString();
         }
     }

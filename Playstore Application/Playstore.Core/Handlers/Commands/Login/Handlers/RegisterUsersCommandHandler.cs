@@ -5,7 +5,6 @@ using FluentValidation;
 using Playstore.Core.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Playstore.Contracts.Data.Repositories;
-using AutoMapper;
 
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -15,7 +14,8 @@ namespace Playstore.Providers.Handlers.Commands
         private readonly IUsersRepository _repository;
         private readonly IUserCredentialsRepository _repository1;
         private readonly IValidator<RegisterUsersDTO> _validator;
-        private readonly IPasswordHasher<UserCredentials> _passwordHasher; private readonly IEmailService _emailService;
+        private readonly IPasswordHasher<UserCredentials> _passwordHasher;
+        private readonly IEmailService _emailService;
         private readonly IRoleRepository _roleRepository;
         private readonly IUserRoleRepository _userRoleRepository;
 
@@ -44,7 +44,7 @@ namespace Playstore.Providers.Handlers.Commands
 
             if (!result.IsValid)
             {
-                var errors = result.Errors.Select(x => x.ErrorMessage).ToArray();
+                var errors = result.Errors.Select(validationMessage => validationMessage.ErrorMessage).ToArray();
                 throw new InvalidRequestBodyException
                 {
                     Errors = errors

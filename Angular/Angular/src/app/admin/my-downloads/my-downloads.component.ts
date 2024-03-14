@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { DownloadedAppsInfo } from 'src/app/interface/user';
@@ -11,6 +11,10 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./my-downloads.component.scss']
 })
 export class MyDownloadsComponent implements OnInit {
+
+
+
+
 
   downloadedApps!: DownloadedAppsInfo[]
 
@@ -42,6 +46,8 @@ export class MyDownloadsComponent implements OnInit {
   }
   public redirectTospecificApp(fileid: Guid) {
     console.log(fileid);
+    
     this.router.navigate(['/admin/downloadPage', fileid])
+    
   }
 }

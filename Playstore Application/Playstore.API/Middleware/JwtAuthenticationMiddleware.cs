@@ -40,11 +40,8 @@ namespace Playstore.Contracts.Middleware
                     if (token != null)
                     {
                         var userId = token.Claims.FirstOrDefault(type => type.Type == ClaimTypes.UserData).Value;
-                        var role = token.Claims.FirstOrDefault(type => type.Type == "role").Value;
-
                         context.Items["userId"] = userId;
                         logger = logger.ForContext("userId" , userId);
-                        logger.Information("{role}" , role );
                         await next(context);
                     }
                     else

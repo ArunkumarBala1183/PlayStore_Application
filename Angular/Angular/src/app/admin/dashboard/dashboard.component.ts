@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { AppInfoService } from 'src/app/services/app-info.service';
+import { HttpStatusCode } from '@angular/common/http';
+import {  ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { GetUsers } from 'src/app/interface/get-users';
+import { SearchUser } from 'src/app/interface/search-user';
+import { UserService } from 'src/app/services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,15 +17,72 @@ import { AppInfoService } from 'src/app/services/app-info.service';
 })
 export class DashboardComponent implements OnInit {
 
+//dashboard
   responseDetails : any
   dates! : string[]
   count! : number[]
+  isDropdownOpen = false;
 
+//Users
+  searchUsers: SearchUser = {searchDetails : ''};
+  displayedColumns: string[] = ['name', 'emailId' , 'userRoles'];
+  dataSource = new MatTableDataSource<any>();
+  errorMessage : string = ''
+  isUserFound : boolean = true
+  userDetails : GetUsers[] = []
+  // data:any;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   ngOnInit(): void {
     this.getAppDownloads();
+    this.getAllUsers();
   }
 
-  constructor(private service: AppInfoService) { }
+  constructor(private service: AppInfoService,private router : Router, private services: UserService) { }
+
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+  
+  getUserDetails() {
+    this.services.getUserDetails(this.searchUsers)
+    .subscribe({
+      next : response => {
+        this.isUserFound = true
+        this.userDetails = response.body as GetUsers[]
+        this.dataSource = new MatTableDataSource<GetUsers>(this.userDetails); // Specify the type here
+        this.dataSource.paginator = this.paginator;
+      },
+      error: error => {
+        this.isUserFound = false
+        this.errorMessage = error.error.message
+      }
+    })
+  }
+
+  getAllUsers()
+  {
+    this.services.getAllUsers()
+    .subscribe({
+      next : response => {
+        if(response.status == HttpStatusCode.Ok)
+        {
+            this.userDetails = response.body as GetUsers[]
+            console.log(this.userDetails)
+            this.dataSource = new MatTableDataSource<GetUsers>(this.userDetails); // Specify the type here
+            this.dataSource.paginator = this.paginator;
+        }
+        else
+        {
+          console.log(response.body)
+        }
+      },
+      error : error => {
+        console.log(error)
+      }
+    })
+  }
 
   createChart() {
     const dates = this.generateDates(); // Function to generate dates
@@ -30,13 +95,14 @@ export class DashboardComponent implements OnInit {
           label: 'No of apps downloaded in a day',
           data: this.count,
           backgroundColor: [
-            'rgba(0, 0, 0, 1)',
-            'rgba(0, 0, 0, 1)',
-            'rgba(0, 0, 0, 1)',
-            'rgba(0, 0, 0, 1)',
-            'rgba(0, 0, 0, 1)',
-            'rgba(0, 0, 0, 1)'
+            'rgba(255, 206, 86, 1)', // Purple // Red
+            'rgba(153, 102, 255, 1)', // Purple // Blue
+            'rgba(255, 99, 132, 1)', // Purple // Yellow
+            'rgba(139, 69, 19, 1)', // Purple // Green
+            'rgba(0, 0, 0, 1)', // Purple
+            'rgba(153, 102, 255, 1)', // Purple // Orange
           ],
+          
           borderColor: [
             'rgba(255, 99, 132, 1)',
             'rgba(54, 162, 235, 1)',
@@ -100,6 +166,26 @@ export class DashboardComponent implements OnInit {
         }
       })
   }
+ 
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+  goTOAppDownloads()
+  {
+    this.router.navigate(["admin/dashboard"]);
+  }
+
+  goTOLogPage()
+  {
+    this.router.navigate(["admin/applicationLogs"]);
+  }
+
+  goToUser() {
+    this.router.navigate(["admin/users"]);
+    }
+
+
 }
 
 

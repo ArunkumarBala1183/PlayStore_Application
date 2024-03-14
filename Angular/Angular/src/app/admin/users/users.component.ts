@@ -2,6 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { GetUsers } from 'src/app/interface/get-users';
 import { SearchUser } from 'src/app/interface/search-user';
 import { UserService } from 'src/app/services/user.service';
@@ -19,40 +20,15 @@ export class UsersComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
   errorMessage : string = ''
   isUserFound : boolean = true
+  isDropdownOpen: boolean = false
 
   userDetails : GetUsers[] = []
   // data:any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  // Sample user data
-  users = [
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'prem', Email: 'prem632@gmail.com', Role: 'dev' },
-    { Username: 'bharath', Email: 'bharath@gmail.com', Role: 'dev' },
-    { Username: 'arun', Email: 'arun@gmail.com', Role: 'dev' },
-    { Username: 'Ashiq', Email: 'ashiq@gmail.com', Role: 'User' },
-    { Username: 'daniel', Email: 'daniel@gmail.com', Role: 'dev' },
-    { Username: 'vinoth', Email: 'vinoth@gmail.com', Role: 'User' },
-    { Username: 'Pradeep', Email: 'pradeep@gmail.com', Role: 'dev' },
-    { Username: 'dhivyan', Email: 'dhivya@gmail.com', Role: 'User' },
-    { Username: 'arunkumar', Email: 'arukumar@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    // Add more user objects as needed
-  ];
 
-  constructor(private service : UserService ){}
+  constructor(private service : UserService , private router : Router ){}
 
   ngOnInit() {
      this.getAllUsers();
@@ -100,5 +76,22 @@ export class UsersComponent implements OnInit {
       }
     })
   }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+  goTOAppDownloads()
+  {
+    this.router.navigate(["admin/dashboard"]);
+  }
+
+  goTOLogPage()
+  {
+    this.router.navigate(["admin/applicationLogs"]);
+  }
+
+  goToUser() {
+    this.router.navigate(["admin/users"]);
+    }
 
 }
