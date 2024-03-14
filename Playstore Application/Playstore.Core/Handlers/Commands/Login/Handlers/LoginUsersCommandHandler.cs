@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +11,6 @@ using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
-using Playstore.Providers.Handlers.Commands;
 
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -47,7 +42,7 @@ namespace Playstore.Providers.Handlers.Commands
 
             if (!validationResult.IsValid)
             {
-                var errors = validationResult.Errors.Select(x => x.ErrorMessage).ToArray();
+                var errors = validationResult.Errors.Select(validationMessage => validationMessage.ErrorMessage).ToArray();
                 throw new InvalidRequestBodyException
                 {
                     Errors = errors
@@ -55,8 +50,7 @@ namespace Playstore.Providers.Handlers.Commands
             }
 
             var userCredentials = await _credentialsRepository.GetByEmailAsync(model.EmailId);
-            var refreshTokenEntity = await _refreshTokenRepository.GetRefreshTokenAsync(userCredentials.UserId);
-
+           
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(userCredentials, userCredentials.Password, model.Password);
 
             if (passwordVerificationResult != PasswordVerificationResult.Success)
@@ -64,34 +58,30 @@ namespace Playstore.Providers.Handlers.Commands
                 throw new InvalidcredentialsException("Invalid password");
             }
             var userRoles = await _roleRepository.GetUserRolesAsync(userCredentials.UserId);
-            var roleCodes = userRoles.Select(ur => ur.Role.RoleCode).ToList();
+            var roleCodes = userRoles.Select(obtainRole => obtainRole.Role.RoleCode).ToList();
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Authentication:Jwt:Secret"));
+            var securityKey = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Authentication:Jwt:Secret"));
             var refreshToken = GenerateRefreshToken();
             var claims = new List<Claim>
             {
 
-                new Claim(ClaimTypes.UserData, userCredentials.UserId.ToString()),
+                new (ClaimTypes.UserData, userCredentials.UserId.ToString()),
+                new (ClaimTypes.Expired, refreshToken)
 
             };
             foreach (var roleCode in roleCodes)
             {
                 claims.Add(new Claim(ClaimTypes.Role, roleCode));
             }
-            if (refreshTokenEntity != null)
-            {
-                claims.Add(new Claim(ClaimTypes.Expired, refreshToken));
-
-            }
             await StoreRefreshTokenAsync(userCredentials.UserId, refreshToken);
-            var accessTokenExpires = DateTime.Now.AddMinutes(2);
+            var accessTokenExpires = DateTime.Now.AddMinutes(15);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = accessTokenExpires,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(securityKey), SecurityAlgorithms.HmacSha256Signature)
             };
 
 
@@ -107,9 +97,9 @@ namespace Playstore.Providers.Handlers.Commands
         private string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
+            using (var randomNumberGenerator = RandomNumberGenerator.Create())
             {
-                rng.GetBytes(randomNumber);
+                randomNumberGenerator.GetBytes(randomNumber);
                 return Convert.ToBase64String(randomNumber);
             }
         }

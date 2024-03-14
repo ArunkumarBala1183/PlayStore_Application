@@ -15,7 +15,7 @@ namespace Playstore.Providers.Handlers.Commands
 
         public LoginUsersCommand(LoginUsersDTO model)
         {
-            this.Model = model;
+            Model = model;
         }
     }
 }

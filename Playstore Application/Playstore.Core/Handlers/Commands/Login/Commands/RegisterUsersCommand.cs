@@ -8,7 +8,7 @@ namespace Playstore.Providers.Handlers.Commands
         public RegisterUsersDTO Model { get; }
         public RegisterUsersCommand(RegisterUsersDTO model)
         {
-            this.Model = model;
+            Model = model;
         }
     }
 }
