@@ -112,7 +112,7 @@ export class LoginService {
   }
 
   public isTokenExpired(): boolean {
-    console.log('token expired called');
+    console.log('token expired method called');
     const token = this.getToken();
     if (token) {
       const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
@@ -123,7 +123,7 @@ export class LoginService {
       console.log(timeDifference);
       const oneMinute = 1 * 60 * 1000;
       if (timeDifference < oneMinute) {
-        console.log('refresh..........');
+        console.log('refreshtoken return true..........');
         return true;
       }
     }

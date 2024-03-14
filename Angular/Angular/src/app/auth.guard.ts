@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
             {
               const accessToken=refreshToken.accessToken;
               localStorage.setItem('accessToken',accessToken)
-              console.log(accessToken + 'Refreshed...................................');
+              console.log(accessToken + 'Token Refreshed...................................');
               return true;
             }),
             catchError(
@@ -67,8 +67,9 @@ export class AuthGuard implements CanActivate {
         }
 
       }
-
+      
       return of(true);
+     
      
     }
 

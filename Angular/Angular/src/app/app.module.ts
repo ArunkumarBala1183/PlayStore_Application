@@ -40,7 +40,7 @@ import { AdminModule } from './admin/admin.module';
     UserModule,
     JwtModule.forRoot({
       config: {
-        tokenGetter: () => localStorage.getItem('token')
+        tokenGetter: () => localStorage.getItem('accessToken')
       }}),
       ToastrModule.forRoot()
   ],

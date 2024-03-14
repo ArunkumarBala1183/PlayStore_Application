@@ -25,6 +25,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
 import { HomeModule } from '../home/home.module';
 import { DownloadpageComponent } from './downloadpage/downloadpage.component';
 import { UserModule } from '../user/user.module';
+import { AppliationlogsComponent } from './appliationlogs/appliationlogs.component';
 
 
 
@@ -49,6 +50,7 @@ import { UserModule } from '../user/user.module';
     AboutComponent,
     ChangePasswordComponent,
     DownloadpageComponent,
+    AppliationlogsComponent,
     
         
   ],

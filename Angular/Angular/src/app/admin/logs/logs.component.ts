@@ -40,6 +40,7 @@ export class LogsComponent implements OnInit {
 
     this.filterDetails.downloadedDate = new Date().toISOString().split('T')[0]
     this.maxDate = new Date().toISOString().split('T')[0]
+
     this.getAppLogs()
   }
 

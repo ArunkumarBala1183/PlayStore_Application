@@ -1,17 +1,16 @@
-<div class="flex w-full">
-    <div class="">
-        <h3 class="font-bold">APP DETAILS</h3>
-    </div>
+<div class=" underline md:ml-[48%] "> <h2 class="flex items-center ">App Details</h2></div>
+<div class="flex md:w-[70%]">
+    
     <div class="md:ml-64 ml-28 hidden"><button (click)="downloadAppData(requestDetails[0].appId)"
             class="bg-black text-white px-2 py-2 rounded-md hover:bg-blue-600 ml-5">Download</button></div>
 </div>
 
 
 
-<div class="md:overflow-x-auto  overflow-x-scroll overflow-y-hidden mt-4  ml-0 bg-gray-100 rounded-lg md:w-fit">
+<div class="md:overflow-x-auto  overflow-x-scroll overflow-y-hidden mt-4  md:ml-52 bg-gray-100 rounded-lg md:w-[70%]">
     
     
-    <div>
+    <div >
         <p-table [value]="requestDetails">
             <ng-template pTemplate="header" class="bg-black">
                 <tr>
@@ -61,17 +60,18 @@
 
 
 <!-- App Images -->
-<div class="mt-5 font-bold">
-    <h3>APP IMAGES</h3>
-</div>
+<div class="md:ml-72">
+    <div class=" underline ml-[29%] mt-5 "> <h2 class="flex items-center ">App Images</h2></div>
+
 <div class="mt-4 md:ml-36 flex justify-evenly space-x-5 w-fit ">
     <div *ngFor="let request of requestDetails[0].appImages" class="hover:scale-105">
         <img src="data:image/png;base64,{{request.image}}" alt="logo" class=" mr-2 mb-2 h-60 w25">
     </div>
 </div>
+</div>
 
 <!-- App Description -->
-<div *ngFor="let details of requestDetails" class=" flex flex-col items-center justify-center bg-gray-100 mt-10 ml-32 rounded-lg shadow-lg px-5 py-2">
+<div *ngFor="let details of requestDetails" class=" flex flex-col md:w-[60%] items-center justify-center bg-gray-100 mt-10 md:ml-60 rounded-lg shadow-lg px-5 py-2">
    <div class=" underline "> <h2 class="flex items-center">App Description</h2></div>
     <div class="text-blue-800 ">
         {{details.description}}
@@ -81,7 +81,7 @@
 
 <!-- User Details -->
 
-<div class="bg-gray-100 rounded-lg shadow-2xl mt-9 md:ml-32 flex flex-col hover:scale-105 items-center p-3">
+<div class="bg-gray-100 rounded-lg shadow-2xl md:w-[60%] mt-9 md:ml-60 flex flex-col hover:scale-105 items-center p-3">
     <div class="underline">
         <h2>Developer Details</h2>
     </div>
@@ -100,7 +100,7 @@
 </div>
 
 
-<div class="flex justify-between md:ml-48 ml-10 md:mr-0 mt-10 mb-10">
+<div class="flex justify-between w-[35%] md:ml-96 ml-10 md:mr-0 mt-10 mb-10">
     <button (click)="processRequest(true)" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 md:ml-10">Accept</button>
-    <button (click)="processRequest(false)" class="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-900 mr-8">Decline</button>
+    <button (click)="processRequest(false)" class="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-900 ml-16 md:mr-8">Decline</button>
 </div>

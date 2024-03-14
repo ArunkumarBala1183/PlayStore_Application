@@ -1,0 +1,49 @@
+<!-- Application Logs -->
+
+<div class=" md:mt-20 mt-20 ml-72 md:w-fit w-[100%]">
+    <div class="md:ml-32 ml-10">
+        <h1 class="text-3xl md:text-2xl lg:text-5xl text-black underline font-bold mb-4">Application Logs</h1>
+    </div>    
+   
+    
+
+    <div class="overflow-x-scroll md:overflow-x-auto mt-4 shadow-xl border w-[100%] border-gray-300 rounded-s">
+        <table mat-table  class="min-w-full ">
+            <ng-container matColumnDef="message">
+                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Message </th>
+                <td mat-cell *matCellDef="let user"> {{ user.name }} </td>
+            </ng-container>
+            <ng-container matColumnDef="level">
+                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Level  </th>
+                <td mat-cell *matCellDef="let user"> {{ user.emailId }} </td>
+            </ng-container>
+            <ng-container matColumnDef="timeStamp">
+                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Time Stamp </th>
+                <td mat-cell *matCellDef="let user">
+                    <ul>
+                        <li class="my-2" *ngFor="let role of user.userRoles">{{role.role.roleCode}}</li>
+                    </ul>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="exception">
+                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Exception  </th>
+                <td mat-cell *matCellDef="let user"> {{ user.emailId }} </td>
+            </ng-container>
+            <ng-container matColumnDef="userId">
+                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> User Id  </th>
+                <td mat-cell *matCellDef="let user"> {{ user.emailId }} </td>
+            </ng-container>
+            <ng-container matColumnDef="location">
+                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Location  </th>
+                <td mat-cell *matCellDef="let user"> {{ user.emailId }} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <!-- Pagination -->
+        <mat-paginator [pageSizeOptions]="[5,10,20]"></mat-paginator>
+    </div>
+    
+</div>
