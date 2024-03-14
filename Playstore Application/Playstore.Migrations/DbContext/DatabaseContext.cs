@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Migrations.DateConvertor;
 

@@ -80,19 +80,20 @@ namespace Playstore
                 }
             };
 
+            string connectionString = Configuration.GetConnectionString("SqlServerConnection");
+
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
             .WriteTo.File($"Logs/{DateOnly.FromDateTime(DateTime.Today)}.txt", rollingInterval: RollingInterval.Day)
             .WriteTo.Console()
             .WriteTo.MSSqlServer(
-                connectionString: Configuration.GetConnectionString("SqlServerConnection"),
+                connectionString: connectionString,
                 sinkOptions: new MSSqlServerSinkOptions
                 {
-                    TableName = "Logs",
+                    TableName = "AppLogs",
                     AutoCreateSqlTable = true,
-
                 },
-                columnOptions: columnOptions)
+                columnOptions : columnOptions)
             .CreateLogger();
 
             services.AddCors(options =>
@@ -120,9 +121,7 @@ namespace Playstore
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseMiddleware<JwtAuthenticationMiddleware>();
             app.UseHttpsRedirection();
-
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -139,7 +138,8 @@ namespace Playstore
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseCors();
+            app.UseMiddleware<JwtAuthenticationMiddleware>();
+
 
             app.UseEndpoints(endpoints =>
             {

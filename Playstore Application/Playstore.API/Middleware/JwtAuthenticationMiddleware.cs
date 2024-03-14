@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -7,58 +9,104 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 namespace Playstore.Contracts.Middleware
 {
     public class JwtAuthenticationMiddleware : IMiddleware
     {
         private readonly IConfiguration configuration;
+        private ILogger logger;
 
         public JwtAuthenticationMiddleware(IConfiguration configuration)
         {
             this.configuration = configuration;
+            logger = Log.ForContext("Location" , typeof(JwtAuthenticationMiddleware).Name);
         }
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            var headerValue = context.Request.Headers["Authorization"]
-                .ToString()
-                .Split(" ");
-
-            var token = headerValue[headerValue.Length - 1];
-            
-            Console.WriteLine($"From Middlewaretoken : {token}\n");
-            if (!string.IsNullOrEmpty(token))
+            try
             {
-                GetUserIdByToken(token , context);
+                var headerValue = context.Request.Headers["Authorization"].ToString().Split(" ");
+
+                var tokenString = headerValue[headerValue.Length - 1];
+
+                if (!string.IsNullOrEmpty(tokenString) && this.ValidateToken(tokenString))
+                {
+                    JwtSecurityTokenHandler tokenHandler = new();
+
+                    var token = tokenHandler.ReadToken(tokenString) as JwtSecurityToken;
+
+                    if (token != null)
+                    {
+                        var userId = token.Claims.FirstOrDefault(type => type.Type == ClaimTypes.UserData).Value;
+                        var role = token.Claims.FirstOrDefault(type => type.Type == "role").Value;
+
+                        context.Items["userId"] = userId;
+                        logger = logger.ForContext("userId" , userId);
+                        logger.Information("{role}" , role );
+                        await next(context);
+                    }
+                    else
+                    {
+                        logger.Warning("Not a Valid Token");
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        await context.Response.WriteAsJsonAsync(new { message = "Unauthorized" });
+                    }
+
+                }
+                else
+                {
+                    var requestedPath = context.Request.Path.ToString().ToLower(culture: CultureInfo.InvariantCulture);
+
+                    var whiteListUrls = configuration.GetSection("Authentication:WhiteListUrls").Get<List<string>>();
+
+                    if (whiteListUrls != null && whiteListUrls.Count > 0)
+                    {
+                        if (whiteListUrls.Any(url => requestedPath.Contains(url, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            await next(context);
+                        }
+                        else
+                        {
+                            logger.Warning("Unauthorized Access");
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            await context.Response.WriteAsJsonAsync(new { message = "Unauthorized" });
+                        }
+                    }
+                    else
+                    {
+                        logger.Error("Internal Server Error");
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        await context.Response.WriteAsJsonAsync(new { message = "Internal Server Error" });
+                    }
+                }
             }
-            await next(context);    
+            catch (Exception error)
+            {
+                logger.Error(error, $"Error Message : {error.Message}");
+            }
         }
 
-        private void GetUserIdByToken(string token , HttpContext context)
+        private bool ValidateToken(string token)
         {
-            JwtSecurityToken securityToken = new JwtSecurityToken();
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(configuration.GetValue<string>("Authentication:Jwt:Secret"));
 
-            tokenHandler.ValidateToken(token , new TokenValidationParameters{
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
                 ValidateIssuer = false,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuerSigningKey = true,
                 ValidateAudience = false,
                 ClockSkew = TimeSpan.Zero
-            } , out var validatedToken);
+            }, out var validatedToken);
 
-            if(validatedToken != null)
+            if (validatedToken != null)
             {
-                securityToken = validatedToken as JwtSecurityToken;
+                return true;
             }
-
-            var claims = securityToken.Claims.FirstOrDefault(id => id.Type == ClaimTypes.UserData);
-
-            if (claims != null)
-            {
-                context.Items["userId"] = claims.Value;
-            }
+            return false;
         }
     }
 }
