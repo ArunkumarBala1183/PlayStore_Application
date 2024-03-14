@@ -167,8 +167,6 @@ namespace Playstore.Controllers
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> UserLogin([FromBody] LoginUsersDTO model)
         {
-            Console.WriteLine(model.EmailId);
-            Console.WriteLine(model.Password);
             try
             {
 
