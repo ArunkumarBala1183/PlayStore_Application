@@ -1,5 +1,4 @@
 ﻿using Playstore.Contracts.Data;
-
 using Playstore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +18,6 @@ using MediatR;
 using Playstore.Providers.Handlers.Queries;
 using Playstore.Contracts.Data.Repositories.Admin;
 using Playstore.Infrastructure.Data.Repositories;
-using Playstore.Core.Data;
 using Playstore.Infrastructure.Data;
 
 namespace Playstore.Infrastructure

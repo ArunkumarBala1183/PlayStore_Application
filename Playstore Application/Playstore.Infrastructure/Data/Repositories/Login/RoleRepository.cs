@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
 
@@ -16,13 +15,13 @@ namespace Playstore.Core.Data.Repositories
         }
         public async Task<UserCredentials?> GetByEmailAsync(string email)
         {
-            return await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
+            return await _context.UserCredentials.FirstOrDefaultAsync(mailid => mailid.EmailId == email);
         }
         public async Task<List<UserRole>> GetUserRolesAsync(Guid userId)
         {
             return await _context.UserRole
-                .Include(ur => ur.Role)
-                .Where(ur => ur.UserId == userId)
+                .Include(role => role.Role)
+                .Where(user => user.UserId == userId)
                 .ToListAsync();
         }
 
@@ -33,19 +32,19 @@ namespace Playstore.Core.Data.Repositories
 
         public async Task<Guid> GetDefaultRoleId()
         {
-            var defaultRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleCode == "User");
+            var defaultRole = await _context.Roles.FirstOrDefaultAsync(role => role.RoleCode == "User");
             return defaultRole != null ? defaultRole.RoleId : Guid.Empty;
         }
 
 
         public async Task<Role?> GetByRoleCode(string roleCode)
         {
-            return await _context.Roles.FirstOrDefaultAsync(r => r.RoleCode == roleCode);
+            return await _context.Roles.FirstOrDefaultAsync(role => role.RoleCode == roleCode);
             
         }
         public async Task<Role?> GetByRoleId(Guid roleId)
         {
-            return await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == roleId);
+            return await _context.Roles.FirstOrDefaultAsync(role => role.RoleId == roleId);
         
         }
     }

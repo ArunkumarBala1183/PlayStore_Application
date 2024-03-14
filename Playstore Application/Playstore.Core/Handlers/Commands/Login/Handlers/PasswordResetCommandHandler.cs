@@ -1,15 +1,10 @@
-
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -40,7 +35,7 @@ namespace Playstore.Providers.Handlers.Commands
 
             var model = new PasswordResetDTO
             {
-                EmailId = request.Model.EmailId,
+                EmailId = emailId,
                 Otp = otp,
                 NewPassword = request.Model.NewPassword,
                 ConfirmPassword = request.Model.ConfirmPassword
@@ -50,7 +45,7 @@ namespace Playstore.Providers.Handlers.Commands
 
             if (!result.IsValid)
             {
-                var errors = result.Errors.Select(x => x.ErrorMessage).ToArray();
+                var errors = result.Errors.Select(validationMessage => validationMessage.ErrorMessage).ToArray();
                 throw new InvalidRequestBodyException
                 {
                     Errors = errors
@@ -67,7 +62,9 @@ namespace Playstore.Providers.Handlers.Commands
             userCredentials.Password = _passwordHasher.HashPassword(userCredentials, request.Model.NewPassword); // Hash and save the new password
 
             await _credentialsRepository.UpdateCredentials(userCredentials);
-
+            emailId = null;
+            otp = null;
+            
             return true;
         }
 
@@ -76,7 +73,5 @@ namespace Playstore.Providers.Handlers.Commands
             var command = new ValidateOtpCommand(new ValidateOtpDTO { EmailId = emailId, Otp = otp }, emailId, otp);
             return await _mediator.Send(command);
         }
-
-
     }
 }
