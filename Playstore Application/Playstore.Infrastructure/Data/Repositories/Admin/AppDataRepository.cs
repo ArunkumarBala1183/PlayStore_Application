@@ -35,7 +35,7 @@ namespace Playstore.Core.Data.Repositories.Admin
     
                 return HttpStatusCode.NotFound;
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
                 return HttpStatusCode.ServiceUnavailable;
             }

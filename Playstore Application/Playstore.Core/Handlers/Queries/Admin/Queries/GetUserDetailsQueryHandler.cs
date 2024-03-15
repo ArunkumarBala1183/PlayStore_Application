@@ -17,11 +17,11 @@ namespace Playstore.Providers.Handlers.Queries.Admin
         }
         public async Task<IEnumerable<UserInfoDto>> Handle(GetUserDetailsQuery request, CancellationToken cancellationToken)
         {
-            var response = await repository.SearchUserDetail(request.searchDetails);
+            var response = await repository.SearchUserDetail(request.SearchDetails);
 
-            if(response.GetType() == typeof(HttpStatusCode))
+            if(response is HttpStatusCode code)
             {
-                statusCodeHandler.HandleStatusCode((HttpStatusCode) response);
+                statusCodeHandler.HandleStatusCode(code);
             }
 
             return (IEnumerable<UserInfoDto>) response;

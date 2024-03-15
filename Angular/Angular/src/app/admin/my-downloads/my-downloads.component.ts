@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { DownloadedAppsInfo } from 'src/app/interface/user';
@@ -12,8 +12,11 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class MyDownloadsComponent implements OnInit {
 
+
+
+
+
   downloadedApps!: DownloadedAppsInfo[]
-  isDownloaded : boolean = false;
 
   constructor(private router: Router,private userservice : UserService , private loginService : LoginService)
   {
@@ -34,10 +37,9 @@ export class MyDownloadsComponent implements OnInit {
     .subscribe({
       next : response =>{
         this.downloadedApps = response
-        this.isDownloaded = true
       },
       error : error => {
-        this.isDownloaded = false
+        this.downloadedApps = []
         console.log(error)
       }
     })

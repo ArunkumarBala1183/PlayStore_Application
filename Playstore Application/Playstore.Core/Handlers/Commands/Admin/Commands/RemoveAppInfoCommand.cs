@@ -5,10 +5,10 @@ namespace Playstore.Providers.Handlers.Commands
 {
     public class RemoveAppInfoCommand : IRequest<HttpStatusCode>
     {
-        public Guid id;
+        public Guid Id { get; set; }
         public RemoveAppInfoCommand(Guid id)
         {
-            this.id = id;
+            this.Id = id;
         }
     }
 }

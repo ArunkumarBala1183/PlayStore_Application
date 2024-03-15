@@ -21,12 +21,10 @@ namespace Playstore.Providers.Handlers.Queries.UserData
     public class GetAppByIdQueryHandler : IRequestHandler<GetAppByIdValueQuery, IEnumerable<AppInfoDetailsDTO>>
     {
         private readonly IUnitOfWork _repository;
-        private readonly IMapper _mapper;
 
         public GetAppByIdQueryHandler(IUnitOfWork repository, IMapper mapper)
         {
             _repository = repository;
-            _mapper = mapper;
         }
 
         public async Task<IEnumerable<AppInfoDetailsDTO>> Handle(GetAppByIdValueQuery request, CancellationToken cancellationToken)

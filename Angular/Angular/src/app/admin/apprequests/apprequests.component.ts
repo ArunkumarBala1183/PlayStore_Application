@@ -12,7 +12,7 @@ import { UserService } from 'src/app/services/user.service';
 
 export class ApprequestsComponent implements OnInit {
 
-  appRequests : Apprequests[] | undefined 
+  appRequests! : Apprequests[]
   
   constructor(private router: Router , private service : AppRequestsService,private userservice:UserService){}
   
@@ -30,6 +30,7 @@ export class ApprequestsComponent implements OnInit {
           this.appRequests = response.body as Apprequests[]
         },
         error: error => {
+          this.appRequests = []
           console.log(error)
         }
       })

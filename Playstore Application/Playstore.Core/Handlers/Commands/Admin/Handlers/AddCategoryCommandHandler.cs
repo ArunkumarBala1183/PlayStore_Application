@@ -1,9 +1,6 @@
 using System.Net;
-using AutoMapper;
 using MediatR;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Contracts.DTO.Category;
-using Playstore.Core.Exceptions;
 
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -19,21 +16,14 @@ namespace Playstore.Providers.Handlers.Commands
         }
         public async Task<HttpStatusCode> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var response = await this.repository.AddCategory(request._category);
+            var response = await this.repository.AddCategory(request.Category);
 
-                if(response != HttpStatusCode.AlreadyReported && response != HttpStatusCode.Created)
-                {
-                    statusCodeHandler.HandleStatusCode(response);
-                }
-
-                return response;
-            }
-            catch (ApiResponseException)
+            if (response != HttpStatusCode.AlreadyReported && response != HttpStatusCode.Created)
             {
-                throw;
+                statusCodeHandler.HandleStatusCode(response);
             }
+
+            return response;
         }
     }
 }

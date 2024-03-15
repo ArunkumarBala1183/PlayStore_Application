@@ -59,9 +59,7 @@ namespace Playstore.Core.Data.Repositories.Admin
         public async Task<object> SearchCategory(CategoryDto category)
         {
             try
-            {
-                var categoryDetails = this.mapper.Map<Category>(category);
-    
+            {    
                 var searchedDetails = await this.database.Categories.Where(searchOption => searchOption.CategoryName.Contains(category.CategoryName)).Select(id => id.CategoryName).ToListAsync();
     
                 if (searchedDetails != null && searchedDetails.Count > 0)

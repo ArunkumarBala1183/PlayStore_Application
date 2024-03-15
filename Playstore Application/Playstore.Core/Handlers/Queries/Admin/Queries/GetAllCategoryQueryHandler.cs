@@ -18,22 +18,14 @@ namespace Playstore.Providers.Handlers.Queries.Admin
 
         public async Task<IEnumerable<CategoryUpdateDto>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
         {
-            try
+            var response = await this.repository.GetAllCategory();
+
+            if (response is HttpStatusCode code)
             {
-                var response = await this.repository.GetAllCategory();
-
-                if (response.GetType() == typeof(HttpStatusCode))
-                {
-                    statusCodeHandler.HandleStatusCode((HttpStatusCode) response);
-                }
-
-                return (IEnumerable<CategoryUpdateDto>)response;
+                statusCodeHandler.HandleStatusCode(code);
             }
-            catch (ApiResponseException)
-            {
 
-                throw;
-            }
+            return (IEnumerable<CategoryUpdateDto>)response;
         }
     }
 }

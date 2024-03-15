@@ -1,8 +1,6 @@
 using System.Net;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Core.Exceptions;
 
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -18,22 +16,14 @@ namespace Playstore.Providers.Handlers.Commands
         }
         public async Task<HttpStatusCode> Handle(AppUploadCommand request, CancellationToken cancellationToken)
         {
-            try
+            var response = await this.repository.UploadApp(request.AppFile, request.AppId);
+
+            if (response != HttpStatusCode.Created)
             {
-                var response =  await this.repository.UploadApp(request.AppFile , request.AppId);
-    
-                if(response != HttpStatusCode.Created)
-                {
-                    statusCodeHandler.HandleStatusCode(response);
-                }
-    
-                return response;
+                statusCodeHandler.HandleStatusCode(response);
             }
-            catch (ApiResponseException)
-            {
-                
-                throw;
-            }
+
+            return response;
         }
     }
 }

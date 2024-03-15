@@ -1,7 +1,4 @@
-using System.Linq;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;

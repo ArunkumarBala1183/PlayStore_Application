@@ -16,6 +16,7 @@ import { AboutComponent } from './about/about.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { AuthGuard } from '../auth.guard';
 import { DownloadpageComponent } from './downloadpage/downloadpage.component';
+import { AppliationlogsComponent } from './appliationlogs/appliationlogs.component';
 
 
 const routes: Routes = [
@@ -82,6 +83,10 @@ const routes: Routes = [
         // }
         {
           path: 'download-page', component: DownloadpageComponent, title: 'changePassword',canActivate:[AuthGuard],data:{role:'Admin'}
+           
+        },
+        {
+          path: 'applicationLogs', component: AppliationlogsComponent, title: 'applicationlogs',canActivate:[AuthGuard],data:{role:'Admin'}
            
         }
       ]

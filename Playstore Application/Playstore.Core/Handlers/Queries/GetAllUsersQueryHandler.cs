@@ -30,7 +30,6 @@ namespace Playstore.Providers.Handlers.Queries
         public async Task<object> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
         {
             var entities = await _repository.GetAll(request.Id);
-            // return _mapper.Map<List<AllUsersDTO>>(entities);
 
             return entities;
         }

@@ -1,10 +1,5 @@
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Contracts.DTO;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
  
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -34,7 +29,7 @@ namespace Playstore.Providers.Handlers.Commands
  
         private string GenerateOtp()
         {
-            Random random = new Random();
+            Random random = new();
             return random.Next(100000, 999999).ToString();
         }
     }

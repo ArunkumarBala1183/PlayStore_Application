@@ -29,7 +29,6 @@ namespace Playstore
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                })
-                .UseSerilog(); //registering serilog to use in application
+                }); //registering serilog to use in application
     }
 }

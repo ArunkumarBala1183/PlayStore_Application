@@ -5,10 +5,10 @@ namespace Playstore.Providers.Handlers.Commands
 {
     public class AddAppReviewCommand : IRequest<object>
     {
-        public AppReviewDto appReviewDto { get; set; }
+        public AppReviewDto AppReviewDto { get; set; }
         public AddAppReviewCommand(AppReviewDto appReview)
         {
-            this.appReviewDto = appReview;
+            this.AppReviewDto = appReview;
         }
     }
 }

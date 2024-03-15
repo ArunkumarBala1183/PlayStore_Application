@@ -18,22 +18,14 @@ namespace Playstore.Providers.Handlers.Queries.Admin
         }
         public async Task<RequestedAppDataDto> Handle(GetRequestedAppDataQuery request, CancellationToken cancellationToken)
         {
-            try
+            var response = await this.repository.GetAppData(request.AppId);
+
+            if (response is HttpStatusCode code)
             {
-                var response = await this.repository.GetAppData(request.appId);
-    
-                if(response.GetType() == typeof(HttpStatusCode))
-                {
-                    statusCodeHandler.HandleStatusCode((HttpStatusCode) response);
-                }
-    
-                return (RequestedAppDataDto) response;
+                statusCodeHandler.HandleStatusCode(code);
             }
-            catch (ApiResponseException)
-            {
-                
-                throw;
-            }
+
+            return (RequestedAppDataDto)response;
         }
     }
 }

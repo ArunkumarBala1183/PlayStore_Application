@@ -34,5 +34,10 @@ export class AppInfoService {
   {
     return this.http.get(this.baseUrl + "AppInfo/GetTotalDownloads" , {observe : "response"})
   }
+
+  getlogDetails()
+  {
+    return this.http.get(this.baseUrl + "ApplicationLogs/GetApplicationLogs", {observe: "response"})
+  }
   
 }

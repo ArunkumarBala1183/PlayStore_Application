@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
 
@@ -16,7 +15,6 @@ namespace Playstore.Core.Data.Repositories
         }
         public async Task<bool> UpdateCredentials(UserCredentials userCredentials)
         {
-
             _context.UserCredentials.Update(userCredentials);
             await _context.SaveChangesAsync();
 
@@ -25,13 +23,13 @@ namespace Playstore.Core.Data.Repositories
         }
         public async Task<UserCredentials?> GetByEmailAsync(string email)
         {
-            return await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
+            return await _context.UserCredentials.FirstOrDefaultAsync(mailid => mailid.EmailId == email);
             
         }
 
         public async Task<UserCredentials?> GetByIdAsync(Guid userId)
         {
-            return await _context.UserCredentials.FirstOrDefaultAsync(u => u.UserId == userId);
+            return await _context.UserCredentials.FirstOrDefaultAsync(id => id.UserId == userId);
 
         }
 
@@ -45,7 +43,6 @@ namespace Playstore.Core.Data.Repositories
             var user=await _context.UserCredentials.Where(user=>user.UserId==userId).FirstOrDefaultAsync();
             if(user != null)
             {
-            Console.WriteLine("++++++++++++++++++password Not FOund+++++++++++++++++++");
                 user.Password=password;
                 _context.UserCredentials.Update(user);
                 _context.SaveChangesAsync();

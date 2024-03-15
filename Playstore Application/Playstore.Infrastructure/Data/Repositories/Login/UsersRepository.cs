@@ -1,9 +1,7 @@
 using System.Net;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
 
@@ -34,13 +32,13 @@ namespace Playstore.Core.Data.Repositories
         }
         public async Task<Users?> GetByEmailId(string emailId)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.EmailId == emailId);
+            return await _context.Users.FirstOrDefaultAsync(mailid => mailid.EmailId == emailId);
 
         }
 
         public async Task<Users?> GetByPhoneNumber(string mobileNumber)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.MobileNumber == mobileNumber);
+            return await _context.Users.FirstOrDefaultAsync(number => number.MobileNumber == mobileNumber);
             
         }
         

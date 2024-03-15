@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Playstore.Contracts.Data.Entities
+﻿namespace Playstore.Contracts.Data.Entities
 {
     public class User : BaseEntity
     {

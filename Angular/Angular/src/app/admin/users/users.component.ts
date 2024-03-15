@@ -2,6 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { GetUsers } from 'src/app/interface/get-users';
 import { SearchUser } from 'src/app/interface/search-user';
 import { UserService } from 'src/app/services/user.service';
@@ -19,6 +20,7 @@ export class UsersComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
   errorMessage : string = ''
   isUserFound : boolean = true
+  isDropdownOpen: boolean = false
 
   userDetails : GetUsers[] = []
   // data:any;
@@ -74,5 +76,22 @@ export class UsersComponent implements OnInit {
       }
     })
   }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+  goTOAppDownloads()
+  {
+    this.router.navigate(["admin/dashboard"]);
+  }
+
+  goTOLogPage()
+  {
+    this.router.navigate(["admin/applicationLogs"]);
+  }
+
+  goToUser() {
+    this.router.navigate(["admin/users"]);
+    }
 
 }

@@ -1,4 +1,3 @@
-// CheckEmailExistenceQueryHandler.cs
 using MediatR;
 using Playstore.Contracts.Data.Repositories;
 using System.Threading;

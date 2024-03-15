@@ -1,5 +1,5 @@
 <!-- Alignment Div for fixed navbars -->
-<div class="  lg:pl-0 w-full ml-20">
+<div class="  lg:pl-0 md:w-[60%] md:ml-60">
     <!-- Main Div -->
     <div class=" shadow-2xl p-3 mx-4  flex flex-col bg-gray-100">
         <!-- Logo, App Name, Category, Download -->
@@ -81,7 +81,7 @@
             </h3>
         </div>
         <!-- screenshots -->
-        <div *ngIf="appDetail" class="flex">
+        <div *ngIf="appDetail" class="flex md:overflow-x-auto overflow-x-scroll">
             <div *ngFor="let images of appDetail[0]?.appImages" class="space-x-2 px-3">
                 <div class="flex flex-row border">
                     <img class="h-[13rem] w-[13rem] rounded-lg " [src]="'data:image/jpg;base64,' +images"

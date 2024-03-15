@@ -24,7 +24,6 @@ namespace Playstore.Controllers.UserData
 
 
         private readonly IMediator _mediator;
-        public Guid Assignvalue;
         public AppInfoController(IMediator mediator)
         {
             _mediator = mediator;
@@ -85,7 +84,6 @@ namespace Playstore.Controllers.UserData
             {
                 var query = new GetAllAppReviewDetails(appId);
                 var response = await _mediator.Send(query);
-                Console.WriteLine(response);
                 return Ok(response);
             }
             catch (Exception exception)
@@ -239,7 +237,6 @@ namespace Playstore.Controllers.UserData
         {
             try
             {
-                Console.WriteLine(appreviewDTO.Commands);
                 var command = new CreateAppReviewCommand(appreviewDTO);
 
                 return StatusCode((int)HttpStatusCode.Created, await _mediator.Send(command));

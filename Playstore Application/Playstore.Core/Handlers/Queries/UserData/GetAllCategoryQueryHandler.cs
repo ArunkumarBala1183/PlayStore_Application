@@ -12,7 +12,7 @@ public class GetAllCategoryQuery : IRequest<IEnumerable<Category>>
 
 public class GetAllCategoryQueryHandler : IRequestHandler<GetAllCategoryQuery, IEnumerable<Category>>
 {
-    private IUnitOfWork _repository;
+    private readonly IUnitOfWork _repository;
 
     public GetAllCategoryQueryHandler(IUnitOfWork repository)
     {

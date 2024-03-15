@@ -12,6 +12,10 @@ using Serilog;
 using Playstore.JsonSerialize;
 using System;
 using Playstore.Contracts.DTO;
+using Playstore.Contracts.Middleware;
+using Serilog.Sinks.MSSqlServer;
+using System.Collections.ObjectModel;
+using Playstore.ActionFilters;
 
 namespace Playstore
 {
@@ -27,6 +31,8 @@ namespace Playstore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<JwtAuthenticationMiddleware>();//Custom MiddleWare
+            services.AddScoped<ControllerFilter>(); //Adding ActionFilter for Logging Controller-Action Flow
             services.AddSession(options => // Session Configuration
             {
                 options.IdleTimeout = TimeSpan.FromSeconds(60);
@@ -44,17 +50,50 @@ namespace Playstore
             });
             services.Configure<EmailConfig>(Configuration.GetSection("EmailConfig"));
 
-            services.AddControllers().AddJsonOptions(option => {
+            services.AddControllers().AddJsonOptions(option =>
+            {
                 option.JsonSerializerOptions.Converters.Add(new JsonConvertor());
             })
-            .AddNewtonsoftJson(option => {
+            .AddNewtonsoftJson(option =>
+            {
                 option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
 
-            //Configuring Serilog 
+            var columnOptions = new ColumnOptions();
+            columnOptions.Store.Remove(StandardColumn.Properties);
+            columnOptions.Store.Remove(StandardColumn.MessageTemplate);
+
+            columnOptions.AdditionalColumns = new Collection<SqlColumn>
+            {
+                new SqlColumn
+                {
+                    ColumnName = "UserId",
+                    AllowNull = true,
+                    DataType = System.Data.SqlDbType.UniqueIdentifier,
+                    PropertyName = "userId"
+                },
+                new SqlColumn
+                {
+                    ColumnName = "Location",
+                    AllowNull = true,
+                    DataType = System.Data.SqlDbType.VarChar,
+                }
+            };
+
+            string connectionString = Configuration.GetConnectionString("SqlServerConnection");
+
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
+            .WriteTo.File($"Logs/{DateOnly.FromDateTime(DateTime.Today)}.txt", rollingInterval: RollingInterval.Day)
             .WriteTo.Console()
+            .WriteTo.MSSqlServer(
+                connectionString: connectionString,
+                sinkOptions: new MSSqlServerSinkOptions
+                {
+                    TableName = "AppLogs",
+                    AutoCreateSqlTable = true,
+                },
+                columnOptions : columnOptions)
             .CreateLogger();
 
             services.AddCors(options =>
@@ -82,9 +121,7 @@ namespace Playstore
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseHttpsRedirection();
-
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -101,7 +138,8 @@ namespace Playstore
             app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseCors();
+            app.UseMiddleware<JwtAuthenticationMiddleware>();
+
 
             app.UseEndpoints(endpoints =>
             {

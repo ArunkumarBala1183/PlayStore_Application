@@ -18,22 +18,14 @@ namespace Playstore.Providers.Handlers.Queries.Admin
         }
         public async Task<DownloadDetailsDto> Handle(GetTotalDownloadsQuery request, CancellationToken cancellationToken)
         {
-            try
+            var response = await repository.GetTotalDownloadsByDate();
+
+            if (response is HttpStatusCode code)
             {
-                var response = await repository.GetTotalDownloadsByDate();
-
-                if (response.GetType() == typeof(HttpStatusCode))
-                {
-                    statusCodeHandler.HandleStatusCode((HttpStatusCode)response);
-                }
-
-                return (DownloadDetailsDto)response;
+                statusCodeHandler.HandleStatusCode(code);
             }
 
-            catch (ApiResponseException)
-            {
-                throw;
-            }
+            return (DownloadDetailsDto)response;
 
         }
     }

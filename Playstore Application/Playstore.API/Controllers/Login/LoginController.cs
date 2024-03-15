@@ -6,9 +6,7 @@ using Playstore.Providers.Handlers.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using Playstore.Providers.Handlers.Queries;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Playstore.Core.Data.Repositories;
 using Playstore.Providers.Handlers.Queries.Admin;
@@ -93,9 +91,9 @@ namespace Playstore.Controllers
                     return BadRequest(new { Error = "Invalid OTP" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return BadRequest(new { Error = ex.Message });
+                return BadRequest(new { Error = exception.Message });
             }
         }
 
@@ -114,18 +112,19 @@ namespace Playstore.Controllers
 
                 if (isPasswordReset)
                 {
+                    HttpContext.Session.Remove("ResetPasswordEmail");
+                    HttpContext.Session.Remove("ResetPasswordOTP");
                     return Ok(new { Message = "Password reset successful" });
+                    
                 }
                 else
                 {
-                    Console.WriteLine("Failed");
                     return BadRequest(new { Error = "Password reset failed. Make sure OTP is validated first." });
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Console.WriteLine(ex.Message);
-                return BadRequest(new { Error = ex.Message });
+                return BadRequest(new { Error = exception.Message });
             }
         }
 
@@ -142,20 +141,20 @@ namespace Playstore.Controllers
                 var response = await _mediator.Send(command);
                 return StatusCode((int)HttpStatusCode.Created, response);
             }
-            catch (InvalidRequestBodyException ex)
+            catch (InvalidRequestBodyException exception)
             {
                 return BadRequest(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = ex.Errors
+                    Errors = exception.Errors
                 });
             }
-            catch (DuplicateEmailException ex)
+            catch (DuplicateEmailException exception)
             {
                 return Conflict(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new[] { ex.Message }
+                    Errors = new[] { exception.Message }
                 });
             }
         }
@@ -167,8 +166,6 @@ namespace Playstore.Controllers
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> UserLogin([FromBody] LoginUsersDTO model)
         {
-            Console.WriteLine(model.EmailId);
-            Console.WriteLine(model.Password);
             try
             {
 
@@ -176,28 +173,28 @@ namespace Playstore.Controllers
                 var response = await _mediator.Send(command);
                 return Ok(response);
             }
-            catch (InvalidRequestBodyException ex)
+            catch (InvalidRequestBodyException exception)
             {
                 return BadRequest(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = ex.Errors
+                    Errors = exception.Errors
                 });
             }
-            catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new[] { ex.Message }
+                    Errors = new[] { exception.Message }
                 });
             }
-            catch (InvalidcredentialsException ex)
+            catch (InvalidcredentialsException exception)
             {
                 return Unauthorized(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new[] { ex.Message }
+                    Errors = new[] { exception.Message }
                 });
             }
         }
@@ -212,24 +209,23 @@ namespace Playstore.Controllers
                 var response = await _mediator.Send(command);
                 return Ok(response);
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException exception)
             {
                 return Unauthorized(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new[] { ex.Message }
+                    Errors = new[] { exception.Message }
                 });
             }
         }
         [HttpPatch("changePassword")]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordQuery command)
         {
             try
             {
                 var response = await _mediator.Send(command);
-                Console.WriteLine(response);
                 return Ok(new {message = response}); 
             }
             catch (Exception exception)
@@ -251,7 +247,5 @@ namespace Playstore.Controllers
             return Ok(response);
             
         }
-       
-
     }
 }

@@ -15,6 +15,7 @@ export class AuthGuard implements CanActivate {
   canActivate(route:ActivatedRouteSnapshot, state:RouterStateSnapshot):Observable<boolean> {
     if (!this.authService.isAuthenticated())
      {
+      sessionStorage.removeItem('accessToken')
        this.toastr.error('Please login')
       this.router.navigate(['login']); 
       return of(false); 
@@ -29,8 +30,8 @@ export class AuthGuard implements CanActivate {
             map((refreshToken:any)=>
             {
               const accessToken=refreshToken.accessToken;
-              localStorage.setItem('accessToken',accessToken)
-              console.log(accessToken + 'Refreshed...................................');
+              sessionStorage.setItem('accessToken',accessToken)
+              console.log(accessToken + 'Token Refreshed...................................');
               return true;
             }),
             catchError(
@@ -67,8 +68,9 @@ export class AuthGuard implements CanActivate {
         }
 
       }
-
+      
       return of(true);
+     
      
     }
 

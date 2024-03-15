@@ -25,14 +25,9 @@ namespace Playstore.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IConfiguration _configuration;
-        private readonly IPasswordHasher<User> _passwordHasher;
-
         public AuthController(IMediator mediator, IConfiguration configuration, IPasswordHasher<User> passwordHasher)
         {
             _mediator = mediator;
-            _configuration = configuration;
-            _passwordHasher = passwordHasher;
         }
 
         [HttpGet]
@@ -93,12 +88,6 @@ namespace Playstore.Controllers
                     Errors = new string[] { ex.Message }
                 });
             }
-        }
-         [HttpPost("Image")]
-        public IActionResult imageupload([FromForm]Image image)
-        {
-           
-            return Ok(image);
         }
     }
 }
