@@ -29,7 +29,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
         public async Task<IEnumerable<AppStoreDTO>> Handle(GetAppInfoDownloadFile request, CancellationToken cancellationToken)
         {
 
-
+            if(request!=null){
             var app = await _repository.AppDownload.GetData(request.Userid);
 
             if (app == null)
@@ -38,6 +38,11 @@ namespace Playstore.Providers.Handlers.Queries.UserData
             }
 
             return (IEnumerable<AppStoreDTO>)app;
+            }
+        
+            
+                throw new ObjectNullException($"No Data Found");
+           
         }
     }
 }

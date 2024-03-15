@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
@@ -13,39 +14,49 @@ namespace Playstore.Infrastructure.Data.Repositories
         public DatabaseContext databaseContext;
         public GetUsersDetailsRepository(DatabaseContext context) : base(context)
         {
-            databaseContext=context;
+            databaseContext = context;
         }
         public async Task<object> GetUsersDetails(Guid userId)
         {
-            var userDetails=await databaseContext.Users
-            .Include(data=>data.UserRoles)
-            .ThenInclude(role => role.Role)
-            .Where(Id=>Id.UserId==userId)
-            .FirstOrDefaultAsync();
-
-            if(userDetails != null)
+            try
             {
-                List<string> roles = new List<string>();
+                var userDetails = await databaseContext.Users
+                .Include(data => data.UserRoles)
+                .ThenInclude(role => role.Role)
+                .Where(Id => Id.UserId == userId)
+                .FirstOrDefaultAsync();
 
-                foreach (var role in userDetails.UserRoles)
+                if (userDetails != null)
                 {
-                    roles.Add(role.Role.RoleCode);
+                    List<string> roles = new List<string>();
+
+                    foreach (var role in userDetails.UserRoles)
+                    {
+                        roles.Add(role.Role.RoleCode);
+                    }
+
+                    var UserData = new UsersDetailsDTO
+                    {
+                        Name = userDetails.Name,
+                        Email = userDetails.EmailId,
+                        PhoneNumber = userDetails.MobileNumber,
+                        Role = roles
+                    };
+
+                    return UserData;
                 }
 
-                var UserData = new UsersDetailsDTO
-                {
-                    Name = userDetails.Name,
-                    Email = userDetails.EmailId,
-                    PhoneNumber = userDetails.MobileNumber,
-                    Role = roles
-                };
-
-                return UserData;
+                return HttpStatusCode.NotFound;
             }
-
-            return HttpStatusCode.NotFound;
+            catch(SqlException exception)
+            {
+                throw new Exception($"{exception}");
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"{exception}");
+            }
         }
 
-       
     }
 }

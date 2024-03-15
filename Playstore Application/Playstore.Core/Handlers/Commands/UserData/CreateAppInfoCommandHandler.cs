@@ -39,9 +39,14 @@ namespace Playstore.Providers.Handlers.Commands.UserData
 
         public async Task<HttpStatusCode> Handle(CreateAppInfoCommand request, CancellationToken cancellationToken)
         {
+            if(request!=null){
             CreateAppInfoDTO model = request.Model;
 
             return await _repository.AppFiles.AddFiles(model);
+            }
+            
+                throw new ObjectNullException($"No Data Found");
+           
         }
 
     }

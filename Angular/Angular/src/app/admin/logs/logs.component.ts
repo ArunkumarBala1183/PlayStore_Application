@@ -18,6 +18,7 @@ export class LogsComponent implements OnInit {
   itemsPerPage = 5;
   filteredLogs: AppLogs[] = [];
   maxDate: string | undefined;
+  minDate!: string
 
 
 
@@ -40,6 +41,13 @@ export class LogsComponent implements OnInit {
 
     this.filterDetails.downloadedDate = new Date().toISOString().split('T')[0]
     this.maxDate = new Date().toISOString().split('T')[0]
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    const minDate = yesterday.toISOString().split('T')[0];
+    console.log(minDate); // Output: yesterday's date in ISO format
+    
+    console.log(this.maxDate)
     this.getAppLogs()
   }
 

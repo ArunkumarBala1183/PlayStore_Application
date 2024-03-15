@@ -15,7 +15,7 @@ namespace Playstore.Infrastructure.Data.Repositories
 {
     public class AppDetailsRepository : Repository<AppInfo>, IAppDetailsRepository
     {
-        public readonly DatabaseContext databaseContext;
+        private readonly DatabaseContext databaseContext;
         public AppDetailsRepository(DatabaseContext context) : base(context)
         {
             this.databaseContext=context;
@@ -23,6 +23,7 @@ namespace Playstore.Infrastructure.Data.Repositories
 
         public async Task<object> GetAppDetails(Guid id,Guid userId)
         {
+            try{
             var response = await this.databaseContext.AppInfo.Include(obj=>obj.Category).Include(obj=>obj.AppImages).Where(obj=>obj.AppId==id).ToListAsync();
             var appImages = await this.databaseContext.AppImages.Where(obj => obj.AppId== id).ToListAsync();
             var AppRating=await this.databaseContext.AppReviews.Where(obj=>obj.AppId==id).ToListAsync();
@@ -56,6 +57,15 @@ namespace Playstore.Infrastructure.Data.Repositories
                 return appinfoDetails;
             }
              throw new EntityNotFoundException($"No AppInfo found for Id {id}"); 
+            }
+             catch(SqlException exception)
+            {
+                throw new Exception($"{exception}");
+            }
+            catch(Exception exception)
+            {
+                throw new Exception($"{exception}");
+            }
             
             
         }

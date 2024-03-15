@@ -24,6 +24,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
 
         public async Task<IEnumerable<AppsdetailsDTO>> Handle(GetAllAppInfoQuery request, CancellationToken cancellationToken)
         {
+            
             var app = await _repository.AppValue.ViewAllApps();
             return (IEnumerable<AppsdetailsDTO>)app;
         }

@@ -100,7 +100,9 @@ export class LoginService {
     const token = localStorage.getItem('accessToken');
 
     if (token) {
+     
       const decodedToken = this.jwtHelper.decodeToken(token);
+    
       const userId = decodedToken
         ? decodedToken[
             'http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata'

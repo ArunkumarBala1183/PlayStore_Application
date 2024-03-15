@@ -31,6 +31,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
 
         public async Task<IEnumerable<AppInfoDetailsDTO>> Handle(GetAppByIdValueQuery request, CancellationToken cancellationToken)
         {
+            if(request!=null){
             var app = await _repository.AppDetails.GetAppDetails(request.AppId,request.UserId);
 
             if (app == null)
@@ -39,6 +40,10 @@ namespace Playstore.Providers.Handlers.Queries.UserData
             }
 
             return (IEnumerable<AppInfoDetailsDTO>)app;
+            }
+            
+                throw new ObjectNullException($"No Data Found");
+            
         }
     }
 }

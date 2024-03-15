@@ -5,6 +5,7 @@ using Playstore.Infrastructure.Data.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Playstore.Contracts.DTO.AppReview;
+using Microsoft.Data.SqlClient;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
@@ -18,6 +19,7 @@ namespace Playstore.Infrastructure.Data.Repositories
 
         public async Task<object> GetReview(Guid id)
         {
+            try{
             var response = await this.databaseContext.AppReviews.Include(obj => obj.Users).Where(obj => obj.AppId == id).ToListAsync();
             if(response!=null)
             {
@@ -28,7 +30,6 @@ namespace Playstore.Infrastructure.Data.Repositories
                     {
                         AppId = obj.AppId,
                         Username = response.Select(obj => obj.Users.Name).ToList(),
-                        // Commands = response.GroupBy(obj => obj.UserId).ToDictionary(obj => obj.Key, obj => obj.Select(obj => obj.Comment).ToList())
                         Commands = response.Select(obj => obj.Comment).ToList(),
                         Ratings = response.Select(obj => obj.Rating).ToList()
                     };
@@ -37,6 +38,15 @@ namespace Playstore.Infrastructure.Data.Repositories
             }
 
             return HttpStatusCode.NoContent;
+            }
+            catch(SqlException exception)
+            {
+                throw new Exception($"{exception}");
+            }
+            catch(Exception exception)
+            {
+                throw new Exception($"{exception}");
+            }
         }
     }
 }

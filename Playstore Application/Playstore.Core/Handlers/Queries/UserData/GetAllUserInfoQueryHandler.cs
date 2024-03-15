@@ -5,6 +5,7 @@ using Playstore.Contracts.DTO;
 using MediatR;
 using System.Linq;
 using Playstore.Contracts.DTO.AppReview;
+using Playstore.Core.Exceptions;
 
 namespace Playstore.Providers.Handlers.Queries.UserData
 {
@@ -35,8 +36,13 @@ namespace Playstore.Providers.Handlers.Queries.UserData
 
         public async Task<UsersDetailsDTO> Handle(GetAllUserInfoQuery request, CancellationToken cancellationToken)
         {
+            if(request!=null){
             var app = await _repository.UserData.GetUsersDetails(request.UserId);
             return (UsersDetailsDTO)app;
+            }
+           
+                throw new ObjectNullException($"No Data Found");
+           
         }
     }
 }

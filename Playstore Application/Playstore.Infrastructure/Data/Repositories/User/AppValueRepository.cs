@@ -21,78 +21,102 @@ namespace Playstore.Infrastructure.Data.Repositories
             this.context = context;
         }
 
-        public async Task<AppData> GetAppData(Guid appId , Guid userId)
+        public async Task<AppData> GetAppData(Guid appId, Guid userId)
         {
-            var response = await context.AppInfo
-            .Include(data => data.AppData)
-            .FirstOrDefaultAsync(id => id.AppId == appId);
- 
-            if (response != null)
+            try
             {
-                var fileEntity = this.context.AppDownloads.FirstOrDefault(app => app.AppId == appId && app.UserId == userId); //use userId here
- 
-                if (fileEntity == null)
+                var response = await context.AppInfo
+                .Include(data => data.AppData)
+                .FirstOrDefaultAsync(id => id.AppId == appId);
+
+                if (response != null)
                 {
-                    var entity = new AppDownloads
+                    var fileEntity = this.context.AppDownloads.FirstOrDefault(app => app.AppId == appId && app.UserId == userId); //use userId here
+
+                    if (fileEntity == null)
                     {
-                        AppId = appId,
-                        UserId = userId, //use userId here
-                        DownloadedDate = DateTime.Today,
-                    };
-                    this.context.AppDownloads.Add(entity);
-                    await this.context.SaveChangesAsync();
-                    return response.AppData;
-                    
+                        var entity = new AppDownloads
+                        {
+                            AppId = appId,
+                            UserId = userId, //use userId here
+                            DownloadedDate = DateTime.Today,
+                        };
+                        this.context.AppDownloads.Add(entity);
+                        await this.context.SaveChangesAsync();
+                        return response.AppData;
+
+                    }
+                    throw new InvalidRequestBodyException();
                 }
-                throw new InvalidRequestBodyException();
+
+                throw new EntityNotFoundException($"No App Found");
             }
- 
-            throw new EntityNotFoundException($"No App Found");
+            catch (Exception exception)
+            {
+                throw new Exception($"{exception}");
+            }
         }
         public async Task<object> GetValue(Guid id)
         {
-            var response = await context.AppInfo.FirstOrDefaultAsync(appId => appId.UserId == id);
-
-            if (response != null)
+            try
             {
-                return response;
+                var response = await context.AppInfo.FirstOrDefaultAsync(appId => appId.UserId == id);
+
+                if (response != null)
+                {
+                    return response;
+                }
+                return HttpStatusCode.NoContent;
             }
-            return HttpStatusCode.NoContent;
+            catch(SqlException exception)
+            {
+                throw new Exception($"{exception}");
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"{exception}");
+            }
         }
         public async Task<object> ViewAllApps()
         {
-            var enetities = await this.context.AppInfo.Include(data => data.AppReview).Include(data => data.Category).Include(data => data.AppImages).Where(status => status.Status == RequestStatus.Approved).ToListAsync();
-            int count = enetities.Count();
-            if (enetities.Any())
+            try
             {
-                var myappDetails = enetities.Select(appInfo =>
-                 {
-                     var appReview = this.context.AppReviews
-                         .Where(review => review.AppId == appInfo.AppId)
-                         .ToList();
-                     var AppDownload = this.context.AppDownloads.Where(download => download.AppId == appInfo.AppId).ToList();
-
-                     return new AppsdetailsDTO
+                var enetities = await this.context.AppInfo.Include(data => data.AppReview).Include(data => data.Category).Include(data => data.AppImages).Where(status => status.Status == RequestStatus.Approved).ToListAsync();
+                int count = enetities.Count();
+                if (enetities.Any())
+                {
+                    var myappDetails = enetities.Select(appInfo =>
                      {
-                         AppId = appInfo.AppId,
-                         Name = appInfo.Name,
-                         Description = appInfo.Description,
-                         Logo = appInfo.Logo,
-                         UserId = appInfo.UserId,
-                         Apps = count,
-                         CategoryName = appInfo.Category.CategoryName,
-                         Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
-                         CategoryId = appInfo.Category.CategoryId,
-                         Downloads = AppDownload.Count(),
-                         Status = appInfo.Status
-                     };
-                 }).ToList();
-                return myappDetails;
+                         var appReview = this.context.AppReviews
+                             .Where(review => review.AppId == appInfo.AppId)
+                             .ToList();
+                         var AppDownload = this.context.AppDownloads.Where(download => download.AppId == appInfo.AppId).ToList();
 
+                         return new AppsdetailsDTO
+                         {
+                             AppId = appInfo.AppId,
+                             Name = appInfo.Name,
+                             Description = appInfo.Description,
+                             Logo = appInfo.Logo,
+                             UserId = appInfo.UserId,
+                             Apps = count,
+                             CategoryName = appInfo.Category.CategoryName,
+                             Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
+                             CategoryId = appInfo.Category.CategoryId,
+                             Downloads = AppDownload.Count(),
+                             Status = appInfo.Status
+                         };
+                     }).ToList();
+                    return myappDetails;
+
+                }
+                throw new EntityNotFoundException($"No Apps found");
             }
-            throw new EntityNotFoundException($"No Apps found");
+            catch (Exception exception)
+            {
+                throw new Exception($"{exception}");
+            }
         }
-
 
     }
 }

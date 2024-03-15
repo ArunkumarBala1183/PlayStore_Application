@@ -31,7 +31,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
 
         public async Task<IEnumerable<AppReviewDetailsDTO>> Handle(GetAllAppReviewDetails request, CancellationToken cancellationToken)
         {
-            // throw new NotImplementedException();
+            if(request!=null){
             var app = await _repository.AppReview.GetReview(request.AppId);
 
             if (app == null)
@@ -40,6 +40,12 @@ namespace Playstore.Providers.Handlers.Queries.UserData
             }
 
             return (IEnumerable<AppReviewDetailsDTO>)app;
+            }
+            
+           
+                throw new ObjectNullException($"No Data Found");
+        
+
         }
 
 

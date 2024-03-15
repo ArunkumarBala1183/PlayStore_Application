@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data.Entities;
@@ -94,7 +95,7 @@ namespace Playstore.Infrastructure.Data.Repositories
 
                 appInfo.AppImages = appImages;
 
-                Console.WriteLine("Saved App Data");
+                
 
                 var user = await databaseContext.Users
                 .Include(data => data.UserRoles)
@@ -123,10 +124,13 @@ namespace Playstore.Infrastructure.Data.Repositories
                 }
                 return HttpStatusCode.BadRequest;
             }
+            catch(SqlException exception)
+            {
+                throw new Exception($"{exception}");
+            }
             catch (Exception error)
             {
-                Console.WriteLine(error.Message);
-
+               
                 return HttpStatusCode.InternalServerError;
             }
         }
