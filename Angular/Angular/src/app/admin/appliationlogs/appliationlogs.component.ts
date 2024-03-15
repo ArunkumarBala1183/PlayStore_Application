@@ -12,7 +12,7 @@ import { AppInfoService } from 'src/app/services/app-info.service';
 })
 export class AppliationlogsComponent implements OnInit {
 
-  displayedColumns: string[] = ['level', 'timeStamp', 'exception', 'userId', 'location','message'];
+  displayedColumns: string[] = ['userId','timeStamp','level', 'location','message','exception'];
   appLogSource = new MatTableDataSource<any>();
 
   appLogDetails!: ApplicationLogs[]
