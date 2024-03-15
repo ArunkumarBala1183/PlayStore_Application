@@ -25,33 +25,7 @@ export class UsersComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  // Sample user data
-  users = [
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'prem', Email: 'prem632@gmail.com', Role: 'dev' },
-    { Username: 'bharath', Email: 'bharath@gmail.com', Role: 'dev' },
-    { Username: 'arun', Email: 'arun@gmail.com', Role: 'dev' },
-    { Username: 'Ashiq', Email: 'ashiq@gmail.com', Role: 'User' },
-    { Username: 'daniel', Email: 'daniel@gmail.com', Role: 'dev' },
-    { Username: 'vinoth', Email: 'vinoth@gmail.com', Role: 'User' },
-    { Username: 'Pradeep', Email: 'pradeep@gmail.com', Role: 'dev' },
-    { Username: 'dhivyan', Email: 'dhivya@gmail.com', Role: 'User' },
-    { Username: 'arunkumar', Email: 'arukumar@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    { Username: 'Nithish', Email: 'nithishkumar632@gmail.com', Role: 'User' },
-    { Username: 'kumar', Email: 'nithishkumar632@gmail.com', Role: 'dev' },
-    // Add more user objects as needed
-  ];
-
+  
   constructor(private service : UserService ){}
 
   ngOnInit() {

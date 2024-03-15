@@ -41,7 +41,7 @@ const routes: Routes = [
         },
         
         {
-          path: 'myDownloads', component: MyDownloadsComponent, title: 'MyDownloads',canActivate:[AuthGuard],data:{role:'Admin'}
+          path: 'my-downloads', component: MyDownloadsComponent, title: 'MyDownloads',canActivate:[AuthGuard],data:{role:'Admin'}
            
         },
         {
@@ -57,12 +57,12 @@ const routes: Routes = [
            
         },
         {
-          path: 'apprequests', component: ApprequestsComponent, title: 'apprequests',canActivate:[AuthGuard],data:{role:'Admin'}
+          path: 'app-requests', component: ApprequestsComponent, title: 'apprequests',canActivate:[AuthGuard],data:{role:'Admin'}
            
         },
 
         {
-          path: 'requestdetails/:id', component: RequestdetailsComponent, title: 'requestdetails',canActivate:[AuthGuard],data:{role:'Admin'}
+          path: 'request-details', component: RequestdetailsComponent, title: 'requestdetails',canActivate:[AuthGuard],data:{role:'Admin'}
            
         },
 
@@ -72,12 +72,16 @@ const routes: Routes = [
         },
 
         {
-          path: 'changePassword', component: ChangePasswordComponent, title: 'changePassword',canActivate:[AuthGuard],data:{role:'Admin'}
+          path: 'change-password', component: ChangePasswordComponent, title: 'changePassword',canActivate:[AuthGuard],data:{role:'Admin'}
            
         },
 
+        // {
+        //   path: 'downloadPage/:appId', component: DownloadpageComponent, title: 'changePassword',canActivate:[AuthGuard],data:{role:'Admin'}
+           
+        // }
         {
-          path: 'downloadPage/:appId', component: DownloadpageComponent, title: 'changePassword',canActivate:[AuthGuard],data:{role:'Admin'}
+          path: 'download-page', component: DownloadpageComponent, title: 'changePassword',canActivate:[AuthGuard],data:{role:'Admin'}
            
         }
       ]

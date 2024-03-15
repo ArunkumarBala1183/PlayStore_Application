@@ -1,12 +1,14 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Guid } from 'guid-typescript';
 import { ToastrService } from 'ngx-toastr';
 import { PrimeNGConfig } from 'primeng/api';
 import { ProcessRequest } from 'src/app/interface/process-request';
 import { RequestDetails } from 'src/app/interface/request-details';
 import { AppInfoService } from 'src/app/services/app-info.service';
 import { AppRequestsService } from 'src/app/services/app-requests.service';
+import { UserService } from 'src/app/services/user.service';
 
 
 @Component({
@@ -25,16 +27,17 @@ export class RequestdetailsComponent implements OnInit {
 
   processRequestDetails: ProcessRequest | undefined
 
-  constructor(private router: ActivatedRoute, private primengConfig: PrimeNGConfig, private service: AppRequestsService, private appDataService: AppInfoService , private toastr : ToastrService , private route : Router) { }
+  constructor(private router: ActivatedRoute, private primengConfig: PrimeNGConfig, private service: AppRequestsService, private appDataService: AppInfoService , private toastr : ToastrService , private route : Router,private userservice:UserService) { }
 
   appidShow: boolean = false;
 
   ngOnInit(): void {
 
-    this.router.params.subscribe(response => {
-      this.appId = response["id"]
-    });
-
+    // this.router.params.subscribe(response => {
+    //   this.appId = response["id"]
+    // });
+  //  this.appId=this.userservice.getAppId()
+  this.appId=this.userservice.getAppId();
     this.primengConfig.ripple = true;
     this.fetchAppDetails();
     this.getRequestedDetails();
@@ -107,7 +110,7 @@ export class RequestdetailsComponent implements OnInit {
           else
           {
             this.toastr.error("Denied" , "Playstore Application"); 
-            this.route.navigate(["admin/apprequests"])
+            this.route.navigate(["admin/app-requests"])
           }
 
          

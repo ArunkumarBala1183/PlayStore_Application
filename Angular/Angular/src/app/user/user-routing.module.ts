@@ -26,22 +26,25 @@ const routes : Routes = [
           path:'downloads', component : UserDownloadsComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
         {
-          path:'aboutUs', component : AboutUsComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
+          path:'about-us', component : AboutUsComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
         {
-          path:'myApps', component : DeveloperMyAppsComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
+          path:'my-apps', component : DeveloperMyAppsComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
         {
-          path:'newApp', component : DeveloperNewAppComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
+          path:'new-app', component : DeveloperNewAppComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
         {
-          path:'userProfile', component : UserProfileComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
+          path:'user-profile', component : UserProfileComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
+        // {
+        //   path: 'specificApp/:appId', component : SpecificAppComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
+        // },
         {
-          path: 'specificApp/:appId', component : SpecificAppComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
-        },
+            path: 'specific-app', component : SpecificAppComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
+        },   
         {
-          path:'resetPassword', component : ResetPasswordComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
+          path:'reset-password', component : ResetPasswordComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         }
     ]
   }

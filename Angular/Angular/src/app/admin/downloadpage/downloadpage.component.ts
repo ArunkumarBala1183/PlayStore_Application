@@ -48,10 +48,13 @@ export class DownloadpageComponent implements OnInit {
   }
   ngOnInit(): void {
     const userId=this.loginService.getUserId();
-    this.route.params.subscribe((params) => {
-      const appId: Guid = params['appId'];
-      this.getSpecificApp(appId,userId)
-    });
+    // this.route.params.subscribe((params) => {
+    //   const appId: Guid = params['appId'];
+    //   this.getSpecificApp(appId,userId)
+    // });
+    const appId=this.userService.getAppId();
+    
+    this.getSpecificApp(appId,userId);
   }
     // this.service.getAllApps().subscribe({
     //   next: (response) => {
@@ -93,6 +96,9 @@ export class DownloadpageComponent implements OnInit {
       error: (error) => {
         console.log(error);
       },
+      complete : () => {
+        this.currentRating = 0;
+      }
     });
   }
 
@@ -112,8 +118,9 @@ export class DownloadpageComponent implements OnInit {
  
 
   public Downloadfile() {
-    this.route.params.subscribe((params) => {
-      const appId: Guid = params['appId'];
+    // this.route.params.subscribe((params) => {
+      // const appId: Guid = params['appId'];
+      const appId=this.userService.getAppId();
       const userId = this.loginService.getUserId();
       this.service.PostAppFile(appId, userId).subscribe({
         next: (response) => {
@@ -141,13 +148,14 @@ export class DownloadpageComponent implements OnInit {
           }
         },
       });
-    });
-  }
+    };
+  
  
   public onSubmit() {
     if (this.reviewForm.valid) {
       const formData = this.reviewForm.value;
-      const appId = this.route.snapshot.params['appId'];
+      // const appId = this.route.snapshot.params['appId'];
+      const appId=this.userService.getAppId();
       const userId = this.loginService.getUserId();
       formData.appId = appId;
       formData.userId = userId;

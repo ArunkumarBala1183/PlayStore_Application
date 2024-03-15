@@ -169,7 +169,7 @@ export class DeveloperNewAppComponent implements OnInit {
           }
           else{
           this.toastr.success('Form Submitted',);
-          this.router.navigate(['user/myApps']);
+          this.router.navigate(['user/my-apps']);
           }
         },
         error: (error) => {
