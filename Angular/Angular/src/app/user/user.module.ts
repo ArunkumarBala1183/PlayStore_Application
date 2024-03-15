@@ -4,6 +4,7 @@ import { UserRoutingComponent, UserRoutingModule } from './user-routing.module';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AbbreviateNumberPipe } from './abbreviate-number.pipe';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { AbbreviateNumberPipe } from './abbreviate-number.pipe';
     UserRoutingModule,
     MatIconModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    RouterModule
   ],
   exports:[AbbreviateNumberPipe]
 })

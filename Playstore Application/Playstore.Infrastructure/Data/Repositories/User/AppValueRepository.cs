@@ -1,15 +1,12 @@
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.Data.Entities;
-
-
 using Playstore.Migrations;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
-using Microsoft.AspNetCore.Mvc;
-using Playstore.Contracts.DTO.AppDownloads;
+
 
 namespace Playstore.Infrastructure.Data.Repositories
 {

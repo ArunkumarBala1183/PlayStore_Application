@@ -10,22 +10,20 @@ namespace Playstore.Providers.Handlers.Queries.UserData
 {
     public class GetDeveloperMyAppDetails : IRequest<IEnumerable<Myappdetails>>
     {
-        public Guid _UserId { get; set; }
-        public GetDeveloperMyAppDetails(Guid Userid)
+        public Guid UserId { get; set; }
+        public GetDeveloperMyAppDetails(Guid userId)
         {
-            _UserId = Userid;
+            UserId = userId;
         }
     }
 
     public class GetDeveloperMyAppDetailsQueryHandler : IRequestHandler<GetDeveloperMyAppDetails, IEnumerable<Myappdetails>>
     {
         private readonly IUnitOfWork _repository;
-        private readonly IMapper _mapper;
 
         public GetDeveloperMyAppDetailsQueryHandler(IUnitOfWork repository, IMapper mapper)
         {
             _repository = repository;
-            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Myappdetails>> Handle(GetDeveloperMyAppDetails request, CancellationToken cancellationToken)

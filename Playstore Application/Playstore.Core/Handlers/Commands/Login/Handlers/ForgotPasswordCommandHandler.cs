@@ -1,10 +1,5 @@
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Contracts.DTO;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
  
 namespace Playstore.Providers.Handlers.Commands
 {
@@ -28,15 +23,13 @@ namespace Playstore.Providers.Handlers.Commands
             }
            
             var otp = GenerateOtp();
-             _emailService.SendOtpAsync(userCredentials.EmailId, otp);
-            Console.WriteLine(userCredentials.EmailId);
-            Console.WriteLine(otp);
+            await _emailService.SendOtpAsync(userCredentials.EmailId, otp);
             return otp;
         }
  
         private string GenerateOtp()
         {
-            Random random = new Random();
+            Random random = new();
             return random.Next(100000, 999999).ToString();
         }
     }

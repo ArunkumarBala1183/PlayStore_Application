@@ -5,10 +5,10 @@ namespace Playstore.Providers.Handlers.Queries.Admin
 {
     public class GetAppLogsQuery : IRequest<IEnumerable<AppDownloadsDto>>
     {
-        public AppLogsDto appSearch { get; set; }
+        public AppLogsDto AppSearch { get; set; }
         public GetAppLogsQuery(AppLogsDto appLogsDto)
         {
-            this.appSearch = appLogsDto;
+            this.AppSearch = appLogsDto;
         }
     }
 }

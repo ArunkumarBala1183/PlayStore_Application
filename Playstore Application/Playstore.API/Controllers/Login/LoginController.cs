@@ -6,11 +6,10 @@ using Playstore.Providers.Handlers.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using Playstore.Providers.Handlers.Queries;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Playstore.Core.Data.Repositories;
+using Playstore.Providers.Handlers.Queries.Admin;
 
 namespace Playstore.Controllers
 {
@@ -28,54 +27,6 @@ namespace Playstore.Controllers
             _sharedDataService = sharedDataService;
         }
 
-        [HttpPost("GetUserbyId")]
-        [Authorize(Roles = "dev")]
-        //[Authorize]
-        [ProducesResponseType(typeof(List<AllUsersDTO>), (int)HttpStatusCode.OK)]
-        [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-
-        public async Task<IActionResult> Get(Guid id)
-        {
-            var query = new GetAllUsersQuery(id);
-            var response = await _mediator.Send(query);
-            return Ok(response);
-        }
-
-        [HttpPost("update-permissions")]
-
-        public async Task<IActionResult> UpdatePermissions([FromBody] UpdatePermissionsCommand model, [FromQuery] bool allow)
-        {
-            //var command = new UpdatePermissionsCommand(model) { Allow = allow };
-            var updatedToken = await _mediator.Send(model);
-            return Ok(new { UpdatedToken = updatedToken });
-        }
-
-        // [HttpGet("CheckEmailExistence")]
-        // [ProducesResponseType(typeof(bool), (int)HttpStatusCode.Created)]
-        // [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-        // public async Task<IActionResult> CheckEmailExistence(string email)
-        // {
-        //     Console.WriteLine(email);
-        //     var query = new CheckEmailExistenceQuery(email);
-
-        //     var result = await _mediator.Send(query);
-
-        //     return Ok(result); 
-        // }
-
-        // [HttpPost("CheckEmailExistence")]
-        // [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
-        // [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-        // public async Task<IActionResult> CheckEmailExistence(  ForgotPasswordDTO model)
-        // {
-
-        //     Console.WriteLine(model.EmailId);
-        //     var query = new CheckEmailExistenceQuery(model.EmailId);
-
-        //     var result = await _mediator.Send(query);
-
-        //     return Ok(result); 
-        // }
         [HttpPost("CheckEmailExistence")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
@@ -83,25 +34,15 @@ namespace Playstore.Controllers
         {
             try
             {
-                Console.WriteLine(model?.EmailId);
-                if (model == null)
-                {
-                    // Log or handle the case where model is null
-                    return BadRequest("Invalid model");
-                }
-                Console.WriteLine(model.EmailId);
                 var query = new CheckEmailExistenceQuery(model.EmailId);
                 var result = await _mediator.Send(query);
                 return Ok(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Log the exception
-                Console.WriteLine($"Exception in CheckEmailExistence: {ex.Message}");
                 return StatusCode(500, "Internal Server Error");
             }
         }
-
 
         [HttpPost("forgot-Password")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
@@ -112,15 +53,11 @@ namespace Playstore.Controllers
             {
                 var otp = await _mediator.Send(new ForgotPasswordCommand(model));
                 HttpContext.Session.SetString("ResetPasswordEmail", model.EmailId);
-                var ResetPasswordEmail = HttpContext.Session.GetString("ResetPasswordEmail");
                 _sharedDataService.ResetPasswordEmail = HttpContext.Session.GetString("ResetPasswordEmail");
-                Console.WriteLine(".............This is email" + ResetPasswordEmail);
 
 
                 HttpContext.Session.SetString("ResetPasswordOTP", otp);
-                var ResetPasswordOTP = HttpContext.Session.GetString("ResetPasswordOTP");
                 _sharedDataService.ResetPasswordOTP = HttpContext.Session.GetString("ResetPasswordOTP");
-                Console.WriteLine("...................This is otp" + ResetPasswordOTP);
 
                 return Ok(new { Message = "OTP sent successfully." });
             }
@@ -138,17 +75,8 @@ namespace Playstore.Controllers
         {
             try
             {
-                var storedOtp = HttpContext.Session.GetString("ResetPasswordOTP");
-                var storedEmail = HttpContext.Session.GetString("ResetPasswordEmail");
                 var resetPasswordEmail = _sharedDataService.ResetPasswordEmail;
                 var resetPasswordOTP = _sharedDataService.ResetPasswordOTP;
-
-                Console.WriteLine("Stored OTP: " + resetPasswordOTP);
-
-                Console.WriteLine("Stored Email: " + resetPasswordEmail);
-                Console.WriteLine("Received OTP: " + validateOtpDTO.Otp);
-
-                validateOtpDTO.EmailId = storedEmail;
 
                 var command = new ValidateOtpCommand(validateOtpDTO, resetPasswordEmail, resetPasswordOTP);
                 var isOtpValid = await _mediator.Send(command);
@@ -163,9 +91,9 @@ namespace Playstore.Controllers
                     return BadRequest(new { Error = "Invalid OTP" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return BadRequest(new { Error = ex.Message });
+                return BadRequest(new { Error = exception.Message });
             }
         }
 
@@ -176,70 +104,57 @@ namespace Playstore.Controllers
         {
             try
             {
-                Console.WriteLine(resetPasswordDTO.NewPassword);
-                Console.WriteLine(resetPasswordDTO.ConfirmPassword);
                 var resetPasswordEmail = _sharedDataService.ResetPasswordEmail;
                 var resetPasswordOTP = _sharedDataService.ResetPasswordOTP;
 
-                Console.WriteLine("Stored OTP: " + resetPasswordOTP);
-
-                Console.WriteLine("Stored Email: " + resetPasswordEmail);
-                Console.WriteLine("Received newpassword: " + resetPasswordDTO.NewPassword);
-
-                Console.WriteLine("Received confirmpassword: " + resetPasswordDTO.ConfirmPassword);
                 var command = new ResetPasswordCommand(resetPasswordDTO, resetPasswordEmail, resetPasswordOTP);
                 var isPasswordReset = await _mediator.Send(command);
 
                 if (isPasswordReset)
                 {
+                    HttpContext.Session.Remove("ResetPasswordEmail");
+                    HttpContext.Session.Remove("ResetPasswordOTP");
                     return Ok(new { Message = "Password reset successful" });
+                    
                 }
                 else
                 {
-                    Console.WriteLine("Failed");
                     return BadRequest(new { Error = "Password reset failed. Make sure OTP is validated first." });
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Console.WriteLine(ex.Message);
-                return BadRequest(new { Error = ex.Message });
+                return BadRequest(new { Error = exception.Message });
             }
         }
 
 
 
         [HttpPost("register")]
-        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> UserRegistration([FromBody] RegisterUsersDTO model)
         {
             try
             {
-                if (model == null)
-                {
-                    // Log or handle the case where model is null
-                    return BadRequest("Invalid model");
-                }
-                Console.WriteLine(model.Name);
                 var command = new RegisterUsersCommand(model);
                 var response = await _mediator.Send(command);
                 return StatusCode((int)HttpStatusCode.Created, response);
             }
-            catch (InvalidRequestBodyException ex)
+            catch (InvalidRequestBodyException exception)
             {
                 return BadRequest(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = ex.Errors
+                    Errors = exception.Errors
                 });
             }
-            catch (DuplicateEmailException ex)
+            catch (DuplicateEmailException exception)
             {
                 return Conflict(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new[] { ex.Message }
+                    Errors = new[] { exception.Message }
                 });
             }
         }
@@ -251,8 +166,6 @@ namespace Playstore.Controllers
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> UserLogin([FromBody] LoginUsersDTO model)
         {
-            Console.WriteLine(model.EmailId);
-            Console.WriteLine(model.Password);
             try
             {
 
@@ -260,28 +173,28 @@ namespace Playstore.Controllers
                 var response = await _mediator.Send(command);
                 return Ok(response);
             }
-            catch (InvalidRequestBodyException ex)
+            catch (InvalidRequestBodyException exception)
             {
                 return BadRequest(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = ex.Errors
+                    Errors = exception.Errors
                 });
             }
-            catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new[] { ex.Message }
+                    Errors = new[] { exception.Message }
                 });
             }
-            catch (InvalidcredentialsException ex)
+            catch (InvalidcredentialsException exception)
             {
                 return Unauthorized(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new[] { ex.Message }
+                    Errors = new[] { exception.Message }
                 });
             }
         }
@@ -290,55 +203,49 @@ namespace Playstore.Controllers
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command)
         {
-            if (command == null)
-            {
-                // Handle the case where the command is null
-                return BadRequest("Invalid request. Command object is null.");
-            }
-            Console.WriteLine(command.ExpiredToken);
 
             try
             {
                 var response = await _mediator.Send(command);
                 return Ok(response);
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException exception)
             {
                 return Unauthorized(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new[] { ex.Message }
+                    Errors = new[] { exception.Message }
                 });
             }
         }
-     [HttpPatch("changePassword")]
-     [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
-     [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-     public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordQuery command)
-     {
-        Console.WriteLine("...................."+ command.userId);
-        Console.WriteLine("................."+ command.password);
-        
+        [HttpPatch("changePassword")]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordQuery command)
+        {
             try
             {
-                
                 var response = await _mediator.Send(command);
-                Console.WriteLine(response);
-                return Ok(new {message = response});
- 
+                return Ok(new {message = response}); 
             }
             catch (Exception exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
+                    
                     IsSuccess = false,
                     Errors = new string[] { exception.Message }
                 });
             }
- 
- 
- 
         }
-
+        
+        [HttpGet("checkPassword")]
+        public async Task<IActionResult> CheckPassword(Guid UserId , string password)
+        {
+            var value=new GetPasswordQuery(UserId ,password);
+            var response= await _mediator.Send(value);
+            return Ok(response);
+            
+        }
     }
 }

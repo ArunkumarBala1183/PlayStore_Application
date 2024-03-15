@@ -1,8 +1,10 @@
 using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data;
+using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.Data.Repositories.Admin;
 using Playstore.Contracts.Data.RoleConfig;
+using Playstore.Core.Data.Repositories;
 using Playstore.Core.Data.Repositories.Admin;
 using Playstore.Infrastructure.Data.Repositories;
 using Playstore.Migrations;
@@ -38,18 +40,13 @@ namespace Playstore.Infrastructure.Data
         public IAppDetailsRepository AppDetails=>new AppDetailsRepository(_context);
 
         public IGetCategory GetCategory=>new GetCategoryRepository(_context);
+        public IUserCredentialsRepository UserCredentials=>new UserCredentialsRepository(_context);
+
+        
+
         public IUserDetailsRepository UserData=>new GetUsersDetailsRepository(_context);
 
         public IUserRepository User => throw new NotImplementedException();
-
-
-
-
-
-
-
-        // public IAppInfoRepository AppInfo=new AppInfoRepository();
-        // public IAppInfoRepository AppInfo => new AppInfoRepository();
 
         public async Task CommitAsync()
         {

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Playstore.Core.Exceptions;
 using Playstore.Providers.Handlers.Commands;
 using Playstore.Providers.Handlers.Queries.Admin;
+using Serilog;
 
 namespace Playstore.Controllers.Admin
 {
@@ -29,10 +30,11 @@ namespace Playstore.Controllers.Admin
             {
                 var appDetails = await this.mediator.Send(new GetRequestedAppDataQuery(appId));
     
-                return File(appDetails.AppFile , appDetails.ContentType , "SampleFile");
+                return File(appDetails.AppFile , appDetails.ContentType , $"{DateOnly.FromDateTime(DateTime.Now)}");
             }
             catch (ApiResponseException error)
             {
+                Log.Error(error , error.Message);
                 return NotFound(error.Message);
             }
         }

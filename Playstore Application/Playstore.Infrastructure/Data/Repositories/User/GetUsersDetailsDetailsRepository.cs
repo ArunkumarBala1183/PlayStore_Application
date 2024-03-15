@@ -11,7 +11,7 @@ namespace Playstore.Infrastructure.Data.Repositories
 {
     public class GetUsersDetailsRepository : Repository<UsersDetailsDTO>, IUserDetailsRepository
     {
-        public DatabaseContext databaseContext;
+        private readonly DatabaseContext databaseContext;
         public GetUsersDetailsRepository(DatabaseContext context) : base(context)
         {
             databaseContext = context;

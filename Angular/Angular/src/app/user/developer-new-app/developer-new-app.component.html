@@ -1,6 +1,6 @@
 <!-- <div class="px-9 pt-12 pb-3 md:pl-48 lg:pl-72 lg:pt-[4rem]"> -->
 <div
-    class="md:bg-gray-100 md:ml-44 lg:ml-56 flex items-center justify-center rounded-md md:flex md:flex-col md:items-center md:justify-center">
+    class="flex items-center justify-center rounded-md md:flex md:flex-col md:items-center md:justify-center">
     <form [formGroup]="appData" (ngSubmit)="onSubmit()"
         class="bg-white shadow-2xl hover:bg-gray-100 h-auto mx-4 mt-[4.5rem] mb-3 pb-2 md:w-[80%]  md:mb-5 md:mt-20 rounded-md ">
 
@@ -52,18 +52,18 @@
                     <label for="Logo" class="">App Logo <span><br>(should be a image)</span></label><br>
                     <input class="mt-1" type="file" name="Logo" id="Logo" accept=".jpg, .jpeg, .png"
                         (change)="handleLogo($event)" formControlName="Logo"><br>
-                    <span class="pb-1  text-red-400"
-                        *ngIf="appData.get('Logo')?.touched && (appData.get('Logo')?.hasError('required'))">{{validationMessages.Logo.required}}</span>
+                    <!-- <span class="pb-1  text-red-400"
+                        *ngIf="appData.get('Logo')?.touched && (appData.get('Logo')?.hasError('required'))">{{validationMessages.Logo.required}}</span> -->
                     <span *ngIf="this.logoFileFormatCheck" class="text-red-500">File should be an Image</span>
                 </div>
 
-                <div class=" w-[72%] mt-3 px-3 h-24 border ">
+                <div class=" w-[72%] mt-3 px-3 h-24 border">
                     <label for="AppFile">Your Application <span><br> (should be a zip file)</span> </label>
                     <input class="mt-1" type="file" name="AppFile" id="AppFile"
                         accept=".zip, application/zip, application/x-zip-compressed" (change)="handleFile($event)"
                         formControlName="AppFile"><br>
-                    <span class="pb-1  text-red-400"
-                        *ngIf="appData.get('AppFile')?.touched && (appData.get('AppFile')?.hasError('required'))">{{validationMessages.AppFile.required}}</span>
+                    <!-- <span class="pb-1  text-red-400"
+                        *ngIf="appData.get('AppFile')?.dirty ">{{validationMessages.AppFile.required}}</span> -->
                     <span *ngIf="!this.appFileFormatCheck" class="text-red-400">App File should be Zip</span>
                     <span *ngIf="fileSize" class="text-red-400 text-center">File exceeds more than 2mb . Please upload file
                         with less than 2mb!!!!</span>
@@ -76,8 +76,8 @@
                 <label for="appImages">App Screenshots <span><br>(app screenshots)</span> </label><br>
                 <input class="mt-1" type="file" name="appImages" id="appImages" accept=".jpg, .jpeg, .png .webp"
                     multiple (change)="multipleFiles($event)" formControlName="appImages"><br>
-                <span class="pt-1  text-red-400"
-                    *ngIf="appData.get('appImages')?.touched && (appData.get('appImages')?.hasError('required'))">{{validationMessages.appImages.required}}</span>
+                <!-- <span class="pt-1  text-red-400"
+                    *ngIf="appData.get('appImages')?.touched && (appData.get('appImages')?.hasError('required'))">{{validationMessages.appImages.required}}</span> -->
                 <span *ngIf="multipleFile" class="text-red-400 text-center">
                     Select atleast 2-3 files
                 </span>

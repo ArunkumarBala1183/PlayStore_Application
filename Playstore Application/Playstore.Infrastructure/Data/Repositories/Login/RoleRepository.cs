@@ -9,29 +9,21 @@ namespace Playstore.Core.Data.Repositories
     public class RoleRepository : Repository<Role>, IRoleRepository
     {
         private readonly DatabaseContext _context;
-        //private readonly DbSet<Users> _dbSet;
         public RoleRepository(DatabaseContext context) : base(context)
         {
             _context = context;
-            // _dbSet = _context.Set<Users>();
         }
-        public async Task<UserCredentials> GetByEmailAsync(string email)
+        public async Task<UserCredentials?> GetByEmailAsync(string email)
         {
-            return await _context.UserCredentials.FirstOrDefaultAsync(x => x.EmailId == email);
+            return await _context.UserCredentials.FirstOrDefaultAsync(mailid => mailid.EmailId == email);
         }
         public async Task<List<UserRole>> GetUserRolesAsync(Guid userId)
         {
             return await _context.UserRole
-                .Include(ur => ur.Role)
-                .Where(ur => ur.UserId == userId)
+                .Include(role => role.Role)
+                .Where(user => user.UserId == userId)
                 .ToListAsync();
         }
-        // public async Task<List<Users>> GetAll()
-        // {
-        //     return await _context.Users.ToListAsync();
-        // }
-
-        //public IUsersRepository Users => new UsersRepository(_context);
 
         public async Task CommitAsync()
         {
@@ -40,28 +32,20 @@ namespace Playstore.Core.Data.Repositories
 
         public async Task<Guid> GetDefaultRoleId()
         {
-            var defaultRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleCode == "User");
+            var defaultRole = await _context.Roles.FirstOrDefaultAsync(role => role.RoleCode == "User");
             return defaultRole != null ? defaultRole.RoleId : Guid.Empty;
         }
-    
 
-        public async Task<Role> GetByRoleCode(string roleCode)
-        {
-            return await _context.Roles.FirstOrDefaultAsync(r => r.RoleCode == roleCode);
-        }
-        public async Task<Role> GetByRoleId(Guid roleId)
-        {
-            return await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == roleId);
-        }
 
+        public async Task<Role?> GetByRoleCode(string roleCode)
+        {
+            return await _context.Roles.FirstOrDefaultAsync(role => role.RoleCode == roleCode);
+            
+        }
+        public async Task<Role?> GetByRoleId(Guid roleId)
+        {
+            return await _context.Roles.FirstOrDefaultAsync(role => role.RoleId == roleId);
         
-        // public async Task<Users> GetByEmailId(string emailId)
-        // {
-        //     return await _context.Users.FirstOrDefaultAsync(u => u.EmailId == emailId);
-        // }
-        // public async Task<Users> GetByPhoneNumber(string mobileNumber)
-        // {
-        //     return await _context.Users.FirstOrDefaultAsync(x => x.MobileNumber == mobileNumber);
-        // }
+        }
     }
 }

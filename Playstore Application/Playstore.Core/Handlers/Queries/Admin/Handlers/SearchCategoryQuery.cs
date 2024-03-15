@@ -5,10 +5,10 @@ namespace Playstore.Providers.Handlers.Queries.Admin
 {
     public class SearchCategoryQuery : IRequest<IEnumerable<string>>
     {
-        public CategoryDto category;
+        public CategoryDto Category {get ; set ;}
         public SearchCategoryQuery(CategoryDto category)
         {
-            this.category = category;
+            this.Category = category;
         }
     }
 }

@@ -2,7 +2,6 @@ using System.Net;
 using MediatR;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO.AppRequests;
-using Playstore.Core.Exceptions;
 
 namespace Playstore.Providers.Handlers.Queries.Admin
 {
@@ -17,21 +16,14 @@ namespace Playstore.Providers.Handlers.Queries.Admin
         }
         public async Task<IEnumerable<RequestDetailsDto>> Handle(GetAllAppRequestsQuery request, CancellationToken cancellationToken)
         {
-            try
+            var response = await this.repository.GetAllRequests();
+
+            if (response is HttpStatusCode code)
             {
-                var response = await this.repository.GetAllRequests();
-    
-                if(response.GetType() == typeof(HttpStatusCode))
-                {
-                    statusCodeHandler.HandleStatusCode((HttpStatusCode) response);
-                }
-    
-                return (IEnumerable<RequestDetailsDto>) response;
+                statusCodeHandler.HandleStatusCode(code);
             }
-            catch (ApiResponseException)
-            {
-                throw;
-            }
+
+            return (IEnumerable<RequestDetailsDto>)response;
 
         }
     }

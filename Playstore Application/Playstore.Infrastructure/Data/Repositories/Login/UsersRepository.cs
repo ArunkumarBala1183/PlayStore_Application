@@ -10,11 +10,9 @@ namespace Playstore.Core.Data.Repositories
     public class UsersRepository : Repository<Users>, IUsersRepository
     {
         private readonly DatabaseContext _context;
-        //private readonly DbSet<Users> _dbSet;
-        public UsersRepository(DatabaseContext context) : base(context)
+        public UsersRepository(DatabaseContext context ) : base(context)
         {
             _context = context;
-            // _dbSet = _context.Set<Users>();
         }
         public async Task<object> GetAll(Guid id)
         {
@@ -27,27 +25,22 @@ namespace Playstore.Core.Data.Repositories
 
             return HttpStatusCode.NoContent;
         }
-        // public async Task<Users> GetByEmailWithRolesAsync(Guid id)
-        // {
-        //     return await _context.Users  // Include the User entity if needed
-        //         .Include(uc => uc.UserRoles)
-        //             .ThenInclude(ur => ur.Role)
-        //         .FirstOrDefaultAsync(x => x.UserId == id);
-        // }
-
-        //public IUsersRepository Users => new UsersRepository(_context);
 
         public async Task CommitAsync()
         {
             await _context.SaveChangesAsync();
         }
-        public async Task<Users> GetByEmailId(string emailId)
+        public async Task<Users?> GetByEmailId(string emailId)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.EmailId == emailId);
+            return await _context.Users.FirstOrDefaultAsync(mailid => mailid.EmailId == emailId);
+
         }
-        public async Task<Users> GetByPhoneNumber(string mobileNumber)
+
+        public async Task<Users?> GetByPhoneNumber(string mobileNumber)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.MobileNumber == mobileNumber);
+            return await _context.Users.FirstOrDefaultAsync(number => number.MobileNumber == mobileNumber);
+            
         }
+        
     }
 }

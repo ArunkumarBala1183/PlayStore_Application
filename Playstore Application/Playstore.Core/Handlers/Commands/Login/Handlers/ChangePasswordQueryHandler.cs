@@ -1,25 +1,26 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Providers.Handlers.Queries;
- 
-public class ChangePasswordQueryHandler : IRequestHandler<ChangePasswordQuery,string>
+
+namespace Playstore.Providers.Handlers.Commands
 {
-    private readonly IPasswordHasher<object> passwordHasher;
-    private readonly IUserCredentialsRepository userCredentialsRepository;
- 
-    public ChangePasswordQueryHandler(IPasswordHasher<object> passwordHasher,IUserCredentialsRepository userCredentialsRepository)
+    public class ChangePasswordQueryHandler : IRequestHandler<ChangePasswordQuery, bool>
     {
-        this.passwordHasher=passwordHasher;
-        this.userCredentialsRepository=userCredentialsRepository;
-    }
- 
-    public async Task<string> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
-    {
- 
-        string hashedPassword=this.passwordHasher.HashPassword(null,request.password);
-       return await this.userCredentialsRepository.ChangePassword(request.userId,hashedPassword);
-       
+        private readonly IPasswordHasher<object> passwordHasher;
+        private readonly IUserCredentialsRepository userCredentialsRepository;
+
+        public ChangePasswordQueryHandler(IPasswordHasher<object> passwordHasher, IUserCredentialsRepository userCredentialsRepository)
+        {
+            this.passwordHasher = passwordHasher;
+            this.userCredentialsRepository = userCredentialsRepository;
+        }
+
+        public async Task<bool> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
+        {
+
+            string hashedPassword = passwordHasher.HashPassword(userCredentialsRepository, request.Password);
+            return await userCredentialsRepository.ChangePassword(request.UserId, hashedPassword);
+
+        }
     }
 }
- 

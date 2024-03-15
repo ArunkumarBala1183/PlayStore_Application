@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { Guid } from 'guid-typescript';
 import { DownloadedAppsInfo } from 'src/app/interface/user';
 import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
@@ -10,10 +12,13 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class MyDownloadsComponent implements OnInit {
 
-  downloadedApps!: DownloadedAppsInfo[]
-  isDownloaded : boolean = false;
 
-  constructor(private service : UserService , private loginService : LoginService)
+
+
+
+  downloadedApps!: DownloadedAppsInfo[]
+
+  constructor(private router: Router,private service : UserService , private loginService : LoginService)
   {
 
   }
@@ -22,12 +27,7 @@ export class MyDownloadsComponent implements OnInit {
     this.getAppDownloads()
   }
 
-  apps = [
-  
-    { name: 'Instagram', rating: '4.3', category: 'Social', imageUrl: 'https://cdn-icons-png.flaticon.com/128/1409/1409946.png' },
-    { name: 'Whatsapp', rating: '4.5', category: 'Social', imageUrl: 'https://cdn-icons-png.flaticon.com/128/3536/3536445.png' },
-    { name: 'Twitter', rating: '2.1', category: 'social', imageUrl: 'https://cdn-icons-png.flaticon.com/128/3256/3256013.png' },
-  ]
+
 
   getAppDownloads()
   {
@@ -37,12 +37,17 @@ export class MyDownloadsComponent implements OnInit {
     .subscribe({
       next : response =>{
         this.downloadedApps = response
-        this.isDownloaded = true
       },
       error : error => {
-        this.isDownloaded = false
+        this.downloadedApps = []
         console.log(error)
       }
     })
+  }
+  public redirectTospecificApp(fileid: Guid) {
+    console.log(fileid);
+    
+    this.router.navigate(['/admin/downloadPage', fileid])
+    
   }
 }
