@@ -18,7 +18,7 @@ namespace Playstore.Core.Data.Repositories.Admin
         {
             try
             {
-                var logDetails = await this.database.AppLogs.ToListAsync();
+                var logDetails = await this.database.AppLogs.OrderByDescending(time => time.TimeStamp).ToListAsync();
     
                 if(logDetails.Any())
                 {

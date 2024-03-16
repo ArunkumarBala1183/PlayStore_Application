@@ -29,7 +29,9 @@ export class UserDownloadsComponent implements OnInit {
           });
   }
   public redirectTospecificApp(fileid: Guid) {
-    console.log(fileid);
-    this.router.navigate(['/user/specificApp', fileid])
+    // console.log(fileid);
+    // this.router.navigate(['/user/specificApp', fileid])
+    this.services.sendAppId(fileid);
+    this.router.navigate(['/user/specific-app'])
   }
 }

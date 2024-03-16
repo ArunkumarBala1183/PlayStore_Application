@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
             // console.log(response.accessToken);
             const accessToken = response.accessToken;
             // console.log(accessToken);
-            localStorage.setItem('accessToken', accessToken);
+            sessionStorage.setItem('accessToken', accessToken);
             this.toastr.success('Login Successful');
             const role = this.getRole();
             this.loginService.getUserId();

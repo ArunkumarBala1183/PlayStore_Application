@@ -31,11 +31,12 @@ export class SpecificAppComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      const appId: Guid = params['appId'];
+    // this.route.params.subscribe((params) => {
+    //   const appId: Guid = params['appId'];
+      const appId=this.service.getAppId();
       const userId =  this.loginService.getUserId()
       this.getSpecificApp(appId , userId)
-    });
+    // });
   }
 
   getSpecificApp(appId : Guid , userId : Guid)
