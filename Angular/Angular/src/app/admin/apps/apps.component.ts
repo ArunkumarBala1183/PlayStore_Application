@@ -15,13 +15,13 @@ import { UserService } from 'src/app/services/user.service';
 export class AppsComponent implements OnInit{
   menu = false;
 
-  appDetails: ListApps[] | undefined
+  appDetails!: ListApps[]
   searchTerm: string = '';
  
 
 
 
-  constructor(private service: AppInfoService, private route: Router, private loginService : LoginService) 
+  constructor(private service: AppInfoService, private route: Router, private loginService : LoginService,private userService:UserService) 
   {
       
   }
@@ -44,7 +44,9 @@ export class AppsComponent implements OnInit{
 
   getDownloadPage(appId : Guid)
   {
-    this.route.navigate(["admin/downloadPage" , appId]);
+    this.userService.sendAppId(appId);
+    this.route.navigate(['admin/download-page'])
+    // this.route.navigate(["admin/downloadPage" , appId]);
   }
 
   getAllApps() {
@@ -55,6 +57,7 @@ export class AppsComponent implements OnInit{
           this.appDetails = response.body as ListApps[]
         },
         error: error => {
+          this.appDetails = []
           console.log(error)
         }
       })

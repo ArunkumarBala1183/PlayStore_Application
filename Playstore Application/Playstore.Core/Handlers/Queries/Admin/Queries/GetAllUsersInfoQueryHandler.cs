@@ -18,21 +18,14 @@ namespace Playstore.Providers.Handlers.Queries.Admin
         }
         public async Task<IEnumerable<UserInfoDto>> Handle(GetAllUsersInfoQuery request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var response = await this.repository.ViewAllUsers();
+            var response = await this.repository.ViewAllUsers();
 
-                if (response.GetType() == typeof(HttpStatusCode))
-                {
-                    statusCodeHandler.HandleStatusCode((HttpStatusCode)response);
-                }
-
-                return (IEnumerable<UserInfoDto>)response;
-            }
-            catch (ApiResponseException)
+            if (response is HttpStatusCode code)
             {
-                throw;
+                statusCodeHandler.HandleStatusCode(code);
             }
+
+            return (IEnumerable<UserInfoDto>)response;
         }
     }
 }

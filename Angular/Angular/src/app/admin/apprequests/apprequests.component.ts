@@ -2,6 +2,7 @@ import { Component , OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { Apprequests } from 'src/app/interface/apprequests';
 import { AppRequestsService } from 'src/app/services/app-requests.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-apprequests',
@@ -11,9 +12,9 @@ import { AppRequestsService } from 'src/app/services/app-requests.service';
 
 export class ApprequestsComponent implements OnInit {
 
-  appRequests : Apprequests[] | undefined 
+  appRequests! : Apprequests[]
   
-  constructor(private router: Router , private service : AppRequestsService){}
+  constructor(private router: Router , private service : AppRequestsService,private userservice:UserService){}
   
   
   ngOnInit(): void {
@@ -29,6 +30,7 @@ export class ApprequestsComponent implements OnInit {
           this.appRequests = response.body as Apprequests[]
         },
         error: error => {
+          this.appRequests = []
           console.log(error)
         }
       })
@@ -36,8 +38,8 @@ export class ApprequestsComponent implements OnInit {
   
 
   viewRequest(appId : string){
-
-    this.router.navigate(["admin/requestdetails", appId]) 
+    this.userservice.sendAppId(appId);
+    this.router.navigate(["admin/request-details"]) 
    }
 
 

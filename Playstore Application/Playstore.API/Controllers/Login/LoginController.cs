@@ -219,7 +219,7 @@ namespace Playstore.Controllers
             }
         }
         [HttpPatch("changePassword")]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordQuery command)
         {

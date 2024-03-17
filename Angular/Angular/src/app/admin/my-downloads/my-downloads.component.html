@@ -1,4 +1,4 @@
-<div class="flex flex-col items-center">
+<div class="flex flex-col items-center md:mr-32">
   <div class="md:ml-40 ml-8 underline">
     <h2>MY DOWNLOADS</h2>
   </div>
@@ -6,22 +6,22 @@
   <div *ngFor="let app of downloadedApps"
     class="mt-5  md:ml-40  w-72 flex items-center p-4 rounded-md shadow-md bg-white">
     <button (click)="redirectTospecificApp(app.appId)">
-      <div class="flex justify-between">
+      <div class="flex justify-between items-center">
     <div>
       <img src="data:image/png;base64,{{app.logo}}" alt="logo" class="h-20 w-20 ">
     </div>
-    <div class="ml-4">
-      <h2 class="px-1">{{app.fileName}}</h2>
+    <div class="ml-4 app-info-container">
+     <div class="mr-5 items-start"> <h2 class="justify-items-start">{{app.fileName}}</h2></div>
       <div class="flex items-center">
         <p class="mr-2">{{app.rating | number : '1.1-1' }}</p>
-        <img src="https://cdn-icons-png.flaticon.com/128/2893/2893811.png" class="h-4  mb-3 mr-2">
+        <img src="https://cdn-icons-png.flaticon.com/128/2893/2893811.png" alt="logo" class="h-4  mb-3 mr-2">
         <p>| {{app.category}}</p>
 
       </div>
     </div>
   </div></button>
   </div>
-  <div *ngIf="!isDownloaded" class="text-3xl text-red-900 font-bold flex justify-center mt-36 ml-44">
+  <div *ngIf="!(downloadedApps.length > 0)" class="text-3xl text-red-900 font-bold flex justify-center mt-36 ml-44">
     No Records Found
   </div>
 </div>

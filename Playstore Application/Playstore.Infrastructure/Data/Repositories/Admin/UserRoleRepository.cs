@@ -64,7 +64,7 @@ namespace Playstore.Core.Data.Repositories.Admin
 
             if (developerDetails != null)
             {
-                var developerRole = developerDetails.UserRoles.Where(id => id.RoleId != role.DeveloperId).FirstOrDefault();
+                var developerRole = developerDetails.UserRoles.FirstOrDefault(id => id.RoleId != role.DeveloperId);
                 if (developerRole != null)
                 {
                     developerRole.RoleId = role.DeveloperId;

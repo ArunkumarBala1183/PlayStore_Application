@@ -1,11 +1,13 @@
 using System.Net;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO.AppInfo;
 using Playstore.Migrations;
+using Serilog;
 
 namespace Playstore.Core.Data.Repositories
 {
@@ -13,11 +15,14 @@ namespace Playstore.Core.Data.Repositories
     {
         private readonly DatabaseContext _database;
         private readonly IMapper _mapper;
+        private readonly ILogger logger;
 
-        public AppInfoRespository(DatabaseContext database , IMapper mapper)
+        public AppInfoRespository(DatabaseContext database , IMapper mapper , IHttpContextAccessor httpContext)
         {
             this._database = database;
             this._mapper = mapper;
+            logger = Log.ForContext("userId" , httpContext.HttpContext?.Items["userId"]?.ToString())
+                        .ForContext("Location" , typeof(AppInfoRespository).Name);
         }
 
         public async Task<HttpStatusCode> RemoveApp(Guid id)
@@ -31,18 +36,23 @@ namespace Playstore.Core.Data.Repositories
                     this._database.AppInfo.Remove(existedData);
     
                     await this._database.SaveChangesAsync();
-    
+                    
+                    logger.Information($"{existedData.Name} Deleted App Successfully in Database");
+
                     return HttpStatusCode.NoContent;
                 }
-    
+
+                logger.Information($"AppId : {id} Not Found in Database");
                 return HttpStatusCode.NotFound;
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , "Service Unavailable Error : {error}" , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , "Internal Server Error : {error}" , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
@@ -56,6 +66,7 @@ namespace Playstore.Core.Data.Repositories
                 .Include(review => review.AppReview)
                 .Include(downloads => downloads.AppDownloads)
                 .Where(status => status.Status == RequestStatus.Approved)
+                .AsSplitQuery()
                 .ToListAsync();
     
                 if (appDetails != null && appDetails.Count > 0)
@@ -73,7 +84,7 @@ namespace Playstore.Core.Data.Repositories
                         appInfoDto.Rating = this.CalculateAverageRatings((List<AppReview>)appInfo.AppReview);
                         appInfoDto.Downloads = appInfo.AppDownloads.Count;
 
-                        if(appInfo.AppDownloads.Where(id => id.UserId == userId).Any())
+                        if(appInfo.AppDownloads.Any(id => id.UserId == userId))
                         {
                             appInfoDto.UserDownloaded = true;
                         }
@@ -84,20 +95,24 @@ namespace Playstore.Core.Data.Repositories
     
                         appDetailsDto[i] = appInfoDto;
                     }
-    
+                    logger.Information("Apps Fetched from Database");
+                
                     return appDetailsDto;
                 }
                 else
                 {
+                    logger.Information("No Apps Found in Database");
                     return HttpStatusCode.NotFound;
                 }
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error ,"Service Unavailable Error : {error}" , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error ,"Internal Server Error : {error}" , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
@@ -113,19 +128,23 @@ namespace Playstore.Core.Data.Repositories
     
                 if (appDetails != null)
                 {
+                    logger.Information($"Apps Downloaded by UserId - {userId} had Fetched");
                     return HttpStatusCode.Found;
                 }
                 else
                 {
+                    logger.Information($"No Apps Downloaded by UserId - {userId}");
                     return HttpStatusCode.NotFound;
                 }
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , "Service Unavailable Error : {error}" , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , "Internal Server Error : {error}" , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }

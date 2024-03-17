@@ -10,10 +10,5 @@ namespace Playstore.Infrastructure.Data.Repositories
         public AppRepository(DatabaseContext context) : base(context)
         {
         }
-
-        public void AppDetails()
-        {
-            Console.WriteLine("App Details");
-        }
     }
 }

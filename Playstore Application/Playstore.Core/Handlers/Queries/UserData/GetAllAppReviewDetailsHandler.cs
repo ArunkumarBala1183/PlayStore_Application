@@ -21,17 +21,14 @@ namespace Playstore.Providers.Handlers.Queries.UserData
     public class GetAllAppReviewDetailsHandler : IRequestHandler<GetAllAppReviewDetails, IEnumerable<AppReviewDetailsDTO>>
     {
         private readonly IUnitOfWork _repository;
-        private readonly IMapper _mapper;
 
         public GetAllAppReviewDetailsHandler(IUnitOfWork repository, IMapper mapper)
         {
             _repository = repository;
-            _mapper = mapper;
         }
 
         public async Task<IEnumerable<AppReviewDetailsDTO>> Handle(GetAllAppReviewDetails request, CancellationToken cancellationToken)
         {
-            // throw new NotImplementedException();
             var app = await _repository.AppReview.GetReview(request.AppId);
 
             if (app == null)

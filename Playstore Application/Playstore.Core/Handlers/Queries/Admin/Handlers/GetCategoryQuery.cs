@@ -5,10 +5,10 @@ namespace Playstore.Providers.Handlers.Queries.Admin
 {
     public class GetCategoryQuery : IRequest<CategoryUpdateDto>
     {
-        public Guid id;
+        public Guid Id { get; set; }
         public GetCategoryQuery(Guid id)
         {
-            this.id = id;
+            this.Id = id;
         }   
     }
 }

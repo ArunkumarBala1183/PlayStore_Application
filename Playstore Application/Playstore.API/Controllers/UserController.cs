@@ -51,7 +51,7 @@ namespace Playstore.Controllers
             try
             {
                 var command = new CreateUserCommand(model);
-                var response = await _mediator.Send(command);
+                await _mediator.Send(command);
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Authentication:Jwt:Secret"));
                 var tokenDescriptor = new SecurityTokenDescriptor
@@ -68,7 +68,6 @@ namespace Playstore.Controllers
                     user = model,
                     token = tokenHandler.WriteToken(token)
                 });
-                //return StatusCode((int)HttpStatusCode.Created, response);
             }
             catch (InvalidRequestBodyException ex)
             {

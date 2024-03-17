@@ -19,6 +19,7 @@ using Playstore.Providers.Handlers.Queries;
 using Playstore.Contracts.Data.Repositories.Admin;
 using Playstore.Infrastructure.Data.Repositories;
 using Playstore.Infrastructure.Data;
+using Playstore.Migrations.Scaffold;
 
 namespace Playstore.Infrastructure
 {
@@ -46,15 +47,18 @@ namespace Playstore.Infrastructure
             .AddTransient<IValidator<PasswordResetDTO>, PasswordResetDTOValidator>()
             .AddValidatorsFromAssemblyContaining<PasswordResetDTOValidator>()
             .AddScoped<IUserCredentialsRepository, UserCredentialsRepository>()
-            .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
+            .AddTransient<IApplicationLogsRepository , ApplicationLogsRepository>();
         }
 
         private static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
         {
-            return services.AddSqlServer<DatabaseContext>(configuration.GetConnectionString("SqlServerConnection"), (options) =>
+            return services.AddSqlServer<DatabaseContext>(configuration.GetConnectionString("SqlServerConnection"), options =>
             {
                 options.MigrationsAssembly("Playstore.Migrations");
+                options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
             })
+            .AddSqlServer<LogDbContext>(configuration.GetConnectionString("SqlServerConnection"))
             .Configure<RoleConfig>(configuration.GetSection("RoleConfig"));
         }
 

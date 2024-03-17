@@ -29,7 +29,7 @@ namespace Playstore.Core.Data.Repositories.StatusCode
                 default:
 
                 throw new ApiResponseException("Something Went Wrong");
-            };
+            }
         }
     }
 }

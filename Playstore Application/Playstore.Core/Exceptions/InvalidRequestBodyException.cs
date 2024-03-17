@@ -2,6 +2,6 @@
 {
     public class InvalidRequestBodyException : Exception
     {
-        public string[] Errors { get; set; }
+        public string[]? Errors { get; set; }
     }
 }

@@ -23,12 +23,10 @@ namespace Playstore.Infrastructure.Data.Repositories
             {
                 var userReview = response.Select(obj => 
                 {
-                    var users = this.databaseContext.Users.Where(Userobj => Userobj.UserId == obj.UserId).ToList();
                     return new AppReviewDetailsDTO
                     {
                         AppId = obj.AppId,
                         Username = response.Select(obj => obj.Users.Name).ToList(),
-                        // Commands = response.GroupBy(obj => obj.UserId).ToDictionary(obj => obj.Key, obj => obj.Select(obj => obj.Comment).ToList())
                         Commands = response.Select(obj => obj.Comment).ToList(),
                         Ratings = response.Select(obj => obj.Rating).ToList()
                     };

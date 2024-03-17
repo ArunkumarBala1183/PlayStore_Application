@@ -5,10 +5,10 @@ namespace Playstore.Providers.Handlers.Queries.Admin
 {
      public class GetRequestedAppDetailsQuery : IRequest<RequestAppInfoDto>
     {
-        public Guid appId;
+        public Guid AppId {get ; set; }
         public GetRequestedAppDetailsQuery(Guid appId)
         {
-            this.appId = appId;
+            this.AppId = appId;
         }
     }
 }

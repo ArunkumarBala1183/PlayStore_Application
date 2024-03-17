@@ -1,9 +1,4 @@
-using System.Linq;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO;
@@ -28,9 +23,9 @@ namespace Playstore.Infrastructure.Data.Repositories
             var AppRating=await this.databaseContext.AppReviews.Where(obj=>obj.AppId==id).ToListAsync();
             var Value=await this.databaseContext.AppDownloads.Where(obj=>obj.AppId==id).ToListAsync();
             var AppDownloadCount=await databaseContext.AppDownloads.Where(obj=>obj.UserId==userId&&obj.AppId==id).ToListAsync();
-            int Count=Value.Count();
-            int Totalvalue=response.Count();
-            int ParticularAppDownloadCount=AppDownloadCount.Count();
+            int Count=Value.Count;
+            int Totalvalue=response.Count;
+            int ParticularAppDownloadCount=AppDownloadCount.Count;
             
 
             if(response.Any())

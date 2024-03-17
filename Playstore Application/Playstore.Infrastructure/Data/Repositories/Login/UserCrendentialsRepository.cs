@@ -15,7 +15,6 @@ namespace Playstore.Core.Data.Repositories
         }
         public async Task<bool> UpdateCredentials(UserCredentials userCredentials)
         {
-
             _context.UserCredentials.Update(userCredentials);
             await _context.SaveChangesAsync();
 

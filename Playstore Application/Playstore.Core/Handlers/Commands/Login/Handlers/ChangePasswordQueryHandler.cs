@@ -1,34 +1,26 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
-using Playstore.Providers.Handlers.Queries;
- 
-public class ChangePasswordQueryHandler : IRequestHandler<ChangePasswordQuery,bool>
+
+namespace Playstore.Providers.Handlers.Commands
 {
-    private readonly IPasswordHasher<UserCredentials> passwordHasher;
-    private readonly IUserCredentialsRepository userCredentialsRepository;
- 
-    public ChangePasswordQueryHandler(IPasswordHasher<UserCredentials> passwordHasher,IUserCredentialsRepository userCredentialsRepository)
+    public class ChangePasswordQueryHandler : IRequestHandler<ChangePasswordQuery, bool>
     {
-        this.passwordHasher=passwordHasher;
-        this.userCredentialsRepository=userCredentialsRepository;
-    }
- 
-    public async Task<bool> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
-    {
- 
-        var userCredentials = await this.userCredentialsRepository.GetByIdAsync(request.userId);
-        var hashedPassword = passwordHasher.VerifyHashedPassword(userCredentials, userCredentials.Password, request.password);
-        if(hashedPassword==PasswordVerificationResult.Failed)
+        private readonly IPasswordHasher<object> passwordHasher;
+        private readonly IUserCredentialsRepository userCredentialsRepository;
+
+        public ChangePasswordQueryHandler(IPasswordHasher<object> passwordHasher, IUserCredentialsRepository userCredentialsRepository)
         {
-            var newHashedPassword = passwordHasher.HashPassword(null,request.password);
-            return await this.userCredentialsRepository.ChangePassword(request.userId,newHashedPassword);
+            this.passwordHasher = passwordHasher;
+            this.userCredentialsRepository = userCredentialsRepository;
         }
-        else{
-            return false;
+
+        public async Task<bool> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
+        {
+
+            string hashedPassword = passwordHasher.HashPassword(userCredentialsRepository, request.Password);
+            return await userCredentialsRepository.ChangePassword(request.UserId, hashedPassword);
+
         }
-       
     }
 }
- 

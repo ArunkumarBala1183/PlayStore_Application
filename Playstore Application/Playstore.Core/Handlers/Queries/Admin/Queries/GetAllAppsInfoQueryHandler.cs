@@ -1,8 +1,10 @@
 using System.Net;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO.AppInfo;
 using Playstore.Core.Exceptions;
+using Serilog;
 
 namespace Playstore.Providers.Handlers.Queries.Admin
 {
@@ -10,29 +12,23 @@ namespace Playstore.Providers.Handlers.Queries.Admin
     {
         private readonly IAppInfoRepository _repository;
         private readonly IStatusCodeHandlerRepository statusCodeHandler;
-        public GetAllAppsInfoQueryHandler(IAppInfoRepository repository , IStatusCodeHandlerRepository statusCodeHandler)
+        private readonly IHttpContextAccessor httpContext;
+        public GetAllAppsInfoQueryHandler(IAppInfoRepository repository , IStatusCodeHandlerRepository statusCodeHandler , IHttpContextAccessor httpContext)
         {
             this._repository = repository;
             this.statusCodeHandler = statusCodeHandler;
+            this.httpContext = httpContext;
         }
         public async Task<IEnumerable<ListAppInfoDto>> Handle(GetAllAppsInfoQuery request, CancellationToken cancellationToken)
         {
-            try
+            var response = await this._repository.ViewAllApps(request.UserId);
+
+            if (response is HttpStatusCode code)
             {
-                var response = await this._repository.ViewAllApps(request.UserId);
-    
-                if(response.GetType() == typeof(HttpStatusCode))
-                {
-                    statusCodeHandler.HandleStatusCode((HttpStatusCode) response);
-                }
-    
-                return (IEnumerable<ListAppInfoDto>) response;
+                statusCodeHandler.HandleStatusCode(code);
             }
-            catch (ApiResponseException)
-            {
-                
-                throw;
-            }
+
+            return (IEnumerable<ListAppInfoDto>)response;
         }
     }
 }

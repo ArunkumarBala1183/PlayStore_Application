@@ -4,15 +4,18 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Playstore.ActionFilters;
 using Playstore.Contracts.DTO.AppDownloads;
 using Playstore.Contracts.DTO.AppInfo;
 using Playstore.Contracts.DTO.TotalDownloads;
 using Playstore.Core.Exceptions;
 using Playstore.Providers.Handlers.Commands;
 using Playstore.Providers.Handlers.Queries.Admin;
+using Serilog;
 
 namespace Playstore.Controllers.Admin
 {
+    [ServiceFilter(typeof(ControllerFilter))]
     [ApiController]
     [Route("[controller]")]
     public class AppInfoController : ControllerBase
@@ -31,7 +34,6 @@ namespace Playstore.Controllers.Admin
             try
             {
                 var response = await this._mediator.Send(allApps);
-
                 return Ok(response);
             }
             catch (ApiResponseException error)

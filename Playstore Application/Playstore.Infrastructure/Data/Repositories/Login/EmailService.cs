@@ -37,8 +37,9 @@ public class EmailService : IEmailService
             smtp.Send(message);
         }
         await Task.Delay(0);
+        Console.WriteLine($"Sending OTP to {email}: {otp}");
     }
-    public async Task SendUserCredentialsAsync(string email, string name, string mobileNumber, DateOnly dateOfBirth)
+    public async Task SendUserCredentialsAsync(string email, string name, string mobileNumber,DateOnly dateOfBirth)
     {
         var subject = _configuration.Registersubject;
         var body = $"Dear {name},\n\nCongratulations! You have successfully registered on our platform.\n\nYour credentials:\nEmail: {email}\nDateOfBirth: {dateOfBirth}\nMobile Number: {mobileNumber}\n\nThank you for joining!";
@@ -63,6 +64,6 @@ public class EmailService : IEmailService
             smtp.Send(message);
         }
         await Task.Delay(0);
+        Console.WriteLine($"Sending user credentials email to {email}");
     }
-
 }

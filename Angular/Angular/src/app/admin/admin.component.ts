@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { ToastrService } from 'ngx-toastr';
@@ -9,12 +9,16 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent {
+  
 
   constructor(private router: Router, private loginService:LoginService,private toastr:ToastrService){}
-  menu = false;
+  menu:boolean = true;
+  
+
+
+  
   show()
   {
-  
     this.menu=!this.menu;
   }
 

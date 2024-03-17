@@ -1,4 +1,4 @@
-<div>
+ <div class="md:w-[70%] md:ml-40">
     <div class="md:flex md:flex-row justify-between flex-col md:ml-16 md:p-0 p-2">
         <div class="mt-2 md:ml-0 ml-16">
             <input type="text" placeholder="search by username"
@@ -25,7 +25,7 @@
     </div>
  
     <!-- table view -->
-    <div *ngIf="isLogFound && appLogDetails.length > 0; else noLogs" class="overflow-x-auto mt-8 md:ml-48 max-w-full">
+    <div *ngIf="isLogFound && appLogDetails.length > 0; else noLogs" class="md:overflow-x-auto overflow-x-scroll  mt-8 md:ml-56 max-w-full">
         <table class="border border-black shadow-lg">
             <thead class="bg-black text-white">
                 <tr>
@@ -44,9 +44,9 @@
         </table>
         <div class="flex ">
             <nav class="flex items-center flex-col flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
-               <div class="ml-24"> <span class="text-sm font-normal text-gray-900 dark:text-gray-900 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+             <div class="flex flex-col">  <div class="ml-24"> <span class="text-sm font-normal text-gray-900 dark:text-gray-900 mb-4 md:mb-0 block w-full md:inline md:w-auto">
                     Showing <span class="font-semibold text-gray-900 dark:text-white">&nbsp;{{ currentPageStartIndex() }}&nbsp;-&nbsp;{{ currentPageEndIndex() }}</span> &nbsp; of  &nbsp; <span class="font-semibold text-gray-900 ">{{ values.length }}</span> &nbsp; Entries
-                </span></div>
+                </span></div><br>
                 <div class="ml-1 mt-2 mb-3"><ul class="flex -space-x-px rtl:space-x-reverse text-sm h-8">
                     <li>
                         <a routerLink="userStoryList" (click)="goToPage(currentPage - 1)"  class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
@@ -62,7 +62,7 @@
                         <!-- <button (click)="goToPage(currentPage + 1)" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-900 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-300 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</button> -->
                     </li>
                 </ul>
-                </div>
+                </div></div>
             </nav>
         </div>
  

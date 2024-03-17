@@ -24,17 +24,19 @@ export class SpecificAppComponent implements OnInit {
     private formBuilder: FormBuilder,
     private loginService : LoginService,
     private toastr : ToastrService
-  ) {}
-  ngOnInit(): void {
+  ) {
     this.reviewForm = this.formBuilder.group({
       commands: ['', Validators.required],
       rating: ['', Validators.required],
     });
-    this.route.params.subscribe((params) => {
-      const appId: Guid = params['appId'];
+  }
+  ngOnInit(): void {
+    // this.route.params.subscribe((params) => {
+    //   const appId: Guid = params['appId'];
+      const appId=this.service.getAppId();
       const userId =  this.loginService.getUserId()
       this.getSpecificApp(appId , userId)
-    });
+    // });
   }
 
   getSpecificApp(appId : Guid , userId : Guid)
@@ -88,8 +90,9 @@ export class SpecificAppComponent implements OnInit {
   }
 
   public Downloadfile() {
-    this.route.params.subscribe((params) => {
-      const appId: Guid = params['appId'];
+    // this.route.params.subscribe((params) => {
+    //   const appId: Guid = params['appId'];
+    const appId=this.service.getAppId();
       const userId = this.loginService.getUserId();
       this.service.PostAppFile(appId, userId).subscribe({
         next: (response) => {
@@ -113,13 +116,14 @@ export class SpecificAppComponent implements OnInit {
           }
         },
       });
-    });
+    
   }
 
   public onSubmit() {
     if (this.reviewForm.valid) {
       const formData = this.reviewForm.value;
-      const appId = this.route.snapshot.params['appId'];
+      // const appId = this.route.snapshot.params['appId'];
+      const appId=this.service.getAppId();
       const userId = this.loginService.getUserId();
       formData.appId = appId;
       formData.userId = userId;
