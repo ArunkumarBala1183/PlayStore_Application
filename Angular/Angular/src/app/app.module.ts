@@ -29,7 +29,7 @@ import { AdminModule } from './admin/admin.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-   AdminModule,
+    AdminModule,
     RouterModule,
     SharedModule,
     FormsModule,

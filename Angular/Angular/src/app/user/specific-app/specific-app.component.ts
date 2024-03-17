@@ -24,13 +24,12 @@ export class SpecificAppComponent implements OnInit {
     private formBuilder: FormBuilder,
     private loginService : LoginService,
     private toastr : ToastrService
-  ) {
+  ) {}
+  ngOnInit(): void {
     this.reviewForm = this.formBuilder.group({
       commands: ['', Validators.required],
       rating: ['', Validators.required],
     });
-  }
-  ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const appId: Guid = params['appId'];
       const userId =  this.loginService.getUserId()
@@ -158,7 +157,7 @@ export class SpecificAppComponent implements OnInit {
   appReview: AppReviewsInfo[] = [];
   displayedReviews: any[] = [];
   showAllReviews = false;
-  reviewForm: FormGroup;
+  reviewForm !: FormGroup;
   currentRating = 0;
   stars = Array(5);
   particularDownloadCount = false;

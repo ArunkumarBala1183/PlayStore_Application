@@ -45,7 +45,8 @@ export class ResetPasswordComponent {
           this.isPasswordMatch = true;
         }
         else {
-          this.isPasswordMatch = false;
+         this.isPasswordMatch = false;
+          this.toastr.error('Password Not matched');
         }
       },
       error : error => {
