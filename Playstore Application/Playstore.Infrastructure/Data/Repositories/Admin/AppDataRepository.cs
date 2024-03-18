@@ -7,6 +7,7 @@ using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO.AppData;
 using Playstore.Migrations;
+using Serilog;
 
 namespace Playstore.Core.Data.Repositories.Admin
 {
@@ -15,11 +16,14 @@ namespace Playstore.Core.Data.Repositories.Admin
         private readonly DatabaseContext database;
 
         private readonly IMapper mapper;
+        private readonly ILogger logger;
 
-        public AppDataRepository(DatabaseContext context, IMapper mapper)
+        public AppDataRepository(DatabaseContext context, IMapper mapper , IHttpContextAccessor httpContext)
         {
             this.database = context;
             this.mapper = mapper;
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(AppDataRepository).Name);
         }
 
         public async Task<object> GetAppData(Guid appId)
@@ -30,17 +34,21 @@ namespace Playstore.Core.Data.Repositories.Admin
     
                 if (appDetails != null)
                 {
+                    logger.Information($"{appId} Fetched from Server");
                     return this.mapper.Map<RequestedAppDataDto>(appDetails);
                 }
-    
+
+                logger.Information($"{appId} Not Found in Server");
                 return HttpStatusCode.NotFound;
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error ,error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
@@ -85,18 +93,22 @@ namespace Playstore.Core.Data.Repositories.Admin
                     }
     
                     await this.database.SaveChangesAsync();
+
+                    logger.Information($"{appFile.FileName} has Uploaded in Server");
     
                     return HttpStatusCode.Created;
                 }
-    
+                logger.Information($"{appId} Not Found in Server");
                 return HttpStatusCode.NotFound;
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }

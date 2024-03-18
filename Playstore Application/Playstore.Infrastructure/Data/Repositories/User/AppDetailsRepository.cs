@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
@@ -5,15 +6,19 @@ using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
+using Serilog;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
     public class AppDetailsRepository : Repository<AppInfo>, IAppDetailsRepository
     {
         public readonly DatabaseContext databaseContext;
-        public AppDetailsRepository(DatabaseContext context) : base(context)
+        private readonly ILogger logger;
+        public AppDetailsRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
             this.databaseContext=context;
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(AppDetailsRepository).Name);
         }
 
         public async Task<object> GetAppDetails(Guid id,Guid userId)
@@ -48,9 +53,13 @@ namespace Playstore.Infrastructure.Data.Repositories
                     PublisherName = response.PublisherName,
                     PublishedDate = response.PublishedDate                    
                 });
+                logger.Information($"AppDetails fetched for id {id}");
                 return appinfoDetails;
             }
-             throw new EntityNotFoundException($"No AppInfo found for Id {id}"); 
+
+            var message = $"No AppInfo found for Id {id}";
+            logger.Information(message);
+            throw new EntityNotFoundException(message); 
             
             
         }

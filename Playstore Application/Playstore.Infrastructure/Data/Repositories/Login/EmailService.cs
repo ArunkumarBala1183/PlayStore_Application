@@ -1,15 +1,21 @@
 using System.Net.Mail;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data.EmailConfig;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.DTO;
+using Serilog;
 
 public class EmailService : IEmailService
 {
     private readonly EmailConfig _configuration;
+    private readonly ILogger logger;
 
-    public EmailService(IOptions<EmailConfig> configuration)
+    public EmailService(IOptions<EmailConfig> configuration , IHttpContextAccessor httpContext)
     {
         _configuration = configuration.Value;
+        logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(EmailService).Name);
     }
 
     public async Task SendOtp(string email, string otp)

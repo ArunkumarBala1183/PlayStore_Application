@@ -17,6 +17,7 @@ export class AppliationlogsComponent implements OnInit {
 
   appLogDetails!: ApplicationLogs[]
   isDropdownOpen: boolean = false
+  isLoading=false
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -27,15 +28,18 @@ export class AppliationlogsComponent implements OnInit {
   }
 
   public getAppLogs() {
+    this.isLoading=true
     this.service.getlogDetails()
       .subscribe({
         next: response => {
           this.appLogDetails = response.body as ApplicationLogs[]
           this.appLogSource = new MatTableDataSource<ApplicationLogs>(this.appLogDetails)
           this.appLogSource.paginator = this.paginator
+          this.isLoading=false
         },
         error: error => {
           console.log(error)
+          this.isLoading=false
         }
       })
   }

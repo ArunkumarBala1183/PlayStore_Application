@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Playstore.ActionFilters;
 using Playstore.Contracts.DTO.AppInfo;
 using Playstore.Contracts.DTO.AppPublishRequest;
 using Playstore.Core.Exceptions;
@@ -12,6 +13,7 @@ using Playstore.Providers.Handlers.Queries.Admin;
 
 namespace Playstore.Controllers.Admin
 {
+    [ServiceFilter(typeof(ControllerFilter))]
     [ApiController]
     [Route("[controller]")]
     public class RequestController : ControllerBase
@@ -51,7 +53,7 @@ namespace Playstore.Controllers.Admin
             }
             catch (ApiResponseException error)
             {
-                return StatusCode((int)HttpStatusCode.NotFound, error.Message);
+                return StatusCode((int)HttpStatusCode.NotFound, new {message = error.Message});
             }
         }
 
@@ -74,7 +76,7 @@ namespace Playstore.Controllers.Admin
             }
             catch (ApiResponseException error)
             {
-                return NotFound(error.Message);
+                return NotFound(new {message = error.Message});
             }
         }
     }

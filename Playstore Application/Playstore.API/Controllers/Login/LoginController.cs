@@ -10,10 +10,12 @@ using Playstore.Providers.Handlers.Queries;
 using Microsoft.AspNetCore.Http;
 using Playstore.Core.Data.Repositories;
 using Playstore.Providers.Handlers.Queries.Admin;
+using System.IO;
+using Playstore.ActionFilters;
 using Microsoft.AspNetCore.Authorization;
-
 namespace Playstore.Controllers
 {
+    // [ServiceFilter(typeof(ControllerFilter))]
     [ApiController]
     [Route("[controller]")]
     public class LoginController : ControllerBase
