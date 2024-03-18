@@ -13,7 +13,7 @@ export class ApprequestsComponent implements OnInit {
   appRequests: Apprequests[] = [];
   isLoading: boolean = false;
 
-  constructor(private router: Router, private service: AppRequestsService) { }
+  constructor(private router: Router, private service: AppRequestsService,private userService:UserService) { }
 
   ngOnInit(): void {
     this.getAllRequests();
@@ -35,7 +35,7 @@ export class ApprequestsComponent implements OnInit {
   }
 
   viewRequest(appId : string){
-    this.userservice.sendAppId(appId);
+    this.userService.sendAppId(appId);
     this.router.navigate(["admin/request-details"]) 
    }
 

@@ -74,7 +74,7 @@ export class ChangePasswordComponent implements OnInit{
           if(response.message ==true )
           {
             this.toastr.success('Password Changed');
-            this.router.navigate(['user/user-profile']);
+            this.router.navigate(['admin/profile']);
           }
           else{
             this.toastr.info("Password already Exists")
