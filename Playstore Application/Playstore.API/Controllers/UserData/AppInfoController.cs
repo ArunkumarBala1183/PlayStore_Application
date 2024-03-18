@@ -29,6 +29,8 @@ namespace Playstore.Controllers.UserData
         {
             _mediator = mediator;
         }
+
+        
         [HttpGet("GetUserDetails")]
         [ProducesResponseType(typeof(UsersDetailsDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]

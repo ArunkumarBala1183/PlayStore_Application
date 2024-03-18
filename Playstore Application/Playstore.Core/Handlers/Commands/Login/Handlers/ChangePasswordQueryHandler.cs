@@ -21,7 +21,7 @@ namespace Playstore.Providers.Handlers.Commands
         var hashedPassword = passwordHasher.VerifyHashedPassword(userCredentials, userCredentials.Password, request.Password);
         if(hashedPassword==PasswordVerificationResult.Failed)
         {
-            var newHashedPassword = passwordHasher.HashPassword(null,request.Password);
+            var newHashedPassword = passwordHasher.HashPassword(userCredentials,request.Password);
             return await this.userCredentialsRepository.ChangePassword(request.UserId,newHashedPassword);
         }
         else{

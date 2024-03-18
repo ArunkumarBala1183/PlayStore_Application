@@ -13,35 +13,18 @@ namespace Playstore.Providers.Handlers.Commands
         private readonly IValidator<PasswordResetDTO> _validator;
         private readonly IUserCredentialsRepository _credentialsRepository;
         private readonly IPasswordHasher<UserCredentials> _passwordHasher;
-        private readonly IMediator _mediator;
 
-        public ResetPasswordCommandHandler(IMediator mediator, IUserCredentialsRepository credentialsRepository, IValidator<PasswordResetDTO> validator, IPasswordHasher<UserCredentials> passwordHasher)
+        public ResetPasswordCommandHandler(IUserCredentialsRepository credentialsRepository, IValidator<PasswordResetDTO> validator, IPasswordHasher<UserCredentials> passwordHasher)
         {
             _credentialsRepository = credentialsRepository;
             _passwordHasher = passwordHasher;
             _validator = validator;
-            _mediator = mediator;
         }
         public async Task<bool> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
-            var emailId = request.ResetPasswordEmail;
-            var otp = request.ResetPasswordOTP;
-            var isOtpValid = await ValidateOtp(emailId, otp);
+            PasswordResetDTO validator = request.Model;
 
-            if (!isOtpValid || request.Model == null)
-            {
-                return false;
-            }
-
-            var model = new PasswordResetDTO
-            {
-                EmailId = emailId,
-                Otp = otp,
-                NewPassword = request.Model.NewPassword,
-                ConfirmPassword = request.Model.ConfirmPassword
-            };
-
-            var result = _validator.Validate(model);
+             var result = _validator.Validate(validator);
 
             if (!result.IsValid)
             {
@@ -51,6 +34,8 @@ namespace Playstore.Providers.Handlers.Commands
                     Errors = errors
                 };
             }
+
+            var emailId = request.ResetPasswordEmail;
 
             var userCredentials = await _credentialsRepository.GetByEmailId(emailId);
 
@@ -62,16 +47,8 @@ namespace Playstore.Providers.Handlers.Commands
             userCredentials.Password = _passwordHasher.HashPassword(userCredentials, request.Model.NewPassword); // Hash and save the new password
 
             await _credentialsRepository.UpdateCredentials(userCredentials);
-            emailId = null;
-            otp = null;
             
             return true;
-        }
-
-        private async Task<bool> ValidateOtp(string emailId, string otp)
-        {
-            var command = new ValidateOtpCommand(new ValidateOtpDTO { EmailId = emailId, Otp = otp }, emailId, otp);
-            return await _mediator.Send(command);
         }
     }
 }

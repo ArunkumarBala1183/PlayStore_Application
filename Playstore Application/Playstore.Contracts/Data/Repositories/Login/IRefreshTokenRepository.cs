@@ -4,8 +4,8 @@ namespace Playstore.Contracts.Data.Repositories
 {
     public interface IRefreshTokenRepository : IRepository<RefreshToken>
     {
-        Task StoreRefreshTokenAsync(Guid userId, string refreshToken);
-        Task<RefreshToken> GetRefreshTokenAsync(Guid userId);
+        Task StoreRefreshToken(Guid userId, string refreshToken);
+        Task<RefreshToken> GetRefreshToken(Guid userId);
 
     }
 }
