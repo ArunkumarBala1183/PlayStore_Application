@@ -15,12 +15,19 @@ namespace Playstore.Providers.Handlers.Commands
             this.userCredentialsRepository = userCredentialsRepository;
         }
 
-        public async Task<bool> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
+         public async Task<bool> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
+    {
+        var userCredentials = await this.userCredentialsRepository.GetByIdAsync(request.UserId);
+        var hashedPassword = passwordHasher.VerifyHashedPassword(userCredentials, userCredentials.Password, request.Password);
+        if(hashedPassword==PasswordVerificationResult.Failed)
         {
-
-            string hashedPassword = passwordHasher.HashPassword(userCredentialsRepository, request.Password);
-            return await userCredentialsRepository.ChangePassword(request.UserId, hashedPassword);
-
+            var newHashedPassword = passwordHasher.HashPassword(null,request.Password);
+            return await this.userCredentialsRepository.ChangePassword(request.UserId,newHashedPassword);
         }
+        else{
+            return false;
+        }
+       
+    }
     }
 }

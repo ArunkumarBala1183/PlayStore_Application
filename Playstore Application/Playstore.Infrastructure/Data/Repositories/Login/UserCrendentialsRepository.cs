@@ -38,14 +38,14 @@ namespace Playstore.Core.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ChangePassword(Guid userId, string password)
+        public async Task<bool> ChangePassword(Guid UserId, string Password)
         {
-            var user=await _context.UserCredentials.Where(user=>user.UserId==userId).FirstOrDefaultAsync();
+            var user=await _context.UserCredentials.Where(user=>user.UserId==UserId).FirstOrDefaultAsync();
             if(user != null)
             {
-                user.Password=password;
+                user.Password=Password;
                 _context.UserCredentials.Update(user);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                  return true;
             }
             return false;
