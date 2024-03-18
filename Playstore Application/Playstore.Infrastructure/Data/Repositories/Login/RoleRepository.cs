@@ -17,7 +17,7 @@ namespace Playstore.Core.Data.Repositories
             _configuration = configuration;
         }
     
-        public async Task<List<UserRole>> GetUserRolesAsync(Guid userId)
+        public async Task<List<UserRole>> GetUserRoles(Guid userId)
         {
             return await _context.UserRole
                 .Include(role => role.Role)
@@ -31,10 +31,6 @@ namespace Playstore.Core.Data.Repositories
             return defaultRole != null ? defaultRole.RoleId : Guid.Empty;
         }
 
-        public async Task<Role?> GetByRoleId(Guid roleId)
-        {
-            return await _context.Roles.FirstOrDefaultAsync(role => role.RoleId == roleId);
         
-        }
     }
 }

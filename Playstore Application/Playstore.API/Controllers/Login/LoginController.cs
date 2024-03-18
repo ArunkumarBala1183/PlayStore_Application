@@ -10,7 +10,7 @@ using Playstore.Providers.Handlers.Queries;
 using Microsoft.AspNetCore.Http;
 using Playstore.Core.Data.Repositories;
 using Playstore.Providers.Handlers.Queries.Admin;
-using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Playstore.Controllers
 {
@@ -42,7 +42,7 @@ namespace Playstore.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode(500, new{message = "Internal Server Error"} );
             }
         }
 
@@ -115,15 +115,12 @@ namespace Playstore.Controllers
             try
             {
                 var resetPasswordEmail = _sharedDataService.ResetPasswordEmail;
-                var resetPasswordOTP = _sharedDataService.ResetPasswordOTP;
-
-                var command = new ResetPasswordCommand(resetPasswordDTO, resetPasswordEmail, resetPasswordOTP);
+                var command = new ResetPasswordCommand(resetPasswordDTO, resetPasswordEmail);
                 var isPasswordReset = await _mediator.Send(command);
 
                 if (isPasswordReset)
                 {
-                    HttpContext.Session.Remove("ResetPasswordEmail");
-                    HttpContext.Session.Remove("ResetPasswordOTP");
+                    
                     return Ok(new { Message = "Password reset successful" });
                     
                 }
@@ -211,6 +208,7 @@ namespace Playstore.Controllers
 
         
         // To get new AccessToken when old token Expired
+        [Authorize]
         [HttpPost("refresh-token")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
@@ -250,6 +248,7 @@ namespace Playstore.Controllers
 
 
         // Changes the currentPassword whenever the user/admin wish to
+        [Authorize]
         [HttpPatch("changePassword")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
@@ -273,6 +272,7 @@ namespace Playstore.Controllers
 
 
         // Checks whether the given password is similar to CurrentPassword
+        [Authorize]
         [HttpGet("checkPassword")]
         public async Task<IActionResult> CheckPassword(Guid UserId , string password)
         {

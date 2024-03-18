@@ -14,7 +14,7 @@ namespace Playstore.Core.Data.Repositories
             _context = context;
         }
 
-        public async Task StoreRefreshTokenAsync(Guid userId, string refreshToken)
+        public async Task StoreRefreshToken(Guid userId, string refreshToken)
         {
             var refreshTokenEntity = await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
 
@@ -36,7 +36,7 @@ namespace Playstore.Core.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<RefreshToken?> GetRefreshTokenAsync(Guid userId)
+        public async Task<RefreshToken?> GetRefreshToken(Guid userId)
         {
             return await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
         }
