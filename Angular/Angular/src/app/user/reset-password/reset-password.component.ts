@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
@@ -10,20 +10,25 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss']
 })
-export class ResetPasswordComponent {
+export class ResetPasswordComponent implements OnInit{
 
     
   userId !: Guid;
-  changePasswordForm : FormGroup;
+  changePasswordForm !: FormGroup;
 
   constructor(private formBuilder : FormBuilder, private loginService : LoginService, private service : UserService, private toastr : ToastrService, private router : Router){
-    this.changePasswordForm = this.formBuilder.group({
-      password : ['' , Validators.required],
-      newPassword : ['',[Validators.required]],
-      confirmPassword : ['',Validators.required]
-    })
+    
   }
-
+  ngOnInit(): void {
+    this.initForm();
+  }
+initForm(){
+  this.changePasswordForm = this.formBuilder.group({
+    password : ['' , Validators.required],
+    newPassword : ['',[Validators.required]],
+    confirmPassword : ['',Validators.required]
+  })
+}
   public checkPassword():boolean
   {
     const newPassword = this.changePasswordForm.get('newPassword')?.value;
@@ -46,6 +51,7 @@ export class ResetPasswordComponent {
         }
         else {
           this.isPasswordMatch = false;
+          this.toastr.info('Password doesnot Match')
         }
       },
       error : error => {
@@ -64,7 +70,7 @@ export class ResetPasswordComponent {
           if(response.message ==true )
           {
             this.toastr.success('Password Changed');
-            this.router.navigate(['user/userProfile']);
+            this.router.navigate(['user/user-profile']);
           }
           else{
             this.toastr.info("Password already Exists")

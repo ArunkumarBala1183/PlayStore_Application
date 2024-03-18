@@ -1,5 +1,6 @@
 using System.Net;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
@@ -7,15 +8,19 @@ using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO.AppDownloads;
 using Playstore.Contracts.DTO.TotalDownloads;
 using Playstore.Migrations;
+using Serilog;
 
 namespace Playstore.Core.Data.Repositories.Admin
 {
     public class AppDownloadsRepository : IAppDownloadsRepository
     {
         private readonly DatabaseContext database;
-        public AppDownloadsRepository(DatabaseContext context, IMapper mapper)
+        private readonly ILogger logger;
+        public AppDownloadsRepository(DatabaseContext context, IMapper mapper , IHttpContextAccessor httpContext)
         {
             this.database = context;
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(AppDownloadsRepository).Name);
         }
 
 
@@ -25,6 +30,7 @@ namespace Playstore.Core.Data.Repositories.Admin
             {
                 if (appSearch.FromDate is null && appSearch.DownloadedDate is null && appSearch.AppName is null && appSearch.UserName is null)
                 {
+                    logger.Information("Not a Valid Input");
                     return HttpStatusCode.BadRequest;
                 }
     
@@ -37,17 +43,20 @@ namespace Playstore.Core.Data.Repositories.Admin
     
                 if (appLogs != null && appLogs.Count > 0)
                 {
+                    logger.Information("AppDownloads Records Fetched from Server");
                     return appLogs;
                 }
-
+                logger.Information("No AppDownloads Records Found");
                 return HttpStatusCode.NotFound;
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
@@ -73,18 +82,20 @@ namespace Playstore.Core.Data.Repositories.Admin
                     dates.Add(date.ToString("yyyy-MM-dd"));
                 }
 
-
+                logger.Information("AppDownloads Records Fetched from Server");
                 return new DownloadDetailsDto{
                     count = appCount,
                     Dates = dates
                 };
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }

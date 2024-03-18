@@ -27,8 +27,8 @@ export class UsersComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-
-  constructor(private service : UserService , private router : Router ){}
+  
+  constructor(private service : UserService,private router:Router ){}
 
   ngOnInit() {
      this.getAllUsers();

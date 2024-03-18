@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Apprequests } from 'src/app/interface/apprequests';
 import { AppRequestsService } from 'src/app/services/app-requests.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-apprequests',
@@ -33,7 +34,11 @@ export class ApprequestsComponent implements OnInit {
     });
   }
 
-  viewRequest(appId: string) {
-    this.router.navigate(["admin/requestdetails", appId]);
-  }
+  viewRequest(appId : string){
+    this.userservice.sendAppId(appId);
+    this.router.navigate(["admin/request-details"]) 
+   }
+
+
+
 }

@@ -19,7 +19,7 @@ export class MyDownloadsComponent implements OnInit {
 
   downloadedApps!: DownloadedAppsInfo[]
 
-  constructor(private router: Router,private service : UserService , private loginService : LoginService)
+  constructor(private router: Router,private userservice : UserService , private loginService : LoginService)
   {
 
   }
@@ -35,7 +35,7 @@ export class MyDownloadsComponent implements OnInit {
     this.isLoading=true;
     const userId = this.loginService.getUserId()
 
-    this.service.getDownloadedApps(userId)
+    this.userservice.getDownloadedApps(userId)
     .subscribe({
       next : response =>{
         this.downloadedApps = response
@@ -48,10 +48,10 @@ export class MyDownloadsComponent implements OnInit {
       }
     })
   }
-  public redirectTospecificApp(fileid: Guid) {
-    console.log(fileid);
-    
-    this.router.navigate(['/admin/downloadPage', fileid])
-    
+  public redirectTospecificApp(appId: Guid) {
+    // console.log(fileid);
+    // this.router.navigate(['admin/download-page', fileid])
+      this.userservice.sendAppId(appId);
+      this.router.navigate(['admin/download-page'])
   }
 }

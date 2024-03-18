@@ -47,12 +47,12 @@ namespace Playstore.Core.Data.Repositories
             }
             catch (SqlException error)
             {
-                logger.Error(error , "Service Unavailable Error : {error}" , error.Message);
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
             catch (Exception error)
             {
-                logger.Error(error , "Internal Server Error : {error}" , error.Message);
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
@@ -95,10 +95,9 @@ namespace Playstore.Core.Data.Repositories
     
                         appDetailsDto[i] = appInfoDto;
                     }
-                    logger.Information("Apps Fetched from Database");
 
-                    throw new Exception();
-                   
+                    logger.Information("Apps Fetched from Database");
+                
                     return appDetailsDto;
                 }
                 else
@@ -109,12 +108,12 @@ namespace Playstore.Core.Data.Repositories
             }
             catch (SqlException error)
             {
-                logger.Error(error ,"Service Unavailable Error : {error}" , error.Message);
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
             catch (Exception error)
             {
-                logger.Error(error ,"Internal Server Error : {error}" , error.Message);
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
@@ -141,12 +140,12 @@ namespace Playstore.Core.Data.Repositories
             }
             catch (SqlException error)
             {
-                logger.Error(error , "Service Unavailable Error : {error}" , error.Message);
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
             catch (Exception error)
             {
-                logger.Error(error , "Internal Server Error : {error}" , error.Message);
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }

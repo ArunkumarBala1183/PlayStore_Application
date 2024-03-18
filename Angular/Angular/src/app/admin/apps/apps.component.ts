@@ -22,7 +22,7 @@ export class AppsComponent implements OnInit{
 
 
 
-  constructor(private service: AppInfoService, private route: Router, private loginService : LoginService) 
+  constructor(private service: AppInfoService, private route: Router, private loginService : LoginService,private userService:UserService) 
   {
       
   }
@@ -46,7 +46,9 @@ export class AppsComponent implements OnInit{
 
   getDownloadPage(appId : Guid)
   {
-    this.route.navigate(["admin/downloadPage" , appId]);
+    this.userService.sendAppId(appId);
+    this.route.navigate(['admin/download-page'])
+    // this.route.navigate(["admin/downloadPage" , appId]);
   }
 
   getAllApps() {

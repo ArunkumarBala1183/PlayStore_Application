@@ -27,19 +27,23 @@ isLoading: boolean=false
     private loginService : LoginService,
     private toastr : ToastrService
   ) {
-    this.reviewForm = this.formBuilder.group({
-      commands: ['', Validators.required],
-      rating: ['', Validators.required],
-    });
+   
   }
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      const appId: Guid = params['appId'];
+    // this.route.params.subscribe((params) => {
+    //   const appId: Guid = params['appId'];
+      const appId=this.service.getAppId();
       const userId =  this.loginService.getUserId()
-      this.getSpecificApp(appId , userId)
-    });
+      this.getSpecificApp(appId , userId);
+      this.initForm();
+    // });
   }
-
+initForm(){
+  this.reviewForm = this.formBuilder.group({
+    commands: ['', Validators.required],
+    rating: ['', Validators.required],
+  });
+}
   getSpecificApp(appId : Guid , userId : Guid)
   {
     this.isLoading=true;
@@ -96,8 +100,9 @@ isLoading: boolean=false
   }
 
   public Downloadfile() {
-    this.route.params.subscribe((params) => {
-      const appId: Guid = params['appId'];
+    // this.route.params.subscribe((params) => {
+    //   const appId: Guid = params['appId'];
+    const appId=this.service.getAppId();
       const userId = this.loginService.getUserId();
       this.service.PostAppFile(appId, userId).subscribe({
         next: (response) => {
@@ -121,13 +126,14 @@ isLoading: boolean=false
           }
         },
       });
-    });
+    
   }
 
   public onSubmit() {
     if (this.reviewForm.valid) {
       const formData = this.reviewForm.value;
-      const appId = this.route.snapshot.params['appId'];
+      // const appId = this.route.snapshot.params['appId'];
+      const appId=this.service.getAppId();
       const userId = this.loginService.getUserId();
       formData.appId = appId;
       formData.userId = userId;
@@ -165,7 +171,7 @@ isLoading: boolean=false
   appReview: AppReviewsInfo[] = [];
   displayedReviews: any[] = [];
   showAllReviews = false;
-  reviewForm: FormGroup;
+  reviewForm !: FormGroup;
   currentRating = 0;
   stars = Array(5);
   particularDownloadCount = false;

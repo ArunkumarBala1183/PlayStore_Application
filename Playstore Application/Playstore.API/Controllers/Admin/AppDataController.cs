@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Playstore.ActionFilters;
 using Playstore.Core.Exceptions;
 using Playstore.Providers.Handlers.Commands;
 using Playstore.Providers.Handlers.Queries.Admin;
@@ -11,6 +12,7 @@ using Serilog;
 
 namespace Playstore.Controllers.Admin
 {
+    [ServiceFilter(typeof(ControllerFilter))]
     [ApiController]
     [Route("[controller]")]
     public class AppDataController : ControllerBase
@@ -29,13 +31,12 @@ namespace Playstore.Controllers.Admin
             try
             {
                 var appDetails = await this.mediator.Send(new GetRequestedAppDataQuery(appId));
-    
+
                 return File(appDetails.AppFile , appDetails.ContentType , $"{DateOnly.FromDateTime(DateTime.Now)}");
             }
             catch (ApiResponseException error)
             {
-                Log.Error(error , error.Message);
-                return NotFound(error.Message);
+                return NotFound(new {message = error.Message});
             }
         }
 
@@ -52,7 +53,7 @@ namespace Playstore.Controllers.Admin
             }
             catch (ApiResponseException error)
             {
-                return NotFound(error.Message);
+                return NotFound(new {message = error.Message});
             }
         }
     }

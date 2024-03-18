@@ -11,11 +11,11 @@ using Playstore.Core.Security;
 using Serilog;
 using Playstore.JsonSerialize;
 using System;
-using Playstore.Contracts.DTO;
 using Playstore.Contracts.Middleware;
 using Serilog.Sinks.MSSqlServer;
 using System.Collections.ObjectModel;
 using Playstore.ActionFilters;
+using Playstore.Contracts.Data.EmailConfig;
 
 namespace Playstore
 {
@@ -140,11 +140,11 @@ namespace Playstore
             app.UseAuthorization();
             app.UseMiddleware<JwtAuthenticationMiddleware>();
 
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
             });
+            
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Playstore.Providers.Handlers.Commands
                 };
             }
 
-            var userCredentials = await _credentialsRepository.GetByEmailAsync(emailId);
+            var userCredentials = await _credentialsRepository.GetByEmailId(emailId);
 
             if (userCredentials == null)
             {

@@ -1,3 +1,4 @@
+import { Guid } from "guid-typescript"
 import { AppImages } from "./app-images"
 import { Category } from "./category"
 import { RequestedUser } from "./requested-user"

@@ -19,7 +19,7 @@ export class ProfileComponent implements OnInit {
   }
 
   changePassword() {
-  this.router.navigate(["admin/changePassword"]);
+  this.router.navigate(["admin/change-password"]);
   }
 
   getUserProfile()

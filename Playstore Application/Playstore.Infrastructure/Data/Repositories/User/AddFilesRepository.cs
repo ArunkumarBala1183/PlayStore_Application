@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data.Entities;
@@ -7,6 +8,7 @@ using Playstore.Contracts.Data.RoleConfig;
 using Playstore.Contracts.DTO;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
+using Serilog;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
@@ -14,11 +16,14 @@ namespace Playstore.Infrastructure.Data.Repositories
     {
         private readonly DatabaseContext databaseContext;
         private readonly RoleConfig role;
+        private readonly ILogger logger;
 
-        public AppFilesRepository(DatabaseContext context , IOptions<RoleConfig> roleConfig) : base(context)
+        public AppFilesRepository(DatabaseContext context , IOptions<RoleConfig> roleConfig , IHttpContextAccessor httpContext) : base(context)
         {
             databaseContext = context;
             this.role = roleConfig.Value;
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(AppFilesRepository).Name);
         }
 
 
@@ -113,16 +118,17 @@ namespace Playstore.Infrastructure.Data.Repositories
                     await this.databaseContext.AppInfo.AddAsync(appInfo);
 
                     await databaseContext.SaveChangesAsync();
-
+                    logger.Information("App Uploaded Successfully");
                     return HttpStatusCode.Created;
                 }
-
+                logger.Information("App Upload Failed");
                 return HttpStatusCode.NotFound;
                 }
                 return HttpStatusCode.BadRequest;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
