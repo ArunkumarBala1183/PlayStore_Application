@@ -24,19 +24,19 @@ export class SpecificAppComponent implements OnInit {
     private formBuilder: FormBuilder,
     private loginService : LoginService,
     private toastr : ToastrService
-  ) {
+  ) {}
+  ngOnInit(): void {
+      this.assignForm();
+      const appId=this.service.getAppId();
+      const userId =  this.loginService.getUserId()
+      this.getSpecificApp(appId , userId);
+  }
+
+  assignForm(){
     this.reviewForm = this.formBuilder.group({
       commands: ['', Validators.required],
       rating: ['', Validators.required],
     });
-  }
-  ngOnInit(): void {
-    // this.route.params.subscribe((params) => {
-    //   const appId: Guid = params['appId'];
-      const appId=this.service.getAppId();
-      const userId =  this.loginService.getUserId()
-      this.getSpecificApp(appId , userId)
-    // });
   }
 
   getSpecificApp(appId : Guid , userId : Guid)
