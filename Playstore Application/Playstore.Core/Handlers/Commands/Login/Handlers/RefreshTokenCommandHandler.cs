@@ -54,7 +54,7 @@ namespace Playstore.Providers.Handlers.Commands
             var userIdClaim = readToken.Claims.FirstOrDefault(claims => claims.Type == ClaimTypes.UserData);
             var refreshTokenClaim = readToken.Claims.FirstOrDefault(claims => claims.Type == ClaimTypes.Expired);
 
-            if (userIdClaim != null)
+            if (userIdClaim != null && refreshTokenClaim != null)
             {
                 var userId = Guid.Parse(userIdClaim.Value);
                 var refreshToken = refreshTokenClaim?.Value;
@@ -80,7 +80,7 @@ namespace Playstore.Providers.Handlers.Commands
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityKey = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Authentication:Jwt:Secret"));
             var userRoles = await _roleRepository.GetUserRoles(userCredentials.UserId);
-            var roleCodes = userRoles.Select(ur => ur.Role.RoleCode).ToList();
+            var roleCode = userRoles.FirstOrDefault()?.Role.RoleCode; 
             var newRefreshToken = GenerateRefreshToken();
 
             var claims = new List<Claim>
@@ -88,7 +88,7 @@ namespace Playstore.Providers.Handlers.Commands
                 new(ClaimTypes.UserData, userCredentials.UserId.ToString()),
                 new(ClaimTypes.Expired, newRefreshToken)
             };
-            foreach (var roleCode in roleCodes)
+            if (!string.IsNullOrEmpty(roleCode))
             {
                 claims.Add(new Claim(ClaimTypes.Role, roleCode));
             }
@@ -96,11 +96,10 @@ namespace Playstore.Providers.Handlers.Commands
             await _refreshTokenRepository.StoreRefreshToken(userCredentials.UserId, newRefreshToken);
 
 
-            var accessTokenExpires = DateTime.Now.AddMinutes(15);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = accessTokenExpires,
+                Expires = DateTime.Now.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(securityKey), SecurityAlgorithms.HmacSha256Signature)
             };
 

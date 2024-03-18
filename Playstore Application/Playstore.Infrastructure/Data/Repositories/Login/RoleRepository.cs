@@ -12,14 +12,11 @@ namespace Playstore.Core.Data.Repositories
     public class RoleRepository : Repository<Role>, IRoleRepository
     {
         private readonly DatabaseContext _context;
-        private readonly IConfiguration _configuration;
         private readonly ILogger logger;
-        public RoleRepository(DatabaseContext context, IConfiguration configuration , IHttpContextAccessor httpContext) : base(context)
+        public RoleRepository(DatabaseContext context) : base(context)
         {
             _context = context;
-            _configuration = configuration;
-            logger = Log//.ForContext("userId", httpContext.HttpContext?.Items["userId"])
-                        .ForContext("Location", typeof(RoleRepository).Name);
+            logger = Log.ForContext("Location", typeof(RoleRepository).Name);
         }
     
         public async Task<List<UserRole>> GetUserRoles(Guid userId)

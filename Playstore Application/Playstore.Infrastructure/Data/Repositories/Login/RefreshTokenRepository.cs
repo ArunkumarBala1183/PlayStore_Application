@@ -12,11 +12,10 @@ namespace Playstore.Core.Data.Repositories
     {
         private readonly DatabaseContext _context;
         private readonly ILogger logger;
-        public RefreshTokenRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
+        public RefreshTokenRepository(DatabaseContext context ) : base(context)
         {
             _context = context;
-            logger = Log//.ForContext("userId", httpContext.HttpContext?.Items["userId"])
-                        .ForContext("Location", typeof(RefreshTokenRepository).Name);
+            logger = Log.ForContext("Location", typeof(RefreshTokenRepository).Name);
         }
 
         public async Task StoreRefreshToken(Guid userId, string refreshToken)
