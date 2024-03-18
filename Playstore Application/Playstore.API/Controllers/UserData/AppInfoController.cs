@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Playstore.ActionFilters;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.DTO;
 using Playstore.Contracts.DTO.AppDownloads;
@@ -17,18 +18,15 @@ using Playstore.Providers.Handlers.Commands.UserData;
 using Playstore.Providers.Handlers.Queries.UserData;
 namespace Playstore.Controllers.UserData
 {
+    [ServiceFilter(typeof(ControllerFilter))]
     [ApiController]
     [Route("[controller]")]
     public class AppInfoController : ControllerBase
     {
-
-
         private readonly IMediator _mediator;
         public AppInfoController(IMediator mediator)
         {
             _mediator = mediator;
-
-
         }
         [HttpGet("GetUserDetails")]
         [ProducesResponseType(typeof(UsersDetailsDTO), (int)HttpStatusCode.OK)]
@@ -103,8 +101,6 @@ namespace Playstore.Controllers.UserData
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
         public async Task<IActionResult> Post([FromForm] CreateAppInfoDTO model)
         {
-       
-         
             try
             {
                 var command = new CreateAppInfoCommand(model);
@@ -191,8 +187,6 @@ namespace Playstore.Controllers.UserData
 
         }
 
-
-
         //To be use Download the File 
         [HttpPost]
         [Route("DownloadFile")]
@@ -250,7 +244,6 @@ namespace Playstore.Controllers.UserData
                 });
             }
 
-
         }
         //Get the Category name
         [HttpGet("GetCategory")]
@@ -271,7 +264,5 @@ namespace Playstore.Controllers.UserData
                 });
             }
         }
-
-
     }
 }

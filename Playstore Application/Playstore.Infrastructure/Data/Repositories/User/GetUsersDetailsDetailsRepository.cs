@@ -1,19 +1,24 @@
 using System.Net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO.AppReview;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
+using Serilog;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
     public class GetUsersDetailsRepository : Repository<UsersDetailsDTO>, IUserDetailsRepository
     {
         private readonly DatabaseContext databaseContext;
-        public GetUsersDetailsRepository(DatabaseContext context) : base(context)
+        private readonly ILogger logger;
+        public GetUsersDetailsRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
             databaseContext=context;
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(GetUsersDetailsRepository).Name);
         }
         public async Task<object> GetUsersDetails(Guid userId)
         {
@@ -39,10 +44,10 @@ namespace Playstore.Infrastructure.Data.Repositories
                     PhoneNumber = userDetails.MobileNumber,
                     Role = roles
                 };
-
+                logger.Information($"user details fetched for id {userId}");
                 return UserData;
             }
-
+            logger.Information($"No user found for id {userId}");
             return HttpStatusCode.NotFound;
         }
 

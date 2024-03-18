@@ -1,11 +1,13 @@
 using System.Net;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO.Category;
 using Playstore.Migrations;
+using Serilog;
 
 namespace Playstore.Core.Data.Repositories.Admin
 {
@@ -13,10 +15,13 @@ namespace Playstore.Core.Data.Repositories.Admin
     {
         private readonly DatabaseContext database;
         private readonly IMapper mapper;
-        public CategoryRepository(DatabaseContext context, IMapper mapper)
+        private readonly ILogger logger;
+        public CategoryRepository(DatabaseContext context, IMapper mapper , IHttpContextAccessor httpContext)
         {
             this.database = context;
             this.mapper = mapper;
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(CategoryRepository).Name);
         }
         public async Task<HttpStatusCode> AddCategory(CategoryDto category)
         {
@@ -28,18 +33,21 @@ namespace Playstore.Core.Data.Repositories.Admin
 
                     await this.database.Categories.AddAsync(categoryDetails);
                     await this.database.SaveChangesAsync();
+                    logger.Information($"{category.CategoryName} Added successfully");
 
                     return HttpStatusCode.Created;
                 }
-
+                logger.Information("Category Already Reported");
                 return HttpStatusCode.AlreadyReported;
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
@@ -64,17 +72,20 @@ namespace Playstore.Core.Data.Repositories.Admin
     
                 if (searchedDetails != null && searchedDetails.Count > 0)
                 {
+                    logger.Information("Category Fetched from Server");
                     return searchedDetails;
                 }
-    
+                logger.Information("No Category Found");
                 return HttpStatusCode.NotFound;
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
@@ -88,18 +99,20 @@ namespace Playstore.Core.Data.Repositories.Admin
                 if (searchedDetails != null)
                 {
                     var categoryDto = this.mapper.Map<CategoryUpdateDto>(searchedDetails);
-                    
+                    logger.Information("Category Fetched from Server");
                     return categoryDto;
                 }
-    
+                logger.Information("No Category Found");
                 return HttpStatusCode.NotFound;
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
@@ -115,15 +128,18 @@ namespace Playstore.Core.Data.Repositories.Admin
                 this.database.Entry(categoryDetails).State = EntityState.Modified;
     
                 await this.database.SaveChangesAsync();
+                logger.Information("Category Updated");
     
                 return HttpStatusCode.OK;
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
@@ -137,17 +153,20 @@ namespace Playstore.Core.Data.Repositories.Admin
                 if (existedData != null)
                 {
                     var categoryDto = this.mapper.Map<IEnumerable<CategoryUpdateDto>>(existedData);
+                    logger.Information("Category Fetched from Server");
                     return categoryDto;
                 }
-
+                logger.Information("No Category Found");
                 return HttpStatusCode.NotFound;
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }

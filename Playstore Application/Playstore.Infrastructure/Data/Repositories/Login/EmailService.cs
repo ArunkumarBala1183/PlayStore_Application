@@ -1,16 +1,22 @@
 using System.Net;
 using System.Net.Mail;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Playstore.Contracts.Data.EmailConfig;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO;
+using Serilog;
 
 public class EmailService : IEmailService
 {
     private readonly EmailConfig _configuration;
+    private readonly ILogger logger;
 
-    public EmailService(IOptions<EmailConfig> configuration)
+    public EmailService(IOptions<EmailConfig> configuration , IHttpContextAccessor httpContext)
     {
         _configuration = configuration.Value;
+        logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(EmailService).Name);
     }
     public async Task SendOtpAsync(string email, string otp)
     {
@@ -18,7 +24,9 @@ public class EmailService : IEmailService
         var receiverEmail = new MailAddress(email);
         var password = _configuration.Password;
         var subject = _configuration.OTPsubject;
-        var body = "Dear User \n\nGreetings From Authentication:)! \n\nHope you are doing well.\n\nWelcome to the Great Authentication Process. Your are trying to login the account by your credentials, with that please attach the provided OTP to access your account. Find your respected OTP below. \n\nUsername:" + email + "\n\nOTP:" + otp + "\n\nThank you.";
+        var body = _configuration.OtpEmailBody
+        .Replace("{username}", email)
+        .Replace("{otp}", otp);
         var smtp = new SmtpClient
         {
             Host = _configuration.Host,
@@ -37,12 +45,16 @@ public class EmailService : IEmailService
             smtp.Send(message);
         }
         await Task.Delay(0);
-        Console.WriteLine($"Sending OTP to {email}: {otp}");
+        logger.Information($"Sending OTP to {email}");
     }
     public async Task SendUserCredentialsAsync(string email, string name, string mobileNumber,DateOnly dateOfBirth)
     {
         var subject = _configuration.Registersubject;
-        var body = $"Dear {name},\n\nCongratulations! You have successfully registered on our platform.\n\nYour credentials:\nEmail: {email}\nDateOfBirth: {dateOfBirth}\nMobile Number: {mobileNumber}\n\nThank you for joining!";
+        var body = _configuration.UserCredentialsEmailBody
+            .Replace("{name}", name)
+            .Replace("{email}", email)
+            .Replace("{dateOfBirth}", dateOfBirth.ToString())
+            .Replace("{mobileNumber}", mobileNumber);
         var senderEmail = new MailAddress(_configuration.Sender, _configuration.DisplayName);
         var receiverEmail = new MailAddress(email);
         var password = _configuration.Password;
@@ -64,6 +76,6 @@ public class EmailService : IEmailService
             smtp.Send(message);
         }
         await Task.Delay(0);
-        Console.WriteLine($"Sending user credentials email to {email}");
+       logger.Information($"Sending user credentials email to {email}");
     }
 }

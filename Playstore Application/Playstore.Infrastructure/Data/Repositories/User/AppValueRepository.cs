@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
+using Serilog;
+using Microsoft.AspNetCore.Http;
 
 
 namespace Playstore.Infrastructure.Data.Repositories
@@ -13,9 +15,12 @@ namespace Playstore.Infrastructure.Data.Repositories
     public class AppValueRepository : Repository<AppInfo>, IAppValueRepository
     {
         private readonly DatabaseContext context;
-        public AppValueRepository(DatabaseContext context) : base(context)
+        private readonly ILogger logger;
+        public AppValueRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
             this.context = context;
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(AppValueRepository).Name);
         }
 
         public async Task<AppData> GetAppData(Guid appId , Guid userId)
@@ -38,13 +43,16 @@ namespace Playstore.Infrastructure.Data.Repositories
                     };
                     this.context.AppDownloads.Add(entity);
                     await this.context.SaveChangesAsync();
+                    logger.Information($"App Data fetched for id {appId}");
                     return response.AppData;
                     
                 }
+                logger.Information("Bad Request");
                 throw new InvalidRequestBodyException();
             }
- 
-            throw new EntityNotFoundException($"No App Found");
+            var message = $"No App Found";
+            logger.Information(message);
+            throw new EntityNotFoundException(message);
         }
         public async Task<object> GetValue(Guid id)
         {
@@ -52,8 +60,10 @@ namespace Playstore.Infrastructure.Data.Repositories
 
             if (response != null)
             {
+                logger.Information($"App fetched for id {id}");
                 return response;
             }
+            logger.Information($"No App found for id {id}");
             return HttpStatusCode.NoContent;
         }
         public async Task<object> ViewAllApps()
@@ -85,11 +95,13 @@ namespace Playstore.Infrastructure.Data.Repositories
                     };
                 })
                 .ToList();
-
+                logger.Information("Apps fetched from the server");
                 return myappDetails;
 
             }
-            throw new EntityNotFoundException($"No Apps found");
+            var message = $"No Apps found";
+            logger.Information(message);
+            throw new EntityNotFoundException(message);
         }
     }
 }

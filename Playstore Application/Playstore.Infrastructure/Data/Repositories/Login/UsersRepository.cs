@@ -1,18 +1,24 @@
 using System.Net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Infrastructure.Data.Repositories;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
+using Serilog;
 
 namespace Playstore.Core.Data.Repositories
 {
     public class UsersRepository : Repository<Users>, IUsersRepository
     {
         private readonly DatabaseContext _context;
-        public UsersRepository(DatabaseContext context ) : base(context)
+        private readonly ILogger logger;
+        public UsersRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
             _context = context;
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(UserRepository).Name);
         }
         public async Task<object> GetAll(Guid id)
         {
@@ -20,9 +26,10 @@ namespace Playstore.Core.Data.Repositories
 
             if(response != null)
             {
+                logger.Information("User fetched from server");
                 return response;
             }
-
+            logger.Information("No User found");
             return HttpStatusCode.NoContent;
         }
 
@@ -32,13 +39,16 @@ namespace Playstore.Core.Data.Repositories
         }
         public async Task<Users?> GetByEmailId(string emailId)
         {
-            return await _context.Users.FirstOrDefaultAsync(mailid => mailid.EmailId == emailId);
-
+            var response =  await _context.Users.FirstOrDefaultAsync(mailid => mailid.EmailId == emailId);
+            logger.Information($"User fetched for {emailId}");
+            return response;
         }
 
         public async Task<Users?> GetByPhoneNumber(string mobileNumber)
         {
-            return await _context.Users.FirstOrDefaultAsync(number => number.MobileNumber == mobileNumber);
+            var response =  await _context.Users.FirstOrDefaultAsync(number => number.MobileNumber == mobileNumber);
+            logger.Information("User fetched from server");
+            return response;
             
         }
         
