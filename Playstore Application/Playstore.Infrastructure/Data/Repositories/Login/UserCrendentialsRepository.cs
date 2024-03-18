@@ -55,11 +55,11 @@ namespace Playstore.Core.Data.Repositories
                 user.Password=Password;
                 _context.UserCredentials.Update(user);
                 await _context.SaveChangesAsync();
-                logger.Information($"Password Changed for userid {userId}");
+                logger.Information($"Password Changed for userid {UserId}");
                 return true;
                 
             }
-            logger.Information($"No User found for userid {userId}");
+            logger.Information($"No User found for userid {UserId}");
             return false;
         }
 

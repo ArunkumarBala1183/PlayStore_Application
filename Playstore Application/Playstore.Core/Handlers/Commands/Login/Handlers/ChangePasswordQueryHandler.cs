@@ -17,7 +17,7 @@ namespace Playstore.Providers.Handlers.Commands
 
          public async Task<bool> Handle(ChangePasswordQuery request, CancellationToken cancellationToken)
     {
-        var userCredentials = await this.userCredentialsRepository.GetByIdAsync(request.UserId);
+        var userCredentials = await this.userCredentialsRepository.GetById(request.UserId);
         var hashedPassword = passwordHasher.VerifyHashedPassword(userCredentials, userCredentials.Password, request.Password);
         if(hashedPassword==PasswordVerificationResult.Failed)
         {
