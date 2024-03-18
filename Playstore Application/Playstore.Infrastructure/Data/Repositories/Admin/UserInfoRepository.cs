@@ -1,5 +1,6 @@
 using System.Net;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -8,6 +9,7 @@ using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.Data.RoleConfig;
 using Playstore.Contracts.DTO.UserInfo;
 using Playstore.Migrations;
+using Serilog;
 
 namespace Playstore.Core.Data.Repositories.Admin
 {
@@ -16,11 +18,14 @@ namespace Playstore.Core.Data.Repositories.Admin
         private readonly DatabaseContext database;
         private readonly IMapper mapper;
         private readonly RoleConfig role;
-        public UserInfoRepository(DatabaseContext context, IMapper mapper , IOptions<RoleConfig> options)
+        private readonly ILogger logger;
+        public UserInfoRepository(DatabaseContext context, IMapper mapper , IOptions<RoleConfig> options , IHttpContextAccessor httpContext)
         {
             this.database = context;
             this.mapper = mapper;
             this.role = options.Value;
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(UserInfoRepository).Name);
         }
 
         public async Task<object> SearchUserDetail(string searchDetails)
@@ -53,19 +58,23 @@ namespace Playstore.Core.Data.Repositories.Admin
 
                 if (userDetails != null && userDetails.Count > 0)
                 {
+                    logger.Information("UserDetails Fetched from Database");
                     return mapper.Map<IEnumerable<UserInfoDto>>(userDetails);
                 }
                 else
                 {
+                    logger.Information("No Users Found");
                     return HttpStatusCode.NotFound;
                 }
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
@@ -83,17 +92,22 @@ namespace Playstore.Core.Data.Repositories.Admin
                 if (existedData != null && existedData.Count > 0)
                 {
                     var userDetails = this.mapper.Map<IEnumerable<UserInfoDto>>(existedData);
+                    logger.Information("UserDetails Fetched from Database");
+
                     return userDetails;
                 }
+                logger.Information("No Users Found");
 
                 return HttpStatusCode.NotFound;
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }

@@ -1,16 +1,21 @@
 using System.Net;
 using System.Net.Mail;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.DTO;
+using Serilog;
 
 public class EmailService : IEmailService
 {
     private readonly EmailConfig _configuration;
+    private readonly ILogger logger;
 
-    public EmailService(IOptions<EmailConfig> configuration)
+    public EmailService(IOptions<EmailConfig> configuration , IHttpContextAccessor httpContext)
     {
         _configuration = configuration.Value;
+        logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(EmailService).Name);
     }
     public async Task SendOtpAsync(string email, string otp)
     {
@@ -37,7 +42,7 @@ public class EmailService : IEmailService
             smtp.Send(message);
         }
         await Task.Delay(0);
-        Console.WriteLine($"Sending OTP to {email}: {otp}");
+        logger.Information($"Sending OTP to {email}");
     }
     public async Task SendUserCredentialsAsync(string email, string name, string mobileNumber,DateOnly dateOfBirth)
     {
@@ -64,6 +69,6 @@ public class EmailService : IEmailService
             smtp.Send(message);
         }
         await Task.Delay(0);
-        Console.WriteLine($"Sending user credentials email to {email}");
+       logger.Information($"Sending user credentials email to {email}");
     }
 }
