@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Playstore.ActionFilters;
 using Playstore.Core.Exceptions;
@@ -23,6 +24,7 @@ namespace Playstore.Controllers.Admin
             this.mediator = mediator;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("GetAppData/{appId}")]
         [ProducesResponseType(typeof(FileStream) , (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(ApiResponseException))]
@@ -43,6 +45,7 @@ namespace Playstore.Controllers.Admin
         [HttpPost("UploadApp")]
         [ProducesResponseType(typeof(FileStream) , (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(ApiResponseException))]
+        [AllowAnonymous]
         public async Task<IActionResult> UploadApp([FromForm] AppUploadCommand appData)
         {
             try
