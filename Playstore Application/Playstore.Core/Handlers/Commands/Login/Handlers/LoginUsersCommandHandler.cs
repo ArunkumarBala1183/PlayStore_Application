@@ -49,8 +49,7 @@ namespace Playstore.Providers.Handlers.Commands
                 };
             }
 
-            var userCredentials = await _credentialsRepository.GetByEmailAsync(model.EmailId);
-           
+            var userCredentials = await _credentialsRepository.GetByEmailId(model.EmailId) ?? throw new EntityNotFoundException("Email Id not found");
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(userCredentials, userCredentials.Password, model.Password);
 
             if (passwordVerificationResult != PasswordVerificationResult.Success)
@@ -83,7 +82,6 @@ namespace Playstore.Providers.Handlers.Commands
                 Expires = accessTokenExpires,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(securityKey), SecurityAlgorithms.HmacSha256Signature)
             };
-
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 

@@ -24,7 +24,6 @@ namespace Playstore.Core.Data.Repositories.Admin
                 {
                     return logDetails;
                 }
-    
                 return HttpStatusCode.NotFound;
             }
             catch (Exception error)

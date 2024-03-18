@@ -21,13 +21,13 @@ namespace Playstore.Core.Data.Repositories
             return true;
 
         }
-        public async Task<UserCredentials?> GetByEmailAsync(string email)
+        public async Task<UserCredentials?> GetByEmailId(string email)
         {
             return await _context.UserCredentials.FirstOrDefaultAsync(mailid => mailid.EmailId == email);
             
         }
 
-        public async Task<UserCredentials?> GetByIdAsync(Guid userId)
+        public async Task<UserCredentials?> GetById(Guid userId)
         {
             return await _context.UserCredentials.FirstOrDefaultAsync(id => id.UserId == userId);
 

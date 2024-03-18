@@ -24,7 +24,7 @@ public class GetPasswordQueryHandler : IRequestHandler<GetPasswordQuery, bool>
     public async Task<bool> Handle(GetPasswordQuery request, CancellationToken cancellationToken)
 
     {
-        var userCredentials = await _credentialsRepository.GetByIdAsync(request.UserId);
+        var userCredentials = await _credentialsRepository.GetById(request.UserId);
         var hashedPassword = passwordHasher.VerifyHashedPassword(userCredentials, userCredentials.Password, request.Password);
        
         if (hashedPassword == PasswordVerificationResult.Success)

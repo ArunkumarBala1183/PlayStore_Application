@@ -3,20 +3,20 @@ using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
+using Microsoft.Extensions.Configuration;
 
 namespace Playstore.Core.Data.Repositories
 {
     public class RoleRepository : Repository<Role>, IRoleRepository
     {
         private readonly DatabaseContext _context;
-        public RoleRepository(DatabaseContext context) : base(context)
+        private readonly IConfiguration _configuration;
+        public RoleRepository(DatabaseContext context, IConfiguration configuration) : base(context)
         {
             _context = context;
+            _configuration = configuration;
         }
-        public async Task<UserCredentials?> GetByEmailAsync(string email)
-        {
-            return await _context.UserCredentials.FirstOrDefaultAsync(mailid => mailid.EmailId == email);
-        }
+    
         public async Task<List<UserRole>> GetUserRolesAsync(Guid userId)
         {
             return await _context.UserRole
@@ -25,23 +25,12 @@ namespace Playstore.Core.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task CommitAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<Guid> GetDefaultRoleId()
         {
-            var defaultRole = await _context.Roles.FirstOrDefaultAsync(role => role.RoleCode == "User");
+            var defaultRole = await _context.Roles.FirstOrDefaultAsync(role => role.RoleCode == _configuration.GetValue<string>("RoleConfig:UserCode"));
             return defaultRole != null ? defaultRole.RoleId : Guid.Empty;
         }
 
-
-        public async Task<Role?> GetByRoleCode(string roleCode)
-        {
-            return await _context.Roles.FirstOrDefaultAsync(role => role.RoleCode == roleCode);
-            
-        }
         public async Task<Role?> GetByRoleId(Guid roleId)
         {
             return await _context.Roles.FirstOrDefaultAsync(role => role.RoleId == roleId);
