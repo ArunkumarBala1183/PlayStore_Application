@@ -11,6 +11,8 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./user-home.component.scss'],
 })
 export class UserHomeComponent implements OnInit {
+  isLoading:boolean=false
+
   constructor(
     private router: Router,
     private service: UserService,
@@ -18,12 +20,15 @@ export class UserHomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isLoading=true
     this.service.getAllApps().subscribe({
       next: (response) => {
           this.application = response;
+          this.isLoading=false
       },
       error: (error) => {
-        console.error(error);        
+        console.error(error); 
+        this.isLoading=false       
       },
     });
   }

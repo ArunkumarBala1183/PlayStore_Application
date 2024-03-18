@@ -3,6 +3,12 @@
     <h2>App Requests</h2>
 </div>
 
+<!-- Loading Indicator -->
+<div *ngIf="isLoading" class="loader"></div>
+
+
+
+<div *ngIf="!isLoading">
 <div *ngIf="!(appRequests.length > 0)" class="font-semibold text-lg text-red-700 mt-40 ml-72">No Records found!!</div>
 
 <div *ngFor="let app of appRequests"
@@ -38,5 +44,6 @@
 
     <!-- View Button -->
 
+</div>
 </div>
 </div>

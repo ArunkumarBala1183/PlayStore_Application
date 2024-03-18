@@ -18,6 +18,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./specific-app.component.scss'],
 })
 export class SpecificAppComponent implements OnInit {
+isLoading: boolean=false
+
   constructor(
     private route: ActivatedRoute,
     private service: UserService,
@@ -40,6 +42,7 @@ export class SpecificAppComponent implements OnInit {
 
   getSpecificApp(appId : Guid , userId : Guid)
   {
+    this.isLoading=true;
     this.service.getAppsById(appId,userId).subscribe({
       next: (responses) => {
         this.appDetail = responses;
@@ -52,9 +55,13 @@ export class SpecificAppComponent implements OnInit {
           {app.publishedDate=this.convertDateFormat(app.publishedDate);
           });
         },
+        
       error: (error) => {
         console.log(error);
       },
+      complete : () => {
+        this.isLoading = false;
+      }
     });
     
     this.service.getReviews(appId).subscribe({
@@ -126,7 +133,8 @@ export class SpecificAppComponent implements OnInit {
       formData.userId = userId;
       formData.additionalValue = this.service.postReview(formData).subscribe({
         next: (response) => {
-          console.log('Form Submitted', response);
+          console.log(response);
+          this.toastr.success('Review Submitted');
           this.getSpecificApp(appId,userId);
         },
         error: (error) => {
@@ -137,7 +145,6 @@ export class SpecificAppComponent implements OnInit {
         this.reviewForm.reset();
       }
       });
-      this.toastr.success('Review Submitted');
     } 
     else {
       this.toastr.error('Enter Valid Details');
