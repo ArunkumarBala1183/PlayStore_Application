@@ -97,7 +97,7 @@ namespace Playstore.Core.Data.Repositories
                     }
 
                     logger.Information("Apps Fetched from Database");
-                    
+                
                     return appDetailsDto;
                 }
                 else

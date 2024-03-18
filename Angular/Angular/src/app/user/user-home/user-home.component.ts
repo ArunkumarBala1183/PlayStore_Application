@@ -31,7 +31,9 @@ export class UserHomeComponent implements OnInit {
   application: AllAppsInfo[] = [];
 
   public redirectTospecificApp(appId: Guid) {
-    this.router.navigate(['user/specificApp', appId]);
+    this.service.sendAppId(appId);
+    // this.router.navigate(['user/specificApp', appId]);
+    this.router.navigate(['user/specific-app'])
   }
 
   searchInput: string = '';

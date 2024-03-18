@@ -1,4 +1,4 @@
-namespace Playstore.Contracts.DTO
+namespace Playstore.Contracts.Data.EmailConfig
 {
     public class EmailConfig
     {
@@ -9,5 +9,8 @@ namespace Playstore.Contracts.DTO
         public int Port { get; set; }
         public string OTPsubject { get; set;}
         public string Registersubject { get; set;}
+        public string OtpEmailBody { get; set; }
+        public string UserCredentialsEmailBody { get; set; }
+        
     }
 }

@@ -29,7 +29,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   public resetPassword() {
-    this.router.navigate(['user/resetPassword'])
+    this.router.navigate(['user/reset-password'])
   }
 }
 

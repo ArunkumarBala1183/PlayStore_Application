@@ -26,7 +26,7 @@ namespace Playstore.Core.Data.Repositories
             return true;
 
         }
-        public async Task<UserCredentials?> GetByEmailAsync(string email)
+        public async Task<UserCredentials?> GetByEmailId(string email)
         {
             var response =  await _context.UserCredentials.FirstOrDefaultAsync(mailid => mailid.EmailId == email);
             logger.Information($"UserCredetial Fetched for the email {email}");
@@ -34,7 +34,7 @@ namespace Playstore.Core.Data.Repositories
             
         }
 
-        public async Task<UserCredentials?> GetByIdAsync(Guid userId)
+        public async Task<UserCredentials?> GetById(Guid userId)
         {
             var response = await _context.UserCredentials.FirstOrDefaultAsync(id => id.UserId == userId);
             logger.Information($"UserCredentials fetched for Id {userId}");

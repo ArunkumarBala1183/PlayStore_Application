@@ -19,10 +19,6 @@ namespace Playstore.Core.Data.Repositories
                         .ForContext("Location", typeof(RefreshTokenRepository).Name);
         }
 
-        public async Task CommitAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
         public async Task StoreRefreshTokenAsync(Guid userId, string refreshToken)
         {
             var refreshTokenEntity = await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
