@@ -1,7 +1,9 @@
 <!-- Application Logs -->
-<div class="relative ml-[85%] ">
-    <button class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded" (click)="toggleDropdown()">
-      Dashboard
+<div class="relative ml-[87%]">
+    <button class="bg-blue-500 hover:bg-blue-800 text-white font-medium py-2 flex items-center px-4 rounded" (click)="toggleDropdown()">
+      Dashboard 
+      <img src="https://cdn-icons-png.flaticon.com/128/8213/8213476.png" class="h-3 w-4 ml-2" *ngIf="!isDropdownOpen" alt="">
+      <img src="https://cdn-icons-png.flaticon.com/128/8213/8213544.png" class="h-3 w-4 ml-2" *ngIf="isDropdownOpen" alt="">
     </button>
     <div *ngIf="isDropdownOpen" class="absolute z-10 mt-2 bg-white border rounded shadow-md">
       <button (click)="goTOAppDownloads()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">App Downloads</button>
@@ -12,34 +14,34 @@
 <div class=" md:mt-10 mt-20 ml-auto mr-auto">
     
     <div class="md:ml-[40%] ml-10">
-        <h1 class="text-3xl md:text-2xl lg:text-5xl text-black underline font-bold mb-4">Application Logs</h1>
+        <h1 class="text-3xl md:text-2xl lg:text-5xl text-black underline font-bold mbue">Application Logs</h1>
     </div>    
-
-    <div class="mt-4 overflow-x-scroll shadow-xl border ml-[10%] w-[80%] border-gray-300 rounded-s">
+    <div *ngIf="isLoading" class="loader"></div>
+    <div class="mt-4 overflow-x-scroll shadow-xl border ml-[10%] w-[85%] border-gray-300 rounded-s">
         <table mat-table [dataSource]="appLogSource" >
             <ng-container matColumnDef="userId">
-                <th mat-header-cell *matHeaderCellDef class="bg-black border border-black text-black"> User Id  </th>
+                <th mat-header-cell *matHeaderCellDef [style.background-color]="' rgb(14 165 233)'" [style.color]="'white'"> User Id  </th>
                 <td mat-cell *matCellDef="let log"> {{ log.userId }} </td>
             </ng-container>
             <ng-container matColumnDef="timeStamp">
-                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Time Stamp </th>
+                <th mat-header-cell *matHeaderCellDef [style.background-color]="' rgb(14 165 233)'" [style.color]="'white'"> Time Stamp </th>
                 <td mat-cell *matCellDef="let log"> {{log.timeStamp}} </td>
             </ng-container>
             <ng-container matColumnDef="level">
-                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Level  </th>
+                <th mat-header-cell *matHeaderCellDef [style.background-color]="' rgb(14 165 233)'" [style.color]="'white'"> Level  </th>
                 <td mat-cell *matCellDef="let log"> {{ log.level }} </td>
             </ng-container>          
             <ng-container matColumnDef="location">
-                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Location  </th>
+                <th mat-header-cell *matHeaderCellDef [style.background-color]="' rgb(14 165 233)'" [style.color]="'white'"> Location  </th>
                 <td mat-cell *matCellDef="let log"> {{ log.location }} </td>
             </ng-container>
             <ng-container matColumnDef="message">
-                <th mat-header-cell *matHeaderCellDef class="bg-black text-black message-column" style="width: 10%;"> Message </th>
-                <td mat-cell *matCellDef="let log" class="message-column"> {{ log.message }} </td>
+                <th mat-header-cell *matHeaderCellDef [style.background-color]="' rgb(14 165 233)'" [style.color]="'white'" class="message-column px-2" > Message </th>
+                <td mat-cell *matCellDef="let log" class="message-column" > {{ log.message }} </td>
             </ng-container>
             <ng-container matColumnDef="exception">
-                <th mat-header-cell *matHeaderCellDef class="bg-black text-black"> Exception  </th>
-                <td mat-cell *matCellDef="let log"> {{ log.exception }} </td>
+                <th mat-header-cell *matHeaderCellDef [style.background-color]="' rgb(14 165 233)'" [style.color]="'white'" class="message-column"> Exception  </th>
+                <td mat-cell *matCellDef="let log" class="message-column"> {{ log.exception }} </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -47,7 +49,7 @@
         </table>
 
         <!-- Pagination -->
-        <mat-paginator [pageSizeOptions]="[5,10,20]"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[20,35,50]"></mat-paginator>
     </div>
     
 </div>

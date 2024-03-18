@@ -12,6 +12,7 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class MyDownloadsComponent implements OnInit {
 
+  isLoading : boolean=false;
 
 
 
@@ -31,16 +32,19 @@ export class MyDownloadsComponent implements OnInit {
 
   getAppDownloads()
   {
+    this.isLoading=true;
     const userId = this.loginService.getUserId()
 
     this.userservice.getDownloadedApps(userId)
     .subscribe({
       next : response =>{
         this.downloadedApps = response
+        this.isLoading=false
       },
       error : error => {
         this.downloadedApps = []
         console.log(error)
+        this.isLoading=false
       }
     })
   }

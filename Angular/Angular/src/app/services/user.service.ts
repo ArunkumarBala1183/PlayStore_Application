@@ -107,15 +107,15 @@ export class UserService {
   {
     if(data)
     {
-      console.log(data +'AppId.........................................')
+      
       sessionStorage.setItem('appId',data);
       this.appId=data;
+      
     }
   }
   getAppId():any
   {
     const appId=sessionStorage.getItem('appId');
-
     return appId;
   }
 }

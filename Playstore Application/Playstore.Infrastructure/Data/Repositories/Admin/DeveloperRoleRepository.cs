@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -8,6 +9,7 @@ using Playstore.Contracts.Data.RoleConfig;
 using Playstore.Contracts.DTO.AppPublishRequest;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
+using Serilog;
 
 namespace Playstore.Core.Data.Repositories.Admin
 {
@@ -16,10 +18,13 @@ namespace Playstore.Core.Data.Repositories.Admin
         private readonly DatabaseContext database;
 
         private readonly RoleConfig role;
-        public DeveloperRoleRepository(DatabaseContext context, IOptions<RoleConfig> options) : base(context)
+        private readonly ILogger logger;
+        public DeveloperRoleRepository(DatabaseContext context, IOptions<RoleConfig> options , IHttpContextAccessor httpContext) : base(context)
         {
             database = context;
             role = options.Value;
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(UserRoleRepository).Name);
         }
 
         public async Task<HttpStatusCode> ApproveApp(AppPublishDto appPublishDto)
@@ -35,22 +40,26 @@ namespace Playstore.Core.Data.Repositories.Admin
                 {
                     if (appPublishDto.Approve)
                     {
+                        logger.Information("RoleUpdated");
                         return await RoleUpdate(userDetails.UserId, appPublishDto.AppId);
                     }
                     else
                     {
+                        logger.Information("Request Rejected");
                         return await RemoveRequest(userDetails.UserId);
                     }
                 }
 
                 return HttpStatusCode.NotFound;
             }
-            catch (SqlException)
+            catch (SqlException error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }

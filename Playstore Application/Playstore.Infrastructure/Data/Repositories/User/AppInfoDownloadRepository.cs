@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
@@ -5,15 +6,19 @@ using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
+using Serilog;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
     public class AppInfoDownloadRepository : Repository<AppDownloads>, IAppInfoDownloadRepository
     {
         public readonly DatabaseContext databaseContext;
-        public AppInfoDownloadRepository(DatabaseContext context) : base(context)
+        private readonly ILogger logger;
+        public AppInfoDownloadRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
             this.databaseContext = context;
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
+                        .ForContext("Location", typeof(AppInfoDownloadRepository).Name);
         }
 
         public async Task<object> GetData(Guid Userid)
@@ -45,11 +50,13 @@ namespace Playstore.Infrastructure.Data.Repositories
                 })
                 .ToList();
 
+                logger.Information($"AppDownloads fetched for id {Userid}");
                 return myappDetails;
 
             }
-
-            throw new EntityNotFoundException($"No AppDownloads found");
+            var message = "No AppDownloads found";
+            logger.Information(message);
+            throw new EntityNotFoundException(message);
         }
 
     }

@@ -18,29 +18,35 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./specific-app.component.scss'],
 })
 export class SpecificAppComponent implements OnInit {
+isLoading: boolean=false
+
   constructor(
     private route: ActivatedRoute,
     private service: UserService,
     private formBuilder: FormBuilder,
     private loginService : LoginService,
     private toastr : ToastrService
-  ) {}
+  ) {
+   
+  }
   ngOnInit(): void {
-      this.assignForm();
+    // this.route.params.subscribe((params) => {
+    //   const appId: Guid = params['appId'];
       const appId=this.service.getAppId();
       const userId =  this.loginService.getUserId()
       this.getSpecificApp(appId , userId);
+      this.initForm();
+    // });
   }
-
-  assignForm(){
-    this.reviewForm = this.formBuilder.group({
-      commands: ['', Validators.required],
-      rating: ['', Validators.required],
-    });
-  }
-
+initForm(){
+  this.reviewForm = this.formBuilder.group({
+    commands: ['', Validators.required],
+    rating: ['', Validators.required],
+  });
+}
   getSpecificApp(appId : Guid , userId : Guid)
   {
+    this.isLoading=true;
     this.service.getAppsById(appId,userId).subscribe({
       next: (responses) => {
         this.appDetail = responses;
@@ -53,9 +59,13 @@ export class SpecificAppComponent implements OnInit {
           {app.publishedDate=this.convertDateFormat(app.publishedDate);
           });
         },
+        
       error: (error) => {
         console.log(error);
       },
+      complete : () => {
+        this.isLoading = false;
+      }
     });
     
     this.service.getReviews(appId).subscribe({
@@ -129,7 +139,8 @@ export class SpecificAppComponent implements OnInit {
       formData.userId = userId;
       formData.additionalValue = this.service.postReview(formData).subscribe({
         next: (response) => {
-          console.log('Form Submitted', response);
+          console.log(response);
+          this.toastr.success('Review Submitted');
           this.getSpecificApp(appId,userId);
         },
         error: (error) => {
@@ -140,7 +151,6 @@ export class SpecificAppComponent implements OnInit {
         this.reviewForm.reset();
       }
       });
-      this.toastr.success('Review Submitted');
     } 
     else {
       this.toastr.error('Enter Valid Details');

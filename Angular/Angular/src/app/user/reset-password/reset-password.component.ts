@@ -16,19 +16,19 @@ export class ResetPasswordComponent implements OnInit{
   userId !: Guid;
   changePasswordForm !: FormGroup;
 
-  constructor(private formBuilder : FormBuilder, private loginService : LoginService, private service : UserService, private toastr : ToastrService, private router : Router){}
-
+  constructor(private formBuilder : FormBuilder, private loginService : LoginService, private service : UserService, private toastr : ToastrService, private router : Router){
+    
+  }
   ngOnInit(): void {
     this.initForm();
-  }   
-  initForm(){
+  }
+initForm(){
   this.changePasswordForm = this.formBuilder.group({
     password : ['' , Validators.required],
     newPassword : ['',[Validators.required]],
     confirmPassword : ['',Validators.required]
   })
 }
-
   public checkPassword():boolean
   {
     const newPassword = this.changePasswordForm.get('newPassword')?.value;
@@ -51,7 +51,7 @@ export class ResetPasswordComponent implements OnInit{
         }
         else {
           this.isPasswordMatch = false;
-          this.toastr.info('Password Doesnot Match');
+          this.toastr.info('Password doesnot Match')
         }
       },
       error : error => {
@@ -70,7 +70,7 @@ export class ResetPasswordComponent implements OnInit{
           if(response.message ==true)
           {
             this.toastr.success('Password Changed');
-            this.changePasswordForm.reset();
+            this.router.navigate(['user/user-profile']);
           }
           else{
             this.toastr.info("Password already Exists")

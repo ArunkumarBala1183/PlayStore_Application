@@ -1,6 +1,7 @@
 using MediatR;
 using Playstore.Contracts.Data.Repositories;
- 
+using Playstore.Core.Exceptions;
+
 namespace Playstore.Providers.Handlers.Commands
 {
    
@@ -16,14 +17,14 @@ namespace Playstore.Providers.Handlers.Commands
         }
         public async Task<string> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
         {
-            var userCredentials = await _credentialsRepository.GetByEmailAsync(request.Model.EmailId);
+            var userCredentials = await _credentialsRepository.GetByEmailId(request.Model.EmailId);
             if (userCredentials == null)
             {
-                return "false";
+                throw new InvalidcredentialsException("Email not registered ");
             }
            
             var otp = GenerateOtp();
-            await _emailService.SendOtpAsync(userCredentials.EmailId, otp);
+            _emailService.SendOtp(userCredentials.EmailId, otp);
             return otp;
         }
  

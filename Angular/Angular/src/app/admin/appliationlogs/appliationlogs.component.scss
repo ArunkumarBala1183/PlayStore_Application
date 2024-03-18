@@ -1,0 +1,24 @@
+/* Add a custom class to target the message column */
+.message-column {
+    /* Adjust the width as needed */
+    max-width: 200px;
+    word-wrap: break-word;
+
+  }
+  
+  .loader {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: auto;
+    margin-top: 180px;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }

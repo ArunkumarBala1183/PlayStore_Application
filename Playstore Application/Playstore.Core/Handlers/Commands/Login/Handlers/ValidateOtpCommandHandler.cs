@@ -6,6 +6,10 @@ namespace Playstore.Providers.Handlers.Commands
     {
         public Task<bool> Handle(ValidateOtpCommand request, CancellationToken cancellationToken)
         {
+            if(request.Model.EmailId != request.ResetPasswordEmail)
+            {
+                throw new InvalidOperationException("Check your Email id");
+            }
             var isOtpValid = string.Equals(request.Model.Otp, request.ResetPasswordOTP, StringComparison.OrdinalIgnoreCase);
  
             if (string.IsNullOrEmpty(request.ResetPasswordOTP))

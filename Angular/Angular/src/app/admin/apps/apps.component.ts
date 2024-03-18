@@ -17,6 +17,7 @@ export class AppsComponent implements OnInit{
 
   appDetails!: ListApps[]
   searchTerm: string = '';
+  isLoading: boolean = false;
  
 
 
@@ -39,6 +40,7 @@ export class AppsComponent implements OnInit{
 
   get allApps()
   {
+    
     return this.appDetails?.filter(app => app.name.toLowerCase().includes(this.searchTerm.toLowerCase()))
   }
 
@@ -50,15 +52,18 @@ export class AppsComponent implements OnInit{
   }
 
   getAllApps() {
+    this.isLoading = true;
     let data = {userId : this.loginService.getUserId()}
     this.service.GetAllApps(data)
       .subscribe({
         next: response => {
           this.appDetails = response.body as ListApps[]
+          this.isLoading=false;
         },
         error: error => {
           this.appDetails = []
           console.log(error)
+          this.isLoading=false;
         }
       })
   }
