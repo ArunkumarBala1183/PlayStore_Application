@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.Data.Utility;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
@@ -25,7 +26,7 @@ namespace Playstore.Infrastructure.Data.Repositories
                 .Include(data => data.AppInfo.Category)
                 .Where(userId => userId.UserId == Userid)
                 .ToListAsync();
-                if (response.Count > 0)
+                if (response.Count > Dataconstant.ResponseCount)
                 {
                     var myappDetails = response.Select(appInfo =>
                 {
@@ -40,19 +41,19 @@ namespace Playstore.Infrastructure.Data.Repositories
                      FileName = appInfo.AppInfo.Name,
                      Logo = appInfo.AppInfo.Logo,
                      Description = appInfo.AppInfo.Description,
-                     Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
+                     Rating = appReview.Any() ? appReview.Average(review => review.Rating) : Dataconstant.NullRating,
                      Category = appInfo.AppInfo.Category.CategoryName,
-                     Downloads = AppDownload.Count(),
+                     Downloads = AppDownload.Count,
                  };
              }).ToList();
 
                     return myappDetails;
                 }
-                throw new EntityNotFoundException($"No AppDownloads found");
+                throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
             }
             catch(SqlException exception)
             {
-                throw new Exception($"{exception}");
+                throw new SqlException($"{exception}");
             }
             catch (Exception exception)
             {

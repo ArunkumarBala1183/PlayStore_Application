@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Playstore.Contracts.DTO.AppReview;
 using Microsoft.Data.SqlClient;
+using SqlException = Playstore.Core.Exceptions.SqlException;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
@@ -40,7 +41,7 @@ namespace Playstore.Infrastructure.Data.Repositories
             }
             catch(SqlException exception)
             {
-                throw new Exception($"{exception}");
+                throw new SqlException($"{exception}");
             }
             catch(Exception exception)
             {

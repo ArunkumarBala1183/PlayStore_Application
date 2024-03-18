@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.Data.Utility;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
@@ -40,7 +41,7 @@ namespace Playstore.Infrastructure.Data.Repositories
                     Logo=response.Logo,
                     UserId=response.UserId,
                     Apps=Totalvalue,
-                    Rating=AppRating.Any()? AppRating.Average(review=>review.Rating):0,
+                    Rating=AppRating.Any()? AppRating.Average(review=>review.Rating):Dataconstant.NullRating,
                     Commands = AppRating.Select(review => review.Comment).ToList(),
                     CategoryId=response.Category.CategoryId,
                     CategoryName=response.Category.CategoryName,
@@ -51,11 +52,11 @@ namespace Playstore.Infrastructure.Data.Repositories
                 });
                 return appinfoDetails;
             }
-             throw new EntityNotFoundException($"No AppInfo found for Id {id}"); 
+             throw new EntityNotFoundException(Dataconstant.EntityNotFoundException); 
             }
              catch(SqlException exception)
             {
-                throw new Exception($"{exception}");
+                throw new SqlException($"{exception}");
             }
             catch(Exception exception)
             {

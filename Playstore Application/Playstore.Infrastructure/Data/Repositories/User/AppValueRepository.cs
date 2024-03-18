@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
-
+using SqlException = Playstore.Core.Exceptions.SqlException;
+using Playstore.Contracts.Data.Utility;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
@@ -35,7 +36,7 @@ namespace Playstore.Infrastructure.Data.Repositories
                         var entity = new AppDownloads
                         {
                             AppId = appId,
-                            UserId = userId, //use userId here
+                            UserId = userId,
                             DownloadedDate = DateTime.Today,
                         };
                         this.context.AppDownloads.Add(entity);
@@ -46,7 +47,7 @@ namespace Playstore.Infrastructure.Data.Repositories
                     throw new InvalidRequestBodyException();
                 }
 
-                throw new EntityNotFoundException($"No App Found");
+                throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
             }
             catch (Exception exception)
             {
@@ -67,7 +68,7 @@ namespace Playstore.Infrastructure.Data.Repositories
             }
             catch(SqlException exception)
             {
-                throw new Exception($"{exception}");
+                throw new SqlException($"{exception}");
             }
             catch (Exception exception)
             {
@@ -79,7 +80,7 @@ namespace Playstore.Infrastructure.Data.Repositories
             try
             {
                 var enetities = await this.context.AppInfo.Include(data => data.AppReview).Include(data => data.Category).Include(data => data.AppImages).Where(status => status.Status == RequestStatus.Approved).ToListAsync();
-                int count = enetities.Count();
+                int count = enetities.Count;
                 if (enetities.Any())
                 {
                     var myappDetails = enetities.Select(appInfo =>
@@ -98,16 +99,16 @@ namespace Playstore.Infrastructure.Data.Repositories
                              UserId = appInfo.UserId,
                              Apps = count,
                              CategoryName = appInfo.Category.CategoryName,
-                             Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
+                             Rating = appReview.Any() ? appReview.Average(review => review.Rating) : Dataconstant.NullRating,
                              CategoryId = appInfo.Category.CategoryId,
-                             Downloads = AppDownload.Count(),
+                             Downloads = AppDownload.Count,
                              Status = appInfo.Status
                          };
                      }).ToList();
                     return myappDetails;
 
                 }
-                throw new EntityNotFoundException($"No Apps found");
+                throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
             }
             catch (Exception exception)
             {

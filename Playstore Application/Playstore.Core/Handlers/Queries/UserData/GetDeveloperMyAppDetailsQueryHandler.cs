@@ -5,6 +5,7 @@ using Playstore.Core.Exceptions;
 using AutoMapper;
 using Playstore.Contracts.Data;
 using Playstore.Contracts.DTO.AppDownloads;
+using Playstore.Contracts.Data.Utility;
 
 namespace Playstore.Providers.Handlers.Queries.UserData
 {
@@ -29,17 +30,17 @@ namespace Playstore.Providers.Handlers.Queries.UserData
         public async Task<IEnumerable<Myappdetails>> Handle(GetDeveloperMyAppDetails request, CancellationToken cancellationToken)
         {
             if(request!=null){
-            var app = await _repository.MyAppDetails.GetAppDetails(request._UserId);
+            var app = await _repository.MyAppDetails.GetAppDetails(request.UserId);
 
             if (app == null)
             {
-                throw new EntityNotFoundException($"No App found");
+                throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
             }
 
             return (IEnumerable<Myappdetails>)app;
             }
            
-                throw new ObjectNullException($"No Data Found");
-            }
+            throw new ObjectNullException(Dataconstant.ObjectNullException);
+        }
     }
 }

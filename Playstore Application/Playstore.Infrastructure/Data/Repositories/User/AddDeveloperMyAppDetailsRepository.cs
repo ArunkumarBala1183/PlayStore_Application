@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
+using Playstore.Contracts.Data.Utility;
 
 
 namespace Playstore.Infrastructure.Data.Repositories
@@ -28,7 +29,7 @@ namespace Playstore.Infrastructure.Data.Repositories
                 .Include(data => data.Category)
                 .Where(obj => obj.UserId == userId)
                 .ToListAsync();
-            int Count = response.Count();
+            int Count = response.Count;
             if (response.Any())
             {
                 var myappDetails = response.Select(appInfo =>
@@ -47,20 +48,20 @@ namespace Playstore.Infrastructure.Data.Repositories
                         PublishedDate = appInfo.PublishedDate,
                         PublisherName = appInfo.PublisherName,
                         Apps = Count,
-                        Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
+                        Rating = appReview.Any() ? appReview.Average(review => review.Rating) : Dataconstant.NullRating,
                         CategoryName = appInfo.Category.CategoryName,
-                        Downloads = AppDownload.Count(),
+                        Downloads = AppDownload.Count,
                         Status = appInfo.Status
                     };
                 }).ToList();
 
                 return myappDetails;
             }
-                throw new EntityNotFoundException($"No App Found {userId}");
+                throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
             } 
             catch(SqlException exception)
             {
-                throw new Exception($"{exception}");
+                throw new SqlException($"{exception}");
             }
             catch(Exception exception)
             {

@@ -5,6 +5,7 @@ using Playstore.Contracts.Data;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Playstore.Contracts.DTO.AppReview;
 using Playstore.Core.Exceptions;
+using Playstore.Contracts.Data.Utility;
 
 namespace Playstore.Providers.Handlers.Commands.UserData;
 public class CreateAppReviewCommand : IRequest<Guid>
@@ -41,7 +42,7 @@ public class CreateAppReviewCommandHandler : IRequestHandler<CreateAppReviewComm
       return entity.Id;
       }
       
-        throw new ObjectNullException($"No Data Found");
+      throw new ObjectNullException(Dataconstant.ObjectNullException);
      
    }
 }

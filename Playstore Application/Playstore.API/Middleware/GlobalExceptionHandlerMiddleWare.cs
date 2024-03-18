@@ -55,6 +55,12 @@ namespace Playstore
                     statusCode = StatusCodes.Status500InternalServerError;
                     title = "No Object Found";
                 }
+                else if(exception is SpecificException)
+                {
+                     statusCode = StatusCodes.Status500InternalServerError;
+                     title = "Internal Exception";
+
+                }
                 else
                 {
                     statusCode = StatusCodes.Status500InternalServerError;
