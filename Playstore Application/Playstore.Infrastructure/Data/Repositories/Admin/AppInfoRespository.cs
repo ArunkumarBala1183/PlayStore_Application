@@ -96,7 +96,7 @@ namespace Playstore.Core.Data.Repositories
                         appDetailsDto[i] = appInfoDto;
                     }
                     logger.Information("Apps Fetched from Database");
-                    throw new Exception("Something went wrong");
+                
                     return appDetailsDto;
                 }
                 else
