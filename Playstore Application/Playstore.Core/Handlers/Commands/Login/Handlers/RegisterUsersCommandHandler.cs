@@ -58,16 +58,11 @@ namespace Playstore.Providers.Handlers.Commands
                 DateOfBirth = model.DateOfBirth.Date,
                 MobileNumber = model.MobileNumber
             };
-            var existingMobileNumber = await _repository.GetByPhoneNumber(model.MobileNumber);
             var existingUserInUsers = await _repository.GetByEmailId(model.EmailId);
 
             if (existingUserInUsers != null)
             {
                 throw new DuplicateEmailException("Email is already registered.");
-            }
-            if (existingMobileNumber != null)
-            {
-                throw new DuplicateEmailException("MobileNumber is already registered.");
             }
             _repository.Add(userEntity);
             Guid defaultRoleId = await _roleRepository.GetDefaultRoleId();
