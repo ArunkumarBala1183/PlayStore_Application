@@ -69,7 +69,6 @@ export class DashboardComponent implements OnInit {
         if(response.status == HttpStatusCode.Ok)
         {
             this.userDetails = response.body as GetUsers[]
-            console.log(this.userDetails)
             this.dataSource = new MatTableDataSource<GetUsers>(this.userDetails); // Specify the type here
             this.dataSource.paginator = this.paginator;
         }
@@ -95,11 +94,12 @@ export class DashboardComponent implements OnInit {
           label: 'No of apps downloaded in a day',
           data: this.count,
           backgroundColor: [
-            'rgba(255, 206, 86, 1)', // Purple // Red
+            'rgba(153, 102, 255, 1)', // Purple // Red
             'rgba(153, 102, 255, 1)', // Purple // Blue
-            'rgba(255, 99, 132, 1)', // Purple // Yellow
-            'rgba(139, 69, 19, 1)', // Purple // Green
-            'rgba(0, 0, 0, 1)', // Purple
+            'rgba(153, 102, 255, 1)', // Purple // Yellow
+            'rgba(153, 102, 255, 1)', // Purple // Green
+            'rgba(153, 102, 255, 1)', // Purple
+            'rgba(153, 102, 255, 1)',
             'rgba(153, 102, 255, 1)', // Purple // Orange
           ],
           
@@ -109,6 +109,7 @@ export class DashboardComponent implements OnInit {
             'rgba(255, 206, 86, 1)',
             'rgba(75, 192, 192, 1)',
             'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
             'rgba(255, 159, 64, 1)'
           ],
           borderWidth: 0
@@ -143,7 +144,7 @@ export class DashboardComponent implements OnInit {
         const month = day.toLocaleDateString('en-GB', { month: 'long' }); // Get full month name
         const formattedDate = `${dayOfMonth}${suffix} ${month}`; // Format: DDDth MONTH
         dates.push(formattedDate);
-        console.log(dates)
+        
     }
     return dates;
     

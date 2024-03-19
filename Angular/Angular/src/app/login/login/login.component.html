@@ -2,7 +2,7 @@
 <div class=" h-[100vh]  bg-gray-100 flex flex-col justify-center items-center">
     
     <form class="w-[75%] h-[76%]  rounded-2xl shadow-md border  border-gray-300 hover:bg-gray-200 md:w-[25%] md:h-[55%] md:mt-7 flex flex-col items-center bg-white" 
-        [formGroup]="loginData" [ngClass]="{ ' md:h-[60%]':loginData.invalid }"  (ngSubmit)="onSubmit()">
+        [formGroup]="loginData" [ngClass]="{' md:h-[60%]':loginData.invalid }"  (ngSubmit)="onSubmit()">
         <h1 class="login text-center pt-4 text-black">Login</h1>
         <div class="mt-0 md:mt-1"> 
             <input class="mt-2  h-7 rounded-md px-3 bg-gray-100 placeholder-sky-600" type="email" id="emailId" formControlName="emailId" placeholder="Email Id *">

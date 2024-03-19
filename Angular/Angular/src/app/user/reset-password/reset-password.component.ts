@@ -71,7 +71,7 @@ initForm(){
             this.router.navigate(['user/user-profile']);
           }
           else{
-            this.toastr.info("Password already Exists")
+            this.toastr.info("Can't Use Existing Password")
           }
          
         },

@@ -46,6 +46,7 @@ namespace Playstore.Controllers.Admin
         [HttpPost("UploadApp")]
         [ProducesResponseType(typeof(FileStream) , (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(ApiResponseException))]
+        [AllowAnonymous]
         public async Task<IActionResult> UploadApp([FromForm] AppUploadCommand appData)
         {
             try

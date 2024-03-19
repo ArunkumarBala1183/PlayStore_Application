@@ -27,6 +27,11 @@ export class UserComponent implements OnInit {
       next: (response) => {     // returns AppDetails as the response.
         this.developedApps = response;  
         this.isDeveloper = true;
+        if(response==null)
+        {
+        this.isDeveloper = false;
+        
+        }
       },
       error: (error) => {
         if(error.status == HttpStatusCode.NotFound)

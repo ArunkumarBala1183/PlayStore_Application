@@ -24,26 +24,6 @@ namespace Playstore.Infrastructure.Data.Repositories.Generic
         {
             return _dbSet.Count();
         }
-
-        public void Delete(object id)
-        {
-            var entity = Get(id);
-            if (entity != null)
-            {
-                if (_context.Entry(entity).State == EntityState.Detached)
-                {
-                    _dbSet.Attach(entity);
-                }
-                _dbSet.Remove(entity);
-            }
-        }
-
-        public T Get(object id)
-        {
-            var x = _dbSet.Find(id);
-            return x;
-        }
-
         public IEnumerable<T> GetAll()
         {
             return _dbSet.AsEnumerable();

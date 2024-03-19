@@ -4,6 +4,8 @@ using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Playstore.Contracts.DTO.AppReview;
+using Playstore.Core.Exceptions;
+using Playstore.Contracts.Data.Utility;
 
 namespace Playstore.Providers.Handlers.Commands.UserData;
 public class CreateAppReviewCommand : IRequest<Guid>
@@ -25,6 +27,7 @@ public class CreateAppReviewCommandHandler : IRequestHandler<CreateAppReviewComm
 
    public async Task<Guid> Handle(CreateAppReviewCommand request, CancellationToken cancellationToken)
    {
+      if(request!=null){
       AppreviewDTO model = request.Model;
 
       var entity = new AppReview
@@ -37,5 +40,9 @@ public class CreateAppReviewCommandHandler : IRequestHandler<CreateAppReviewComm
       _repository.AppReview.Add(entity);
       await _repository.CommitAsync();
       return entity.Id;
+      }
+      
+      throw new ObjectNullException(Dataconstant.ObjectNullException);
+     
    }
 }

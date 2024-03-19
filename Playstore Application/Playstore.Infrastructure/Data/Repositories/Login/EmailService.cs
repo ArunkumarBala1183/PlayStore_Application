@@ -45,29 +45,37 @@ public class EmailService : IEmailService
 
     public async Task SendUserCredentials(string email, string name, string mobileNumber, DateOnly dateOfBirth)
     {
-        var subject = _configuration.Registersubject;
-        var body = _configuration.UserCredentialsEmailBody
-            .Replace("{name}", name)
-            .Replace("{email}", email)
-            .Replace("{dateOfBirth}", dateOfBirth.ToString())
-            .Replace("{mobileNumber}", mobileNumber);
-
-        var senderEmail = new MailAddress(_configuration.Sender, _configuration.DisplayName);
-        var receiverEmail = new MailAddress(email);
-        var password = _configuration.Password;
-
-        using (var message = new MailMessage(senderEmail, receiverEmail)
+        try
         {
-            Subject = subject,
-            Body = body
-        })
-        {
-            using (var smtp = new SmtpClient(_configuration.Host, _configuration.Port))
+            var subject = _configuration.Registersubject;
+            var body = _configuration.UserCredentialsEmailBody
+                .Replace("{name}", name)
+                .Replace("{email}", email)
+                .Replace("{dateOfBirth}", dateOfBirth.ToString())
+                .Replace("{mobileNumber}", mobileNumber);
+    
+            var senderEmail = new MailAddress(_configuration.Sender, _configuration.DisplayName);
+            var receiverEmail = new MailAddress(email);
+            var password = _configuration.Password;
+    
+            using (var message = new MailMessage(senderEmail, receiverEmail)
             {
-                smtp.EnableSsl = true;
-                smtp.Credentials = new System.Net.NetworkCredential(senderEmail.Address, password);
-                await smtp.SendMailAsync(message);
+                Subject = subject,
+                Body = body
+            })
+            {
+                using (var smtp = new SmtpClient(_configuration.Host, _configuration.Port))
+                {
+                    smtp.EnableSsl = true;
+                    
+                    smtp.Credentials = new System.Net.NetworkCredential(senderEmail.Address, password);
+                    await smtp.SendMailAsync(message);
+                }
             }
+        }
+        catch (Exception error)
+        {
+            Log.Error(error.Message);
         }
     }
 }

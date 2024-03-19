@@ -4,7 +4,7 @@ import { UserService } from 'src/app/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Guid } from 'guid-typescript';
 import {
-  AllAppsInfo,
+ 
   AppReviewsInfo,
   SpecificAppInfo,
 } from 'src/app/interface/user';
