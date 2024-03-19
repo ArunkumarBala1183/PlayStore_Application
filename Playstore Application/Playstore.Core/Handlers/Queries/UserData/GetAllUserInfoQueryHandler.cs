@@ -35,6 +35,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
 
         public async Task<UsersDetailsDTO> Handle(GetAllUserInfoQuery request, CancellationToken cancellationToken)
         {
+            //infrastructure repository
             var app = await _repository.UserData.GetUsersDetails(request.UserId);
             return (UsersDetailsDTO)app;
         }

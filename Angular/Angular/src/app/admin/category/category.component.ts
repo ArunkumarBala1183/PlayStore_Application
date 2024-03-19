@@ -70,9 +70,9 @@ export class CategoryComponent implements OnInit {
     this.categoryService.getCategory().subscribe(
       {
         next: response => {
-          console.log(response.body)
+         
           this.categorydata = response.body
-          console.log(this.categorydata)
+         
         },
         error: error => {
           console.log(error)

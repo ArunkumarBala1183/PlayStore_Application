@@ -70,7 +70,7 @@ export class ChangePasswordComponent implements OnInit{
       const newPassword = this.changePasswordForm.get('newPassword')?.value;
       this.service.patchPassword(this.userId , newPassword).subscribe({
         next:( response:any) => {
-          console.log(response);
+         
           if(response.message ==true )
           {
             this.toastr.success('Password Changed');

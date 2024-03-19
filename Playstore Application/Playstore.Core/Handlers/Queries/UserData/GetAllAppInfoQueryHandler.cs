@@ -9,6 +9,7 @@ namespace Playstore.Providers.Handlers.Queries.UserData
 {
     public class GetAllAppInfoQuery : IRequest<IEnumerable<AppsdetailsDTO>>
     {
+        
     }
 
     public class GetAllAppInfoQueryHandler : IRequestHandler<GetAllAppInfoQuery, IEnumerable<AppsdetailsDTO>>
