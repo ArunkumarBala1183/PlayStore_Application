@@ -42,7 +42,6 @@ initForm(){
   {
     this.userId = this.loginService.getUserId();
     const existingPassword = event.target.value;
-    console.log(existingPassword);
     this.service.getPassword(this.userId , existingPassword).subscribe({
       next : response => {
         if(response)
@@ -55,7 +54,7 @@ initForm(){
         }
       },
       error : error => {
-        console.error(error);
+        this.toastr.error('Password Not Fetched');
       }
     })
   }
@@ -66,7 +65,6 @@ initForm(){
       const newPassword = this.changePasswordForm.get('newPassword')?.value;
       this.service.patchPassword(this.userId , newPassword).subscribe({
         next:( response:any) => {
-          console.log(response);
           if(response.message ==true)
           {
             this.toastr.success('Password Changed');
@@ -79,7 +77,7 @@ initForm(){
         },
         error : error =>
         {
-          console.error(error);
+          this.toastr.error('Password Failed to Fetch');
         }
       });
     }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { userInfo } from 'src/app/interface/user';
 import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
@@ -13,7 +14,7 @@ export class UserProfileComponent implements OnInit {
 
   userData! : userInfo
   
-  constructor(private router: Router, private loginService: LoginService, private service: UserService) { }
+  constructor(private router: Router, private loginService: LoginService, private service: UserService,private toastr : ToastrService) { }
 
   ngOnInit(): void {
     const userId = this.loginService.getUserId();
@@ -23,7 +24,7 @@ export class UserProfileComponent implements OnInit {
           this.userData = response;
         },
         error: error => {
-          console.log(error);
+          this.toastr.error('User Not Found');
         },
       });
   }

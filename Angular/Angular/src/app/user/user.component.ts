@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
 import { LoginService } from '../services/login.service';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../services/user.service';
 import { DeveloperAppInfo } from '../interface/user';
 import { HttpStatusCode } from '@angular/common/http';
+import { userRoutes } from '../shared/routings/redirect';
 
 @Component({
   selector: 'app-user',
@@ -33,22 +33,26 @@ export class UserComponent implements OnInit {
         {
           this.isDeveloper = false;
         }
-        console.log(error);
       },
     });
+    this.userService.getIsDeveloper().subscribe(res=>{
+      if(res){
+        this.isDeveloper = res;
+      }
+    })
   }
 
-  homePage = environment.homeRoute;
-  downloadsPage = environment.downloadsRoute;
-  aboutUsPage = environment.aboutUsRoute;
-  myAppsPage = environment.myAppsRoute;
-  newAppPage = environment.newAppRoute;
-  userProfilePage = environment.userProfileRoute;
-  specificAppPage = environment.specificAppRoute;
-  resetPasswordPage = environment.resetPasswordRoute;
+  homePage = userRoutes.homeRoute;
+  downloadsPage = userRoutes.downloadsRoute;
+  aboutUsPage = userRoutes.aboutUsRoute;
+  myAppsPage = userRoutes.myAppsRoute;
+  newAppPage = userRoutes.newAppRoute;
+  userProfilePage = userRoutes.userProfileRoute;
+  specificAppPage = userRoutes.specificAppRoute;
+  resetPasswordPage = userRoutes.resetPasswordRoute;
   
   // for highlighting the Selected/Current component.
-  isHighlightComponent: string = this.homePage;
+  isHighlightComponent: string = '';
   public highlightSelectedComponent(component: string) {
     this.isHighlightComponent = component;
   }

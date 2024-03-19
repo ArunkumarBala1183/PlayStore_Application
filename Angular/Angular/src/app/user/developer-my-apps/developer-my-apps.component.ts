@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Guid } from 'guid-typescript';
+import { ToastrService } from 'ngx-toastr';
 import {
-  AllAppsInfo,
   DeveloperAppInfo,
-  SpecificAppInfo,
 } from 'src/app/interface/user';
-import { AppService } from 'src/app/services/app.service';
 import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -17,9 +14,9 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class DeveloperMyAppsComponent implements OnInit {
   constructor(
-    private router: Router,
     private service: UserService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private toastr : ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -28,11 +25,10 @@ export class DeveloperMyAppsComponent implements OnInit {
     const userId = this.loginService.getUserId();     // Fetches the UserId from the Token.
     this.service.getDeveloperApps(userId).subscribe({   
       next: (response) => {     // returns AppDetails as the response.
-        this.developedApps = response; 
-             
+        this.developedApps = response;
       },
       error: (error) => {
-        console.log(error);
+        this.toastr.error('No App Uploaded');
       },
     });
   }

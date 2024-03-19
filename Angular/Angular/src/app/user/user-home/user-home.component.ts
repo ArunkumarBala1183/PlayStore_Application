@@ -24,11 +24,11 @@ export class UserHomeComponent implements OnInit {
     this.service.getAllApps().subscribe({
       next: (response) => {
           this.application = response;
-          this.isLoading=false
+          this.isLoading=false;
       },
       error: (error) => {
-        console.error(error); 
-        this.isLoading=false       
+        this.toastr.error('App not Found');
+        this.isLoading=false; 
       },
     });
   }

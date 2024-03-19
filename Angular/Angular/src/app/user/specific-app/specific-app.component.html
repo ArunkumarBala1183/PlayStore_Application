@@ -4,7 +4,7 @@
     <!-- Main Div -->
 <div *ngIf="isLoading" class="loader"></div>
 
-    <div class="mt-2 shadow-2xl p-3 mx-4 md:mx-[5rem] lg:mx-[10rem] flex flex-col">
+    <div *ngIf="!isLoading" class="mt-2 shadow-2xl p-3 mx-4 md:mx-[5rem] lg:mx-[10rem] flex flex-col">
         <!-- Logo, App Name, Category, Download -->
         <div class="flex justify-between items-center px-24">
             <!-- Logo -->

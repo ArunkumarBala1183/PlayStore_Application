@@ -61,7 +61,7 @@ initForm(){
         },
         
       error: (error) => {
-        console.log(error);
+        this.toastr.error('App Not found');
       },
       complete : () => {
         this.isLoading = false;
@@ -70,12 +70,11 @@ initForm(){
     
     this.service.getReviews(appId).subscribe({
       next: (response) => {
-        this.appReview = response;   
-        console.log(this.appReview[0].ratings);             
+        this.appReview = response;             
         this.updateDisplayedReviews();
       },
       error: (error) => {
-        console.log(error);
+       this.toastr.error('Reviews Not Fetched');
       },
       complete : () =>
       {
@@ -117,11 +116,9 @@ initForm(){
           this.getSpecificApp(appId,userId)
         },
         error: (error) => {
-          console.error('Error Occurred :', error);
           if (error instanceof HttpErrorResponse) {
             if (error.status === 400) {
               const errorMessage = error.error instanceof Blob ? 'Already Downloaded' : error.error;
-              console.error(errorMessage);
             }
           }
         },
@@ -139,12 +136,11 @@ initForm(){
       formData.userId = userId;
       formData.additionalValue = this.service.postReview(formData).subscribe({
         next: (response) => {
-          console.log(response);
           this.toastr.success('Review Submitted');
           this.getSpecificApp(appId,userId);
         },
         error: (error) => {
-          console.log(error);
+          this.toastr.error('Review Not Submitted');
         },
         complete : () =>
       {

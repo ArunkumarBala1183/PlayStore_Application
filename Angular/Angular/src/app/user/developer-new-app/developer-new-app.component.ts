@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -30,6 +30,7 @@ export class DeveloperNewAppComponent implements OnInit {
   logoFileFormatCheck = false;
   screenshotFileFormatCheck = false;
   appFileFormatCheck = true;
+  isDeveloper = false;
 
   constructor(
     public router: Router,
@@ -40,15 +41,21 @@ export class DeveloperNewAppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    
     this.initForm();
-    // fetching the categories from the Database.
+    this.getCategory();
+   
+  }
+
+  public getCategory()
+  {
     this.service.getCategory().subscribe({
       next: (response) => {
         this.category = response;
       },
       error : error => 
       {
-        console.error(error);
+        this.toastr.error('Category Failed to Fetch');
       }
     });
   }
@@ -169,11 +176,12 @@ export class DeveloperNewAppComponent implements OnInit {
           }
           else{
           this.toastr.success('Form Submitted',);
+          this.service.setIsDeveloper(true);
           this.router.navigate(['user/my-apps']);
           }
         },
         error: (error) => {
-          console.log(error);
+          this.toastr.error('Application not uploaded');
         },
         complete:()=>{
           this.appData.reset();
