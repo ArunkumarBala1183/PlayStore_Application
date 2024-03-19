@@ -95,6 +95,7 @@ export class UserService {
       return this.http.get<boolean>(`${this.baseUrl}Login/checkPassword?UserId=${userId}&password=${password}`);
     
   }
+}
 
   patchPassword(userId : Guid , newPassword : string) 
   {
