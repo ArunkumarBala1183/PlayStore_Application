@@ -43,14 +43,5 @@ namespace Playstore.Core.Data.Repositories
             logger.Information($"User fetched for {emailId}");
             return response;
         }
-
-        public async Task<Users?> GetByPhoneNumber(string mobileNumber)
-        {
-            var response =  await _context.Users.FirstOrDefaultAsync(number => number.MobileNumber == mobileNumber);
-            logger.Information("User fetched from server");
-            return response;
-            
-        }
-        
     }
 }

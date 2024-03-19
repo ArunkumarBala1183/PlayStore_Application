@@ -27,7 +27,7 @@ export class LoginService {
   }
 
   public forgotPassword(email: EmailExists) {
-    console.log(email);
+  
     return this.http.post(
       this.apiBaseAddress + 'Login/forgot-Password',
       email,
@@ -35,13 +35,13 @@ export class LoginService {
     );
   }
   public addUser(userData: Register) {
-    console.log(userData);
+   
     return this.http.post(this.apiBaseAddress + 'Login/register', userData, {
       observe: 'response',
     });
   }
   public verifyLogin(credentials: Login) {
-    console.log(credentials);
+    
     return this.http.post(
       this.apiBaseAddress + 'Login/User-Login',
       credentials
@@ -57,8 +57,7 @@ export class LoginService {
     );
   }
   public refreshToken(expiredToken: string) {
-    console.log('refreshtokenService');
-    console.log(expiredToken);
+    
     const refreshTokenCommand = { ExpiredToken: expiredToken };
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post(
@@ -77,7 +76,7 @@ export class LoginService {
   }
   public isAuthenticated(): boolean {
     const token = this.getToken();
-    console.log(token);
+    
     return !!token && !this.jwtHelper.isTokenExpired(token);
   }
   public getToken(): string | null {
@@ -85,13 +84,13 @@ export class LoginService {
   }
   public getUserRole(): string | null {
     const token = sessionStorage.getItem('accessToken');
-    // console.log('.........Arun.........'+ token);
+   
     if (token) {
-      // console.log('..................'+ token);
+     
       const decodedToken = this.jwtHelper.decodeToken(token);
       console.log(decodedToken);
       const role = decodedToken['role'];
-      // console.log('...............'+ role)
+     
       return role;
     }
     return null;
@@ -100,30 +99,32 @@ export class LoginService {
     const token = sessionStorage.getItem('accessToken');
 
     if (token) {
+     
       const decodedToken = this.jwtHelper.decodeToken(token);
+    
       const userId = decodedToken
         ? decodedToken[
             'http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata'
           ]
         : null;
-      console.log(userId);
+      
       return userId;
     }
   }
 
   public isTokenExpired(): boolean {
-    console.log('token expired method called');
+    
     const token = this.getToken();
     if (token) {
       const expirationDate = this.jwtHelper.getTokenExpirationDate(token);
-      console.log(expirationDate);
+      
       const currentTime = new Date().getTime();
       const expirationTime = expirationDate ? expirationDate.getTime() : 0;
       const timeDifference = expirationTime - currentTime;
-      console.log(timeDifference);
+      
       const oneMinute = 1 * 60 * 1000;
       if (timeDifference < oneMinute) {
-        console.log('refreshtoken return true..........');
+       
         return true;
       }
     }

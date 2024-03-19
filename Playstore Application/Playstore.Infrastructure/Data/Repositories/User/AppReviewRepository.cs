@@ -7,6 +7,9 @@ using System.Net;
 using Playstore.Contracts.DTO.AppReview;
 using Serilog;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
+using SqlException = Playstore.Core.Exceptions.SqlException;
+using Playstore.Contracts.Data.Utility;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
@@ -17,12 +20,13 @@ namespace Playstore.Infrastructure.Data.Repositories
         public AppReviewRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
             this.databaseContext=context;
-            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
-                        .ForContext("Location", typeof(AppReviewRepository).Name);
+            logger = Log.ForContext(Dataconstant.UserId, httpContext.HttpContext?.Items[Dataconstant.UserId])
+                        .ForContext(Dataconstant.Location, typeof(AppReviewRepository).Name);
         }
 
         public async Task<object> GetReview(Guid id)
         {
+            try{
             var response = await this.databaseContext.AppReviews.Include(obj => obj.Users).Where(obj => obj.AppId == id).ToListAsync();
             if(response!=null)
             {
@@ -36,12 +40,21 @@ namespace Playstore.Infrastructure.Data.Repositories
                         Ratings = response.Select(obj => obj.Rating).ToList()
                     };
                 });
-                logger.Information($"AppReview fetched for id {id}");
+                logger.Information(Dataconstant.AppReviewFetchedInfo+Dataconstant.Singlespace+id);
                 return userReview;
             }
             
-            logger.Information($"No AppReview found for id {id}");
+            logger.Information(Dataconstant.NoAppReviewFetchedInfo+Dataconstant.Singlespace+id);
             return HttpStatusCode.NoContent;
+            }
+            catch(SqlException exception)
+            {
+                throw new SqlException($"{exception}");
+            }
+            catch(Exception exception)
+            {
+                throw new Exception($"{exception}");
+            }
         }
     }
 }

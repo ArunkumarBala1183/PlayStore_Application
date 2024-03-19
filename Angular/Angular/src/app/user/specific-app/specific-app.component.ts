@@ -4,7 +4,7 @@ import { UserService } from 'src/app/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Guid } from 'guid-typescript';
 import {
-  AllAppsInfo,
+ 
   AppReviewsInfo,
   SpecificAppInfo,
 } from 'src/app/interface/user';
@@ -120,7 +120,7 @@ initForm(){
           console.error('Error Occurred :', error);
           if (error instanceof HttpErrorResponse) {
             if (error.status === 400) {
-              const errorMessage = error.error instanceof Blob ? 'Already Downloaded' : error.error;
+              const errorMessage = error.error instanceof Blob ? 'Bad Request' : error.error;
               console.error(errorMessage);
             }
           }

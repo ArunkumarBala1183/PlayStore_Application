@@ -55,41 +55,37 @@ export class ForgotpasswordComponent {
           next: (response) => {
             this.toastr.success('Otp Sent to your Email');
             this.emailSuccess = response;
-            console.log(this.emailSuccess);
+           
             this.emailVerify = true;
             this.showOtp = true;
           },
           error: (error) => {
             this.toastr.error('Incorrect EmailId');
-            console.log(error);
+          
             return;
           },
         });
       } else {
         if (!this.otpVerify) {
-          console.log(this.otp);
-          console.log(this.emailId);
-          console.log(form.value);
+          
           this.loginService.verifyOtp(form.value).subscribe({
             next: (response) => {
-              console.log(response);
+             
               this.otpVerify = true;
               this.showOtp = !this.showOtp;
               this.toastr.info('Enter Your New Password');
             },
             error: (error) => {
-              console.log(error);
+              
               this.toastr.warning('Incorect otp');
               return;
             },
           });
         } else {
-          console.log('Email:', this.emailId);
-          console.log('OTP:', this.otp);
-          console.log('Password:', this.newPassword);
+         
           this.loginService.changePassword(form.value).subscribe({
             next: (response) => {
-              console.log(response);
+            
               this.toastr.success('Password Changed Successfully');
               this.router.navigate(['login']);
               form.reset();
@@ -97,11 +93,12 @@ export class ForgotpasswordComponent {
               this.otpVerify = false;
             },
             error: (error) => {
-              this.toastr.error('Please Try Again Later ');
+              this.toastr.error('Password confirm password doesnot match ');
             },
           });
         }
       }
     }
+   
   }
 }

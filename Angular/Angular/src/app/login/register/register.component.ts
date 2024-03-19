@@ -81,12 +81,12 @@ public mobileCheck():boolean
 }
 
   public checkEmail(event: any): void {
-    console.log(event.target.value);
+
     const emailId = event.target.value;
     const emailExists: EmailExists = { emailId: emailId };
     this.loginService.checkUser(emailExists).subscribe({
       next: response => {
-        console.log(response);
+       
         if (response.body == false) {
           this.emailExists = false;
         } else {
@@ -95,7 +95,8 @@ public mobileCheck():boolean
         }
       },
       error: (error) => {
-        console.log(error);
+        
+        this.toastr.show('Invalid Email')
       },
     });
   }
@@ -107,32 +108,31 @@ public mobileCheck():boolean
     const dateOfBirth: Date = new Date(dateOfBirthString);
 
     if (this.minDate && dateOfBirth >= this.minDate) {
-      console.log(this.minDate);
-      console.log(dateOfBirth);
+      
       this.validdateOfBirth = true;
     } else {
-      console.log(this.minDate);
-      console.log(dateOfBirth);
+     
       this.validdateOfBirth = false;
     }
   }
   onSubmit() {
     if (this.register.valid) {
-      console.log(this.register.value);
+      
       const email = this.register.controls.emailId.value;
-      console.log(email);
+      
       this.loginService.addUser(this.register.value).subscribe({
         next: (response) => {
-          console.log(response);
+          
           this.toastr.success('Register Success.Enter Password to Login');
           this.router.navigate(['login'], { queryParams: { emailId: email } });
         },
         error: (error) => {
-          console.log(error);
+          this.toastr.error('Incorrect Credentials');
+         
         },
       });
     } else {
-      alert('Please fill the input fields correctly');
+      this.toastr.error('Please fill the input fields correctly');
     }
   }
 }

@@ -8,6 +8,7 @@ using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
 using Serilog;
 using Microsoft.AspNetCore.Http;
+using Playstore.Contracts.Data.Utility;
 
 
 namespace Playstore.Infrastructure.Data.Repositories
@@ -19,16 +20,19 @@ namespace Playstore.Infrastructure.Data.Repositories
         public AddDeveloperMyAppDetailsRespository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
             databaseContext = context;
-            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
-                        .ForContext("Location", typeof(AddDeveloperMyAppDetailsRespository).Name);
+            logger = Log.ForContext(Dataconstant.UserId, httpContext.HttpContext?.Items[Dataconstant.UserId])
+                        .ForContext(Dataconstant.Location, typeof(AddDeveloperMyAppDetailsRespository).Name);
         }
 
-        public async Task<object> GetAppDetails(Guid id)
+
+
+        public async Task<object> GetAppDetails(Guid userId)
         {
-            var response = await databaseContext.AppInfo
+            try{
+            var response = await this.databaseContext.AppInfo
                 .Include(data => data.AppDownloads)
                 .Include(data => data.Category)
-                .Where(obj => obj.UserId == id)
+                .Where(obj => obj.UserId == userId)
                 .ToListAsync();
             int Count = response.Count;
             if (response.Any())
@@ -49,20 +53,30 @@ namespace Playstore.Infrastructure.Data.Repositories
                         PublishedDate = appInfo.PublishedDate,
                         PublisherName = appInfo.PublisherName,
                         Apps = Count,
-                        Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
+                        Rating = appReview.Any() ? appReview.Average(review => review.Rating) : Dataconstant.NullRating,
                         CategoryName = appInfo.Category.CategoryName,
                         Downloads = AppDownload.Count,
                         Status = appInfo.Status
                     };
                 }).ToList();
 
-                logger.Information($"App Details fetched for {id}");
+                logger.Information(Dataconstant.AppDetailsInfo+Dataconstant.Singlespace+userId);
                 return myappDetails;
             }
             
-            var message = $"No AppInfo found for UserId {id}";
+            var message = Dataconstant.AppInfovalue+Dataconstant.Singlespace+userId;
             logger.Information(message);
             throw new EntityNotFoundException(message);
+                throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
+            } 
+            catch(SqlException exception)
+            {
+                throw new SqlException($"{exception}");
+            }
+            catch(Exception exception)
+            {
+                throw new Exception($"{exception}");
+            }
         }
     }
 }

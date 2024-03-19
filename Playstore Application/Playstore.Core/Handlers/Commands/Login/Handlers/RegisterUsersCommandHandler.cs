@@ -55,42 +55,36 @@ namespace Playstore.Providers.Handlers.Commands
             {
                 Name = model.Name,
                 EmailId = model.EmailId,
+                
                 DateOfBirth = model.DateOfBirth.Date,
                 MobileNumber = model.MobileNumber
             };
-            var existingMobileNumber = await _repository.GetByPhoneNumber(model.MobileNumber);
             var existingUserInUsers = await _repository.GetByEmailId(model.EmailId);
 
             if (existingUserInUsers != null)
             {
                 throw new DuplicateEmailException("Email is already registered.");
             }
-            if (existingMobileNumber != null)
-            {
-                throw new DuplicateEmailException("MobileNumber is already registered.");
-            }
             _repository.Add(userEntity);
             Guid defaultRoleId = await _roleRepository.GetDefaultRoleId();
             await GenerateUserRole(userEntity, defaultRoleId);
             await GenerateUserCredentials(userEntity.EmailId, request);
-            _emailService.SendUserCredentialsAsync(model.EmailId, model.Name, model.MobileNumber, DateOnly.FromDateTime(model.DateOfBirth));
+            _emailService.SendUserCredentials(model.EmailId, model.Name, model.MobileNumber, DateOnly.FromDateTime(model.DateOfBirth));
             await _repository.CommitAsync();
             return userEntity.UserId;
         }
         private async Task GenerateUserRole(Users userEntity, Guid defaultRoleId)
         {
-            var defaultRole = await _roleRepository.GetByRoleId(defaultRoleId);
-            if (defaultRole != null)
-            {
+
                 var userRole = new UserRole
                 {
                     UserId = userEntity.UserId,
-                    RoleId = defaultRole.RoleId
+                    RoleId = defaultRoleId
                 };
 
                 _userRoleRepository.Add(userRole);
                 await _userRoleRepository.CommitAsync();
-            }
+            
         }
 
 
