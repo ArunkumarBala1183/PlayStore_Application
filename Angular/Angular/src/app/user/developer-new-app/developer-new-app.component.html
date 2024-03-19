@@ -52,8 +52,8 @@
                     <label for="Logo" class="">App Logo <span><br>(should be a image)</span></label><br>
                     <input class="mt-1" type="file" name="Logo" id="Logo" accept=".jpg, .jpeg, .png"
                         (change)="handleLogo($event)" formControlName="Logo"><br>
-                    <!-- <span class="pb-1  text-red-400"
-                        *ngIf="appData.get('Logo')?.touched && (appData.get('Logo')?.hasError('required'))">{{validationMessages.Logo.required}}</span> -->
+                    <span class="pb-1  text-red-400"
+                        *ngIf="appData.get('Logo')?.touched && (appData.get('Logo')?.hasError('required'))"></span>
                     <span *ngIf="this.logoFileFormatCheck" class="text-red-500">File should be an Image</span>
                 </div>
 
@@ -62,8 +62,8 @@
                     <input class="mt-1" type="file" name="AppFile" id="AppFile"
                         accept=".zip, application/zip, application/x-zip-compressed" (change)="handleFile($event)"
                         formControlName="AppFile"><br>
-                    <!-- <span class="pb-1  text-red-400"
-                        *ngIf="appData.get('AppFile')?.dirty ">{{validationMessages.AppFile.required}}</span> -->
+                    <span class="pb-1  text-red-400"
+                        *ngIf="appData.get('AppFile')?.dirty && appData.get('AppFile')?.hasError('required')"></span>
                     <span *ngIf="!this.appFileFormatCheck" class="text-red-400">App File should be Zip</span>
                     <span *ngIf="fileSize" class="text-red-400 text-center">Please upload file
                         with less than 2mb!!!!</span>
@@ -76,8 +76,8 @@
                 <label for="appImages">App Screenshots <span><br>(app screenshots)</span> </label><br>
                 <input class="mt-1" type="file" name="appImages" id="appImages" accept=".jpg, .jpeg, .png .webp"
                     multiple (change)="multipleFiles($event)" formControlName="appImages"><br>
-                <!-- <span class="pt-1  text-red-400"
-                    *ngIf="appData.get('appImages')?.touched && (appData.get('appImages')?.hasError('required'))">{{validationMessages.appImages.required}}</span> -->
+                <span class="pt-1  text-red-400"
+                    *ngIf="appData.get('appImages')?.touched && (appData.get('appImages')?.hasError('required'))"></span>
                 <span *ngIf="multipleFile" class="text-red-400 text-center">
                     Select atleast 2-3 files
                 </span>
