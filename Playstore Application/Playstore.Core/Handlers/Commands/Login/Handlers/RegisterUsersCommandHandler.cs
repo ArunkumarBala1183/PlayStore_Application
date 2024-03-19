@@ -55,6 +55,7 @@ namespace Playstore.Providers.Handlers.Commands
             {
                 Name = model.Name,
                 EmailId = model.EmailId,
+                
                 DateOfBirth = model.DateOfBirth.Date,
                 MobileNumber = model.MobileNumber
             };

@@ -43,7 +43,7 @@ namespace Playstore.Controllers.UserData
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
-            catch (Exception exception)
+            catch (ApiResponseException exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
@@ -67,7 +67,7 @@ namespace Playstore.Controllers.UserData
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
-            catch (Exception exception)
+            catch (ApiResponseException exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
@@ -90,7 +90,7 @@ namespace Playstore.Controllers.UserData
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
-            catch (Exception exception)
+            catch (ApiResponseException exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
@@ -117,7 +117,7 @@ namespace Playstore.Controllers.UserData
                 return Ok(response);
 
             }
-            catch (Exception exception)
+            catch (ApiResponseException exception)
             {
                 return BadRequest(new BaseResponseDTO
                 {
@@ -139,7 +139,7 @@ namespace Playstore.Controllers.UserData
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
-            catch (Exception exception)
+            catch (ApiResponseException exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
@@ -153,7 +153,7 @@ namespace Playstore.Controllers.UserData
         [HttpGet("DeveloperMyAppDetails")]
         [ProducesResponseType(typeof(AppInfoDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-        [Authorize(Roles ="Developer")]
+        [Authorize(Roles ="Developer , User")]
         public async Task<object> GetDeveloperDetails(Guid userId)
         {
             try
@@ -163,12 +163,12 @@ namespace Playstore.Controllers.UserData
 
                 return response;
             }
-            catch (EntityNotFoundException)
+             catch (ApiResponseException exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
                     IsSuccess = false,
-                    Errors = new string[] { "No App Uploaded" }
+                    Errors = new string[] { exception.Message }
                 });
             }
         }
@@ -186,7 +186,7 @@ namespace Playstore.Controllers.UserData
                 var response = await _mediator.Send(query);
                 return Ok(response);
             }
-            catch (Exception exception)
+            catch (ApiResponseException exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
@@ -213,16 +213,16 @@ namespace Playstore.Controllers.UserData
                 return Ok(response);
             }
 
-            catch (InvalidRequestBodyException)
+            catch (InvalidRequestBodyException exception)
             {
                 return BadRequest(new BaseResponseDTO 
                 {   
                     IsSuccess = false,
-                    Errors = new String[] {"Already Downloaded"}
+                    Errors = new string[] {exception.Message}
                 });
             }
             
-            catch (Exception exception)
+            catch (ApiResponseException exception)
             {
                 return NotFound(new BaseResponseDTO
                 {
@@ -247,7 +247,7 @@ namespace Playstore.Controllers.UserData
 
                 return StatusCode((int)HttpStatusCode.Created, await _mediator.Send(command));
             }
-            catch (Exception exception)
+            catch (ApiResponseException exception)
             {
                 return BadRequest(new BaseResponseDTO
                 {
@@ -270,7 +270,7 @@ namespace Playstore.Controllers.UserData
                 var response = await _mediator.Send(category);
                 return Ok(response);
             }
-            catch (Exception exception)
+            catch (ApiResponseException exception)
             {
                 return BadRequest(new BaseResponseDTO
                 {

@@ -1,14 +1,18 @@
 using System.Net;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.Data.RoleConfig;
+using Playstore.Contracts.Data.Utility;
 using Playstore.Contracts.DTO;
+using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
 using Serilog;
+using SqlException = Playstore.Core.Exceptions.SqlException;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
@@ -22,8 +26,8 @@ namespace Playstore.Infrastructure.Data.Repositories
         {
             databaseContext = context;
             this.role = roleConfig.Value;
-            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
-                        .ForContext("Location", typeof(AppFilesRepository).Name);
+            logger = Log.ForContext(Dataconstant.UserId, httpContext.HttpContext?.Items[Dataconstant.UserId])
+                        .ForContext(Dataconstant.Location, typeof(AppFilesRepository).Name);
         }
 
 
@@ -99,6 +103,8 @@ namespace Playstore.Infrastructure.Data.Repositories
 
                 appInfo.AppImages = appImages;
 
+                
+
                 var user = await databaseContext.Users
                 .Include(data => data.UserRoles)
                 .FirstOrDefaultAsync(id => id.UserId == createAppInfoDTO.UserId);
@@ -118,17 +124,22 @@ namespace Playstore.Infrastructure.Data.Repositories
                     await this.databaseContext.AppInfo.AddAsync(appInfo);
 
                     await databaseContext.SaveChangesAsync();
-                    logger.Information("App Uploaded Successfully");
+                    logger.Information(Dataconstant.Appupload);
                     return HttpStatusCode.Created;
                 }
-                logger.Information("App Upload Failed");
+                logger.Information(Dataconstant.NoAppUpload);
                 return HttpStatusCode.NotFound;
                 }
                 return HttpStatusCode.BadRequest;
             }
+            catch(SqlException exception)
+            {
+                throw new SqlException($"{exception}");
+            }
             catch (Exception error)
             {
                 logger.Error(error , error.Message);
+               
                 return HttpStatusCode.InternalServerError;
             }
         }

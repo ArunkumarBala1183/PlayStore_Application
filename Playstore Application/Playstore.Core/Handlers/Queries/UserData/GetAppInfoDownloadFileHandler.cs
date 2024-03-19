@@ -5,6 +5,7 @@ using Playstore.Core.Exceptions;
 using AutoMapper;
 using Playstore.Contracts.Data;
 using Playstore.Contracts.DTO.AppDownloads;
+using Playstore.Contracts.Data.Utility;
 
 namespace Playstore.Providers.Handlers.Queries.UserData
 {
@@ -29,15 +30,21 @@ namespace Playstore.Providers.Handlers.Queries.UserData
         public async Task<IEnumerable<AppStoreDTO>> Handle(GetAppInfoDownloadFile request, CancellationToken cancellationToken)
         {
 
-
+            if(request!=null)
+            {
             var app = await _repository.AppDownload.GetData(request.Userid);
 
             if (app == null)
             {
-                throw new EntityNotFoundException($"No App found");
+                throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
             }
 
             return (IEnumerable<AppStoreDTO>)app;
+            }
+        
+            
+            throw new ObjectNullException(Dataconstant.ObjectNullException);
+           
         }
     }
 }

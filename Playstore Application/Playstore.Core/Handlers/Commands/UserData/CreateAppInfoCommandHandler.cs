@@ -8,6 +8,7 @@ using Playstore.Core.Exceptions;
 using System;
 using System.IO.Pipelines;
 using System.Net;
+using Playstore.Contracts.Data.Utility;
 
 namespace Playstore.Providers.Handlers.Commands.UserData
 {
@@ -37,9 +38,20 @@ namespace Playstore.Providers.Handlers.Commands.UserData
 
         public async Task<HttpStatusCode> Handle(CreateAppInfoCommand request, CancellationToken cancellationToken)
         {
-            CreateAppInfoDTO model = request.Model;
+            if (request != null)
+            {
+                CreateAppInfoDTO model = request.Model;
+                var app = await _repository.AppFiles.AddFiles(model);
+                if (app == HttpStatusCode.NotFound)
+                {
+                    throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
+                }
 
-            return await _repository.AppFiles.AddFiles(model);
+                return app;
+            }
+
+            throw new ObjectNullException(Dataconstant.ObjectNullException);
+
         }
 
     }

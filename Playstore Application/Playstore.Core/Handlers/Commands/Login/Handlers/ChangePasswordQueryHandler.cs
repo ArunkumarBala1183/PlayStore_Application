@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Providers.Handlers.Queries;
 
 namespace Playstore.Providers.Handlers.Commands
 {

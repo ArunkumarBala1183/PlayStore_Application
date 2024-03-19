@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
+using SqlException = Playstore.Core.Exceptions.SqlException;
+using Playstore.Contracts.Data.Utility;
 using Serilog;
 using Microsoft.AspNetCore.Http;
 
@@ -19,8 +21,8 @@ namespace Playstore.Infrastructure.Data.Repositories
         public AppValueRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
             this.context = context;
-            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
-                        .ForContext("Location", typeof(AppValueRepository).Name);
+            logger = Log.ForContext(Dataconstant.UserId, httpContext.HttpContext?.Items[Dataconstant.UserId])
+                        .ForContext(Dataconstant.Location, typeof(AppValueRepository).Name);
         }
 
         public async Task<AppData> GetAppData(Guid appId , Guid userId)
@@ -38,70 +40,88 @@ namespace Playstore.Infrastructure.Data.Repositories
                     var entity = new AppDownloads
                     {
                         AppId = appId,
-                        UserId = userId, //use userId here
+                        UserId = userId,
                         DownloadedDate = DateTime.Today,
                     };
                     this.context.AppDownloads.Add(entity);
                     await this.context.SaveChangesAsync();
-                    logger.Information($"App Data fetched for id {appId}");
+                    logger.Information(Dataconstant.AppDataFetchedInfo+Dataconstant.Singlespace+appId);
                     return response.AppData;
                     
                 }
-                logger.Information("Bad Request");
+                logger.Information(Dataconstant.BadRequest);
                 throw new InvalidRequestBodyException();
             }
-            var message = $"No App Found";
+            var message = Dataconstant.NoAppFound;
             logger.Information(message);
             throw new EntityNotFoundException(message);
         }
         public async Task<object> GetValue(Guid id)
         {
-            var response = await context.AppInfo.FirstOrDefaultAsync(appId => appId.UserId == id);
+            try
+            {
+                var response = await context.AppInfo.FirstOrDefaultAsync(appId => appId.UserId == id);
 
             if (response != null)
             {
-                logger.Information($"App fetched for id {id}");
+                logger.Information(Dataconstant.AppFetchedId+Dataconstant.Singlespace+id);
                 return response;
             }
-            logger.Information($"No App found for id {id}");
+            logger.Information(Dataconstant.NoAppFetched+Dataconstant.Singlespace+id);
             return HttpStatusCode.NoContent;
+                
+            }
+            catch(SqlException exception)
+            {
+                throw new SqlException($"{exception}");
+            }
+            
         }
         public async Task<object> ViewAllApps()
         {
-            var enetities = await this.context.AppInfo.Include(data => data.AppReview).Include(data => data.Category).Include(data => data.AppImages).Where(status => status.Status == RequestStatus.Approved).ToListAsync();
-            int count = enetities.Count;
-            if (enetities.Any())
+            try
             {
-                var myappDetails = enetities.Select(appInfo =>
+                var enetities = await this.context.AppInfo.Include(data => data.AppReview).Include(data => data.Category).Include(data => data.AppImages).Where(status => status.Status == RequestStatus.Approved).ToListAsync();
+                int count = enetities.Count;
+                if (enetities.Any())
                 {
-                     var appReview = this.context.AppReviews
-                        .Where(review => review.AppId == appInfo.AppId)
-                        .ToList();
-                    var AppDownload = this.context.AppDownloads.Where(download => download.AppId == appInfo.AppId).ToList();
+                    var myappDetails = enetities.Select(appInfo =>
+                     {
+                         var appReview = this.context.AppReviews
+                             .Where(review => review.AppId == appInfo.AppId)
+                             .ToList();
+                         var AppDownload = this.context.AppDownloads.Where(download => download.AppId == appInfo.AppId).ToList();
 
-                    return new AppsdetailsDTO
-                    {
-                        AppId = appInfo.AppId,
-                        Name = appInfo.Name,
-                        Description = appInfo.Description,
-                        Logo = appInfo.Logo,
-                        UserId = appInfo.UserId,
-                        Apps = count,
-                        CategoryName = appInfo.Category.CategoryName,
-                        Rating = appReview.Any() ? appReview.Average(review => review.Rating) : 0,
-                        CategoryId = appInfo.Category.CategoryId,
-                        Downloads = AppDownload.Count,
-                        Status = appInfo.Status
-                    };
-                })
-                .ToList();
-                logger.Information("Apps fetched from the server");
-                return myappDetails;
-
+                         return new AppsdetailsDTO
+                         {
+                             AppId = appInfo.AppId,
+                             Name = appInfo.Name,
+                             Description = appInfo.Description,
+                             Logo = appInfo.Logo,
+                             UserId = appInfo.UserId,
+                             Apps = count,
+                             CategoryName = appInfo.Category.CategoryName,
+                             Rating = appReview.Any() ? appReview.Average(review => review.Rating) : Dataconstant.NullRating,
+                             CategoryId = appInfo.Category.CategoryId,
+                             Downloads = AppDownload.Count,
+                             Status = appInfo.Status
+                         };
+                     }).ToList();
+                      logger.Information(Dataconstant.AppFetchedFromServer);
+                    return myappDetails;
+                  
+               
+                
             }
-            var message = $"No Apps found";
+            var message = Dataconstant.NoAppFound;
             logger.Information(message);
-            throw new EntityNotFoundException(message);
+            throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"{exception}");
+            }
         }
+
     }
 }
