@@ -56,9 +56,6 @@ namespace Playstore.ActionFilters
                 .ForContext("Location", ControllerActionName)
                 .Information($"{context.ActionDescriptor.DisplayName} is Starting...");
             }
-            
-            
-           
         }
     }
 }

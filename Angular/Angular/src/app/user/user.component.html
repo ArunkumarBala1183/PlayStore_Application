@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="flex flex-row">
-        <div *ngIf="navbar" class="hidden h-[90vh] fixed top-[10vh] left-0 bg-gray-100 rounded-rt-md pt-3 justify-between md:w-[25%] lg:w-1/5 sm:w-[30%] sm:flex sm:flex-col">
+        <div *ngIf="!navbar" class="hidden h-[90vh] fixed top-[10vh] left-0 bg-gray-100 rounded-rt-md pt-3 justify-between md:w-[25%] lg:w-1/5 sm:w-[30%] sm:flex sm:flex-col">
             <div class="mt-4">
                 <button class="w-full" routerLink={{homePage}}>
                     <div class="flex  h-10 items-center hover:bg-gray-200 transition duration-500"
@@ -247,8 +247,9 @@
                 </div>
             </div>
         </div>
-        <div class="w-[100%]" [ngClass]="{'md:ml-32' :navbar}">
+        <div class="w-[100%]" [ngClass]="{'md:ml-32' :!navbar}">
             <router-outlet></router-outlet>
         </div>
     </div>
+
 </div>

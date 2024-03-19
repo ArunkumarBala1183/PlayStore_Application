@@ -37,9 +37,6 @@ const routes : Routes = [
         {
           path:'user-profile', component : UserProfileComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },
-        // {
-        //   path: 'specificApp/:appId', component : SpecificAppComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
-        // },
         {
             path: 'specific-app', component : SpecificAppComponent, canActivate:[AuthGuard],data:{role:['User','Developer']}
         },   

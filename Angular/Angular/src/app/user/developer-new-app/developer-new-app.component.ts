@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -30,6 +30,10 @@ export class DeveloperNewAppComponent implements OnInit {
   logoFileFormatCheck = false;
   screenshotFileFormatCheck = false;
   appFileFormatCheck = true;
+  isDeveloper = false;
+  validLogo = false;
+  validAppFile = false;
+  validScreenShots = false;
 
   constructor(
     public router: Router,
@@ -40,15 +44,21 @@ export class DeveloperNewAppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    
     this.initForm();
-    // fetching the categories from the Database.
+    this.getCategory();
+   
+  }
+
+  public getCategory()
+  {
     this.service.getCategory().subscribe({
       next: (response) => {
         this.category = response;
       },
       error : error => 
       {
-        console.error(error);
+        this.toastr.error('Category Failed to Fetch');
       }
     });
   }
@@ -106,6 +116,7 @@ export class DeveloperNewAppComponent implements OnInit {
         this.appFileFormatCheck = true;
         this.fileSize = false;
         this.AppFile = event.target.files[0];
+        this.validAppFile = true;
       }
       else
       {
@@ -128,6 +139,8 @@ export class DeveloperNewAppComponent implements OnInit {
       if (files[i] && ['image/jpeg', 'image/png'].includes(files[i].type)) {      // file format should be image
         this.appImages.push(files.item(i)!);
         this.screenshotFileFormatCheck = false;
+        this.validScreenShots = true;
+
       } else {
         this.screenshotFileFormatCheck = true;
         event.target.value ='';
@@ -140,6 +153,7 @@ export class DeveloperNewAppComponent implements OnInit {
     this.Logo = event.target.files[0];
     if (this.Logo && ['image/jpeg', 'image/png'].includes(this.Logo.type)) {      // file should be of Image format.
       this.logoFileFormatCheck = false;
+      this.validLogo = true;
     } else {
       this.logoFileFormatCheck = true;
       event.target.value = '';
@@ -148,7 +162,7 @@ export class DeveloperNewAppComponent implements OnInit {
  
   // App Upload Form Submission.
   public onSubmit() {
-    if (this.appData.valid) {
+    if (this.appData.valid && this.validAppFile && this.validLogo && this.validScreenShots) {
       const userData =  this.loginService.getUserId();      // fetching userId from Tokens.
       const formData = new FormData();
       formData.append('UserId', userData);
@@ -169,16 +183,20 @@ export class DeveloperNewAppComponent implements OnInit {
           }
           else{
           this.toastr.success('Form Submitted',);
+          this.service.setIsDeveloper(true);
           this.router.navigate(['user/my-apps']);
           }
         },
         error: (error) => {
-          console.log(error);
+          this.toastr.error('Application not uploaded');
         },
         complete:()=>{
           this.appData.reset();
         }
       });
+    }
+    else {
+      this.toastr.error('Incorrect File Submission');
     }
   }
 }

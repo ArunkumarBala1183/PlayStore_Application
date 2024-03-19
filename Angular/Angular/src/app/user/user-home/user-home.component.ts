@@ -24,20 +24,20 @@ export class UserHomeComponent implements OnInit {
     this.service.getAllApps().subscribe({
       next: (response) => {
           this.application = response;
-          this.isLoading=false
+          this.isLoading=false;
       },
       error: (error) => {
-        console.error(error); 
-        this.isLoading=false       
+        this.toastr.error('App not Found');
+        this.isLoading=false; 
       },
     });
   }
 
   application: AllAppsInfo[] = [];
 
-  public redirectTospecificApp(appId: Guid) {
+  public redirectTospecificApp(appId: Guid) 
+  {
     this.service.sendAppId(appId);
-    // this.router.navigate(['user/specificApp', appId]);
     this.router.navigate(['user/specific-app'])
   }
 

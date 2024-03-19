@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { ToastrService } from 'ngx-toastr';
-import { LoginService } from 'src/app/services/login.service';
-import { UserService } from 'src/app/services/user.service';
+import { LoginService } from '../../services/login.service';
+import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-reset-password',
   templateUrl: './reset-password.component.html',
@@ -42,7 +42,6 @@ initForm(){
   {
     this.userId = this.loginService.getUserId();
     const existingPassword = event.target.value;
-    console.log(existingPassword);
     this.service.getPassword(this.userId , existingPassword).subscribe({
       next : response => {
         if(response)
@@ -55,7 +54,7 @@ initForm(){
         }
       },
       error : error => {
-        console.error(error);
+        this.toastr.error('Password Not Fetched');
       }
     })
   }
@@ -66,8 +65,7 @@ initForm(){
       const newPassword = this.changePasswordForm.get('newPassword')?.value;
       this.service.patchPassword(this.userId , newPassword).subscribe({
         next:( response:any) => {
-          console.log(response);
-          if(response.message ==true )
+          if(response.message ==true)
           {
             this.toastr.success('Password Changed');
             this.router.navigate(['user/user-profile']);
@@ -75,11 +73,11 @@ initForm(){
           else{
             this.toastr.info("Can't Use Existing Password")
           }
+         
         },
         error : error =>
         {
-          
-          console.error(error);
+          this.toastr.error('Password Failed to Fetch');
         }
       });
     }

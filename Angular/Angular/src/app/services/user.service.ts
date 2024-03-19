@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { SearchUser } from '../interface/search-user';
 import { AllAppsInfo, AppReviewsInfo, CategoryInfo, DeveloperAppInfo, DownloadedAppsInfo, SpecificAppInfo, userInfo } from '../interface/user';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Guid } from 'guid-typescript';
 
 @Injectable({
@@ -13,6 +13,8 @@ export class UserService {
 
   baseUrl : string = environment.apiBaseAddress;
   appId!:Guid;
+
+  isdeveloperToShowMyApps = new BehaviorSubject<boolean>(false);
   
   constructor(private http : HttpClient) 
   { }
@@ -71,7 +73,6 @@ export class UserService {
   {
     const url=(`${this.baseUrl}AppInfo/DownloadFile?AppId=${appId} &UserId=${userId}`);
     const data = {appId,userId};
-    console.log(data);
     return this.http.post(url,data,{
       responseType: 'blob'});     
   }
@@ -83,19 +84,18 @@ export class UserService {
 
   postApplication(formData : FormData) 
   {
-    const url = (`${this.baseUrl}AppInfo/AppDetails`);
-    console.log(formData);      
+    const url = (`${this.baseUrl}AppInfo/AppDetails`);    
     return this.http.post(url , formData);
   }
 
 
   getPassword(userId : Guid , password : string) 
   {
-    
-      console.log(password)
+    {
       return this.http.get<boolean>(`${this.baseUrl}Login/checkPassword?UserId=${userId}&password=${password}`);
     
   }
+}
 
   patchPassword(userId : Guid , newPassword : string) 
   {
@@ -117,6 +117,17 @@ export class UserService {
   {
     const appId=sessionStorage.getItem('appId');
     return appId;
+  }
+
+
+  setIsDeveloper(isDeveloper:boolean)
+  {
+    this.isdeveloperToShowMyApps.next(isDeveloper);
+  }
+
+  getIsDeveloper()
+  {
+    return this.isdeveloperToShowMyApps.asObservable();
   }
 }
 

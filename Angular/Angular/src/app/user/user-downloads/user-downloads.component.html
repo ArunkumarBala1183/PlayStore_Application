@@ -1,12 +1,11 @@
 <div class="px-9 pt-12 pb-3 h-full lg:pt-[4rem]">
     <!-- Main Body -->
-    <div *ngIf="isLoading" class="loader">
-</div>
-
+    <div *ngIf="isLoading" class="loader"></div>
     
     <div class="flex justify-center mt-10 text-sky-600">
         <h2>Downloads</h2>
     </div>
+
     <div *ngIf="downloadedApps.length == 0 && isLoading == false" class="text-red-700 mt-5 flex justify-center">
         <h2>
             No Records Found
@@ -64,3 +63,4 @@
             <p>{{app.description}}</p>
         </div>
         </div>
+    </div>
