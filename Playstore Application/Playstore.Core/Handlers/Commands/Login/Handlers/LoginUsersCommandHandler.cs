@@ -49,16 +49,15 @@ namespace Playstore.Providers.Handlers.Commands
                 };
             }
 
-            var userCredentials = await _credentialsRepository.GetByEmailAsync(model.EmailId);
-           
+            var userCredentials = await _credentialsRepository.GetByEmailId(model.EmailId) ?? throw new EntityNotFoundException("Email Id not found");
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(userCredentials, userCredentials.Password, model.Password);
 
             if (passwordVerificationResult != PasswordVerificationResult.Success)
             {
                 throw new InvalidcredentialsException("Invalid password");
             }
-            var userRoles = await _roleRepository.GetUserRolesAsync(userCredentials.UserId);
-            var roleCodes = userRoles.Select(obtainRole => obtainRole.Role.RoleCode).ToList();
+            var userRoles = await _roleRepository.GetUserRoles(userCredentials.UserId);
+            var roleCode = userRoles.FirstOrDefault()?.Role.RoleCode; 
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityKey = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Authentication:Jwt:Secret"));
@@ -67,23 +66,21 @@ namespace Playstore.Providers.Handlers.Commands
             {
 
                 new (ClaimTypes.UserData, userCredentials.UserId.ToString()),
-                new (ClaimTypes.Expired, refreshToken)
+                new (ClaimTypes.Expired, refreshToken)     
 
             };
-            foreach (var roleCode in roleCodes)
+            if (!string.IsNullOrEmpty(roleCode))
             {
                 claims.Add(new Claim(ClaimTypes.Role, roleCode));
             }
             await StoreRefreshTokenAsync(userCredentials.UserId, refreshToken);
-            var accessTokenExpires = DateTime.Now.AddMinutes(15);
-
+            
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = accessTokenExpires,
+                Expires = DateTime.Now.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(securityKey), SecurityAlgorithms.HmacSha256Signature)
             };
-
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
@@ -106,7 +103,7 @@ namespace Playstore.Providers.Handlers.Commands
 
         private async Task StoreRefreshTokenAsync(Guid userId, string refreshToken)
         {
-            await _refreshTokenRepository.StoreRefreshTokenAsync(userId, refreshToken);
+            await _refreshTokenRepository.StoreRefreshToken(userId, refreshToken);
         }
     }
 }

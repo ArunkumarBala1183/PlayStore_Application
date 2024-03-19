@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Playstore.ActionFilters;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.DTO;
 using Playstore.Contracts.DTO.AppDownloads;
@@ -17,22 +19,22 @@ using Playstore.Providers.Handlers.Commands.UserData;
 using Playstore.Providers.Handlers.Queries.UserData;
 namespace Playstore.Controllers.UserData
 {
+    [ServiceFilter(typeof(ControllerFilter))]
     [ApiController]
     [Route("[controller]")]
     public class AppInfoController : ControllerBase
     {
-
-
         private readonly IMediator _mediator;
         public AppInfoController(IMediator mediator)
         {
             _mediator = mediator;
-
-
         }
+
+        
         [HttpGet("GetUserDetails")]
         [ProducesResponseType(typeof(UsersDetailsDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        [Authorize(Roles ="Admin , Developer , User")]
         public async Task<IActionResult> Getdetails(Guid userId)
         {
             try
@@ -56,6 +58,7 @@ namespace Playstore.Controllers.UserData
         [HttpGet("GetAllApps")]
         [ProducesResponseType(typeof(IEnumerable<AppInfoDTO>), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        [Authorize(Roles ="Developer , User")]
         public async Task<IActionResult> Get()
         {
             try
@@ -78,6 +81,7 @@ namespace Playstore.Controllers.UserData
         [HttpGet("ReviewDetails")]
         [ProducesResponseType(typeof(IEnumerable<AppInfoDTO>), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        [Authorize(Roles ="Admin , Developer , User")]
         public async Task<IActionResult> GetDetails(Guid appId)
         {
             try
@@ -101,10 +105,9 @@ namespace Playstore.Controllers.UserData
         [HttpPost("AppDetails")]
         [ProducesResponseType(typeof(CreateAppInfoDTO), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        [Authorize(Roles ="Developer , User")]
         public async Task<IActionResult> Post([FromForm] CreateAppInfoDTO model)
         {
-       
-         
             try
             {
                 var command = new CreateAppInfoCommand(model);
@@ -127,6 +130,7 @@ namespace Playstore.Controllers.UserData
         [HttpGet("GetAppById")]
         [ProducesResponseType(typeof(AppInfoDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        [Authorize(Roles ="Admin , Developer , User")]
         public async Task<IActionResult> GetById(Guid appId,Guid userId)
         {
             try
@@ -149,6 +153,7 @@ namespace Playstore.Controllers.UserData
         [HttpGet("DeveloperMyAppDetails")]
         [ProducesResponseType(typeof(AppInfoDTO), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        [Authorize(Roles ="Developer , User")]
         public async Task<object> GetDeveloperDetails(Guid userId)
         {
             try
@@ -172,6 +177,7 @@ namespace Playstore.Controllers.UserData
         [HttpGet("DownloadsDetails")]
         [ProducesResponseType(typeof(AppDownloadsDto), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
+        [Authorize(Roles ="Admin , Developer , User")]
         public async Task<IActionResult> GetDownloadDetails(Guid userId)
         {
             try
@@ -191,13 +197,12 @@ namespace Playstore.Controllers.UserData
 
         }
 
-
-
         //To be use Download the File 
         [HttpPost]
         [Route("DownloadFile")]
         [ProducesResponseType(typeof(AppDownloadsDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles ="Admin , Developer , User")]
         public async Task<IActionResult> DownloadFile(Guid appId , Guid userId)
         {
             try
@@ -233,6 +238,7 @@ namespace Playstore.Controllers.UserData
         [HttpPost("AddReview")]
         [ProducesResponseType(typeof(AppreviewDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles ="Admin , Developer , User")]
         public async Task<IActionResult> AddReview(AppreviewDTO appreviewDTO)
         {
             try
@@ -250,10 +256,12 @@ namespace Playstore.Controllers.UserData
                 });
             }
 
-
         }
         //Get the Category name
         [HttpGet("GetCategory")]
+        [ProducesResponseType(typeof(IEnumerable<Category>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles ="Admin , Developer , User")]
         public async Task<IActionResult> GetCategory()
         {
             try
@@ -271,7 +279,5 @@ namespace Playstore.Controllers.UserData
                 });
             }
         }
-
-
     }
 }

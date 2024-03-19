@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +15,7 @@ namespace Playstore.Contracts.Middleware
     public class JwtAuthenticationMiddleware : IMiddleware
     {
         private readonly IConfiguration configuration;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         public JwtAuthenticationMiddleware(IConfiguration configuration)
         {
@@ -39,9 +38,6 @@ namespace Playstore.Contracts.Middleware
 
                     if (token != null)
                     {
-                        var userId = token.Claims.FirstOrDefault(type => type.Type == ClaimTypes.UserData).Value;
-                        context.Items["userId"] = userId;
-                        logger = logger.ForContext("userId" , userId);
                         await next(context);
                     }
                     else
@@ -81,7 +77,7 @@ namespace Playstore.Contracts.Middleware
             }
             catch (Exception error)
             {
-                logger.Error(error, $"Error Message : {error.Message}");
+                logger.Error(error, error.Message);
             }
         }
 

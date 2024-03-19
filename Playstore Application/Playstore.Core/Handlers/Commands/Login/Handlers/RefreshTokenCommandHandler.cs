@@ -28,13 +28,13 @@ namespace Playstore.Providers.Handlers.Commands
         }
         public async Task<TokenResponse> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
-            var expiredToken = request.ExpiredToken;
+            var expiredToken = request.ExpiredToken ?? throw new EntityNotFoundException("Expired Token not found");
             var (userId, refreshToken) = GetClaimsFromExpiredToken(expiredToken);
-            var refreshTokenEntity = await _refreshTokenRepository.GetRefreshTokenAsync(userId);
+            var refreshTokenEntity = await _refreshTokenRepository.GetRefreshToken(userId);
 
             if (refreshTokenEntity != null && refreshTokenEntity.RefreshKey == refreshToken)
             {
-                var userCredentials = await _credentialsRepository.GetByIdAsync(userId);
+                var userCredentials = await _credentialsRepository.GetById(userId);
                 var tokenResponse = await GenerateToken(userCredentials);
                 return tokenResponse;
             }
@@ -43,37 +43,44 @@ namespace Playstore.Providers.Handlers.Commands
         }
 
         private (Guid userId, string refreshToken) GetClaimsFromExpiredToken(string expiredToken)
+{
+    try
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var readToken = tokenHandler.ReadToken(expiredToken) as JwtSecurityToken;
+
+        if (readToken?.Claims != null)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var readToken = tokenHandler.ReadToken(expiredToken) as JwtSecurityToken;
+            var userIdClaim = readToken.Claims.FirstOrDefault(claims => claims.Type == ClaimTypes.UserData);
+            var refreshTokenClaim = readToken.Claims.FirstOrDefault(claims => claims.Type == ClaimTypes.Expired);
 
-            if (readToken?.Claims != null)
+            if (userIdClaim != null && refreshTokenClaim != null)
             {
-                var userIdClaim = readToken.Claims.FirstOrDefault(claims => claims.Type == ClaimTypes.UserData);
-                var refreshTokenClaim = readToken.Claims.FirstOrDefault(claims => claims.Type == ClaimTypes.Expired);
+                var userId = Guid.Parse(userIdClaim.Value);
+                var refreshToken = refreshTokenClaim?.Value;
 
-                if (userIdClaim != null)
+                if (!string.IsNullOrEmpty(refreshToken))
                 {
-                    var userId = Guid.Parse(userIdClaim.Value);
-                    var refreshToken = refreshTokenClaim?.Value;
-
-                    if (!string.IsNullOrEmpty(refreshToken))
-                    {
-                        return (userId, refreshToken);
-                    }
+                    return (userId, refreshToken);
                 }
             }
-
-            throw new ArgumentException("Invalid or missing claims in the expired token");
         }
+
+        throw new UnauthorizedAccessException("Invalid or missing claims in the expired token");
+    }
+    catch (ArgumentException )
+    {
+        throw new ArgumentException("Invalid or malformed JWT token");
+    }
+}
 
 
         private async Task<TokenResponse> GenerateToken(UserCredentials userCredentials)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityKey = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Authentication:Jwt:Secret"));
-            var userRoles = await _roleRepository.GetUserRolesAsync(userCredentials.UserId);
-            var roleCodes = userRoles.Select(ur => ur.Role.RoleCode).ToList();
+            var userRoles = await _roleRepository.GetUserRoles(userCredentials.UserId);
+            var roleCode = userRoles.FirstOrDefault()?.Role.RoleCode; 
             var newRefreshToken = GenerateRefreshToken();
 
             var claims = new List<Claim>
@@ -81,19 +88,18 @@ namespace Playstore.Providers.Handlers.Commands
                 new(ClaimTypes.UserData, userCredentials.UserId.ToString()),
                 new(ClaimTypes.Expired, newRefreshToken)
             };
-            foreach (var roleCode in roleCodes)
+            if (!string.IsNullOrEmpty(roleCode))
             {
                 claims.Add(new Claim(ClaimTypes.Role, roleCode));
             }
 
-            await _refreshTokenRepository.StoreRefreshTokenAsync(userCredentials.UserId, newRefreshToken);
+            await _refreshTokenRepository.StoreRefreshToken(userCredentials.UserId, newRefreshToken);
 
 
-            var accessTokenExpires = DateTime.Now.AddMinutes(2);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = accessTokenExpires,
+                Expires = DateTime.Now.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(securityKey), SecurityAlgorithms.HmacSha256Signature)
             };
 

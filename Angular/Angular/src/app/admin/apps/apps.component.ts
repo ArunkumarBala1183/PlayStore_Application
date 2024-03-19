@@ -17,11 +17,12 @@ export class AppsComponent implements OnInit{
 
   appDetails!: ListApps[]
   searchTerm: string = '';
+  isLoading: boolean = false;
  
 
 
 
-  constructor(private service: AppInfoService, private route: Router, private loginService : LoginService) 
+  constructor(private service: AppInfoService, private route: Router, private loginService : LoginService,private userService:UserService) 
   {
       
   }
@@ -39,24 +40,30 @@ export class AppsComponent implements OnInit{
 
   get allApps()
   {
+    
     return this.appDetails?.filter(app => app.name.toLowerCase().includes(this.searchTerm.toLowerCase()))
   }
 
   getDownloadPage(appId : Guid)
   {
-    this.route.navigate(["admin/downloadPage" , appId]);
+    this.userService.sendAppId(appId);
+    this.route.navigate(['admin/download-page'])
+    // this.route.navigate(["admin/downloadPage" , appId]);
   }
 
   getAllApps() {
+    this.isLoading = true;
     let data = {userId : this.loginService.getUserId()}
     this.service.GetAllApps(data)
       .subscribe({
         next: response => {
           this.appDetails = response.body as ListApps[]
+          this.isLoading=false;
         },
         error: error => {
           this.appDetails = []
           console.log(error)
+          this.isLoading=false;
         }
       })
   }

@@ -11,6 +11,8 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./user-home.component.scss'],
 })
 export class UserHomeComponent implements OnInit {
+  isLoading:boolean=false
+
   constructor(
     private router: Router,
     private service: UserService,
@@ -18,12 +20,15 @@ export class UserHomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isLoading=true
     this.service.getAllApps().subscribe({
       next: (response) => {
           this.application = response;
+          this.isLoading=false
       },
       error: (error) => {
-        console.error(error);        
+        console.error(error); 
+        this.isLoading=false       
       },
     });
   }
@@ -31,7 +36,9 @@ export class UserHomeComponent implements OnInit {
   application: AllAppsInfo[] = [];
 
   public redirectTospecificApp(appId: Guid) {
-    this.router.navigate(['user/specificApp', appId]);
+    this.service.sendAppId(appId);
+    // this.router.navigate(['user/specificApp', appId]);
+    this.router.navigate(['user/specific-app'])
   }
 
   searchInput: string = '';

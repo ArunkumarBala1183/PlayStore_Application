@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
+using Serilog;
+using Microsoft.AspNetCore.Http;
 using Playstore.Contracts.Data.Utility;
 
 
@@ -14,9 +16,12 @@ namespace Playstore.Infrastructure.Data.Repositories
     public class AddDeveloperMyAppDetailsRespository : Repository<AppInfo>, IAppDeveloperMyAppDetailsRepository
     {
         public readonly DatabaseContext databaseContext;
-        public AddDeveloperMyAppDetailsRespository(DatabaseContext context) : base(context)
+        private readonly ILogger logger;
+        public AddDeveloperMyAppDetailsRespository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
             databaseContext = context;
+            logger = Log.ForContext(Dataconstant.UserId, httpContext.HttpContext?.Items[Dataconstant.UserId])
+                        .ForContext(Dataconstant.Location, typeof(AddDeveloperMyAppDetailsRespository).Name);
         }
 
 
@@ -55,8 +60,13 @@ namespace Playstore.Infrastructure.Data.Repositories
                     };
                 }).ToList();
 
+                logger.Information(Dataconstant.AppDetailsInfo+Dataconstant.Singlespace+userId);
                 return myappDetails;
             }
+            
+            var message = Dataconstant.AppInfovalue+Dataconstant.Singlespace+userId;
+            logger.Information(message);
+            throw new EntityNotFoundException(message);
                 throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
             } 
             catch(SqlException exception)

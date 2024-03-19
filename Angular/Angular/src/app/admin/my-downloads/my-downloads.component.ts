@@ -12,13 +12,14 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class MyDownloadsComponent implements OnInit {
 
+  isLoading : boolean=false;
 
 
 
 
   downloadedApps!: DownloadedAppsInfo[]
 
-  constructor(private router: Router,private service : UserService , private loginService : LoginService)
+  constructor(private router: Router,private userservice : UserService , private loginService : LoginService)
   {
 
   }
@@ -31,23 +32,26 @@ export class MyDownloadsComponent implements OnInit {
 
   getAppDownloads()
   {
+    this.isLoading=true;
     const userId = this.loginService.getUserId()
 
-    this.service.getDownloadedApps(userId)
+    this.userservice.getDownloadedApps(userId)
     .subscribe({
       next : response =>{
         this.downloadedApps = response
+        this.isLoading=false
       },
       error : error => {
         this.downloadedApps = []
         console.log(error)
+        this.isLoading=false
       }
     })
   }
-  public redirectTospecificApp(fileid: Guid) {
-    console.log(fileid);
-    
-    this.router.navigate(['/admin/downloadPage', fileid])
-    
+  public redirectTospecificApp(appId: Guid) {
+    // console.log(fileid);
+    // this.router.navigate(['admin/download-page', fileid])
+      this.userservice.sendAppId(appId);
+      this.router.navigate(['admin/download-page'])
   }
 }

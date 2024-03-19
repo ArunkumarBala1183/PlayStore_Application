@@ -1,14 +1,17 @@
 using System.Net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
 using Playstore.Contracts.Data.RoleConfig;
+using Playstore.Contracts.Data.Utility;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
 using Playstore.Migrations;
+using Serilog;
 using SqlException = Playstore.Core.Exceptions.SqlException;
 
 namespace Playstore.Infrastructure.Data.Repositories
@@ -17,11 +20,14 @@ namespace Playstore.Infrastructure.Data.Repositories
     {
         private readonly DatabaseContext databaseContext;
         private readonly RoleConfig role;
+        private readonly ILogger logger;
 
-        public AppFilesRepository(DatabaseContext context , IOptions<RoleConfig> roleConfig) : base(context)
+        public AppFilesRepository(DatabaseContext context , IOptions<RoleConfig> roleConfig , IHttpContextAccessor httpContext) : base(context)
         {
             databaseContext = context;
             this.role = roleConfig.Value;
+            logger = Log.ForContext(Dataconstant.UserId, httpContext.HttpContext?.Items[Dataconstant.UserId])
+                        .ForContext(Dataconstant.Location, typeof(AppFilesRepository).Name);
         }
 
 
@@ -118,10 +124,10 @@ namespace Playstore.Infrastructure.Data.Repositories
                     await this.databaseContext.AppInfo.AddAsync(appInfo);
 
                     await databaseContext.SaveChangesAsync();
-
+                    logger.Information(Dataconstant.Appupload);
                     return HttpStatusCode.Created;
                 }
-
+                logger.Information(Dataconstant.NoAppUpload);
                 return HttpStatusCode.NotFound;
                 }
                 return HttpStatusCode.BadRequest;
@@ -130,8 +136,9 @@ namespace Playstore.Infrastructure.Data.Repositories
             {
                 throw new SqlException($"{exception}");
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                logger.Error(error , error.Message);
                
                 return HttpStatusCode.InternalServerError;
             }

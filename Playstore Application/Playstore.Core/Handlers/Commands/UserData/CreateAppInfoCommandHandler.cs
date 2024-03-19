@@ -18,9 +18,7 @@ namespace Playstore.Providers.Handlers.Commands.UserData
         public CreateAppInfoCommand(CreateAppInfoDTO model)
         {
             Model = model;
-
         }
-
     }
 
     public class CreateAppInfoCommandHandler : IRequestHandler<CreateAppInfoCommand, HttpStatusCode>

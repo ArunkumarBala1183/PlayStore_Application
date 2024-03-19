@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Playstore.Contracts.Data;
 using Playstore.Contracts.Data.Entities;
@@ -16,35 +17,37 @@ namespace Playstore.Infrastructure.Data
         private readonly DatabaseContext _context;
 
         private readonly IOptions<RoleConfig> roleConfig;
+        private readonly IHttpContextAccessor httpContext;
 
-        public UnitOfWork(DatabaseContext context , IOptions<RoleConfig> roleConfig)
+        public UnitOfWork(DatabaseContext context , IOptions<RoleConfig> roleConfig , IHttpContextAccessor httpContext)
         {
             _context = context;
             this.roleConfig = roleConfig;
+            this.httpContext = httpContext;
         }
         public IAppRepository App => new AppRepository(_context);
 
         
 
-        public IDeveloperRole UserRole => new DeveloperRoleRepository(_context , roleConfig);
+        public IDeveloperRole UserRole => new DeveloperRoleRepository(_context , roleConfig , httpContext);
         
         
-        public IAppValueRepository AppValue => new AppValueRepository(_context);
-        public IAppReviewRepository AppReview => new AppReviewRepository(_context);
+        public IAppValueRepository AppValue => new AppValueRepository(_context , httpContext);
+        public IAppReviewRepository AppReview => new AppReviewRepository(_context , httpContext);
         public IAppFileRepository AppData=>new AppFileRepository(_context);
-        public IAppInfoDownloadRepository AppDownload=>new AppInfoDownloadRepository(_context);
+        public IAppInfoDownloadRepository AppDownload=>new AppInfoDownloadRepository(_context , httpContext);
         public IAppImagesRepository AppImages=>new AppImagesRepository(_context);
-        public IAppFilesRepository AppFiles=>new AppFilesRepository(_context , roleConfig);
-        public IAppAdminRequestRepository AdminRequest=>new AppAdminRequestRepository(_context);
-        public IAppDeveloperMyAppDetailsRepository MyAppDetails=> new AddDeveloperMyAppDetailsRespository(_context);
-        public IAppDetailsRepository AppDetails=>new AppDetailsRepository(_context);
+        public IAppFilesRepository AppFiles=>new AppFilesRepository(_context , roleConfig , httpContext);
+        public IAppAdminRequestRepository AdminRequest=>new AppAdminRequestRepository(_context , httpContext);
+        public IAppDeveloperMyAppDetailsRepository MyAppDetails=> new AddDeveloperMyAppDetailsRespository(_context , httpContext);
+        public IAppDetailsRepository AppDetails=>new AppDetailsRepository(_context , httpContext);
 
         public IGetCategory GetCategory=>new GetCategoryRepository(_context);
-        public IUserCredentialsRepository UserCredentials=>new UserCredentialsRepository(_context);
+        public IUserCredentialsRepository UserCredentials=>new UserCredentialsRepository(_context , httpContext);
 
         
 
-        public IUserDetailsRepository UserData=>new GetUsersDetailsRepository(_context);
+        public IUserDetailsRepository UserData=>new GetUsersDetailsRepository(_context , httpContext);
 
         public IUserRepository User => throw new NotImplementedException();
 

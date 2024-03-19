@@ -10,9 +10,10 @@ using Playstore.Providers.Handlers.Queries;
 using Microsoft.AspNetCore.Http;
 using Playstore.Core.Data.Repositories;
 using Playstore.Providers.Handlers.Queries.Admin;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Playstore.Controllers
 {
+    // [ServiceFilter(typeof(ControllerFilter))]
     [ApiController]
     [Route("[controller]")]
     public class LoginController : ControllerBase
@@ -27,6 +28,8 @@ namespace Playstore.Controllers
             _sharedDataService = sharedDataService;
         }
 
+        // To Check whether the Email-Id already exist or not
+        [AllowAnonymous]
         [HttpPost("CheckEmailExistence")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
@@ -40,14 +43,16 @@ namespace Playstore.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, "Internal Server Error");
+                return StatusCode(500, new{message = "Internal Server Error"} );
             }
         }
 
+        // To Send OTP to the respected Email-Id 
+        [AllowAnonymous]
         [HttpPost("forgot-Password")]
-        [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(object))]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO model)
+        public async Task<IActionResult> SendOTP([FromBody] ForgotPasswordDTO model)
         {
             try
             {
@@ -61,13 +66,19 @@ namespace Playstore.Controllers
 
                 return Ok(new { Message = "OTP sent successfully." });
             }
-            catch (Exception)
+            catch (InvalidcredentialsException)
             {
                 return NotFound(new { Message = "Email not registered." });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new{message = "Internal Server Error"});
             }
         }
 
 
+        // To validate the given OTP
+        [AllowAnonymous]
         [HttpPost("validate-otp")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
@@ -97,6 +108,9 @@ namespace Playstore.Controllers
             }
         }
 
+
+        // To reset new password after OTP validation
+        [AllowAnonymous]
         [HttpPost("reset-password")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
@@ -105,15 +119,13 @@ namespace Playstore.Controllers
             try
             {
                 var resetPasswordEmail = _sharedDataService.ResetPasswordEmail;
-                var resetPasswordOTP = _sharedDataService.ResetPasswordOTP;
-
-                var command = new ResetPasswordCommand(resetPasswordDTO, resetPasswordEmail, resetPasswordOTP);
+                var command = new ResetPasswordCommand(resetPasswordDTO, resetPasswordEmail);
                 var isPasswordReset = await _mediator.Send(command);
 
                 if (isPasswordReset)
                 {
-                    HttpContext.Session.Remove("ResetPasswordEmail");
-                    HttpContext.Session.Remove("ResetPasswordOTP");
+                    _sharedDataService.ResetPasswordEmail = null;
+                    _sharedDataService.ResetPasswordOTP = null;
                     return Ok(new { Message = "Password reset successful" });
                     
                 }
@@ -129,11 +141,12 @@ namespace Playstore.Controllers
         }
 
 
-
+        // Sign-up as new user
+        [AllowAnonymous]
         [HttpPost("register")]
         [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-        public async Task<IActionResult> UserRegistration([FromBody] RegisterUsersDTO model)
+        public async Task<IActionResult> SignUp([FromBody] RegisterUsersDTO model)
         {
             try
             {
@@ -160,11 +173,12 @@ namespace Playstore.Controllers
         }
 
 
-
+        // Sign-in to Explore the AppStore
+        [AllowAnonymous]
         [HttpPost("User-Login")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
-        public async Task<IActionResult> UserLogin([FromBody] LoginUsersDTO model)
+        public async Task<IActionResult> SignIn([FromBody] LoginUsersDTO model)
         {
             try
             {
@@ -198,6 +212,10 @@ namespace Playstore.Controllers
                 });
             }
         }
+
+        
+        // To get new AccessToken when old token Expired
+        [Authorize (Roles = "Admin , User , Developer")]
         [HttpPost("refresh-token")]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
@@ -217,7 +235,27 @@ namespace Playstore.Controllers
                     Errors = new[] { exception.Message }
                 });
             }
+            catch (EntityNotFoundException ex)
+            {
+                return BadRequest(new BaseResponseDTO
+                {
+                    IsSuccess = false,
+                    Errors = new[] { ex.Message }
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new BaseResponseDTO
+                {
+                    IsSuccess = false,
+                    Errors = new[] { ex.Message }
+                });
+            }
         }
+
+
+        // Changes the currentPassword whenever the user/admin wish to
+        [Authorize (Roles = "Admin , User , Developer")]
         [HttpPatch("changePassword")]
         [ProducesResponseType(typeof(bool), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(BaseResponseDTO))]
@@ -238,7 +276,10 @@ namespace Playstore.Controllers
                 });
             }
         }
-        
+
+
+        // Checks whether the given password is similar to CurrentPassword
+        [Authorize (Roles = "Admin , User , Developer")]
         [HttpGet("checkPassword")]
         public async Task<IActionResult> CheckPassword(Guid UserId , string password)
         {

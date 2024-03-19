@@ -8,14 +8,12 @@ namespace Playstore.Providers.Handlers.Commands
  
         public PasswordResetDTO Model { get; }
         public string ResetPasswordEmail { get; }
-        public string ResetPasswordOTP { get; }
  
  
-        public ResetPasswordCommand(PasswordResetDTO model,string resetPasswordEmail, string resetPasswordOTP)
+        public ResetPasswordCommand(PasswordResetDTO model,string resetPasswordEmail)
         {
             Model = model;
             ResetPasswordEmail = resetPasswordEmail;
-            ResetPasswordOTP = resetPasswordOTP;
         }
     }
 }

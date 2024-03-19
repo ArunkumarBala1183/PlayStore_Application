@@ -15,6 +15,7 @@ export class UserDownloadsComponent implements OnInit {
   constructor(private router: Router, private services: UserService , private loginService : LoginService) {}
   downloadedApps: DownloadedAppsInfo[] = [];
   ngOnInit(): void {
+        this.isLoading = true;
         const userId = this.loginService.getUserId();
         this.services.getDownloadedApps(userId).subscribe({
           next: response => {
@@ -25,11 +26,18 @@ export class UserDownloadsComponent implements OnInit {
           error: error =>
           {
             console.error(error);
+          },
+          complete : () => {
+            this.isLoading = false;
           }
           });
   }
+
+  isLoading : boolean = false;
   public redirectTospecificApp(fileid: Guid) {
-    console.log(fileid);
-    this.router.navigate(['/user/specificApp', fileid])
+    // console.log(fileid);
+    // this.router.navigate(['/user/specificApp', fileid])
+    this.services.sendAppId(fileid);
+    this.router.navigate(['/user/specific-app'])
   }
 }

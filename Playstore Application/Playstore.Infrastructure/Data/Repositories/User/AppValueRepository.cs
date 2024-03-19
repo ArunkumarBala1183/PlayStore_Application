@@ -8,51 +8,53 @@ using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
 using SqlException = Playstore.Core.Exceptions.SqlException;
 using Playstore.Contracts.Data.Utility;
+using Serilog;
+using Microsoft.AspNetCore.Http;
+
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
     public class AppValueRepository : Repository<AppInfo>, IAppValueRepository
     {
         private readonly DatabaseContext context;
-        public AppValueRepository(DatabaseContext context) : base(context)
+        private readonly ILogger logger;
+        public AppValueRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
             this.context = context;
+            logger = Log.ForContext(Dataconstant.UserId, httpContext.HttpContext?.Items[Dataconstant.UserId])
+                        .ForContext(Dataconstant.Location, typeof(AppValueRepository).Name);
         }
 
-        public async Task<AppData> GetAppData(Guid appId, Guid userId)
+        public async Task<AppData> GetAppData(Guid appId , Guid userId)
         {
-            try
+            var response = await context.AppInfo
+            .Include(data => data.AppData)
+            .FirstOrDefaultAsync(id => id.AppId == appId);
+ 
+            if (response != null)
             {
-                var response = await context.AppInfo
-                .Include(data => data.AppData)
-                .FirstOrDefaultAsync(id => id.AppId == appId);
-
-                if (response != null)
+                var fileEntity = this.context.AppDownloads.FirstOrDefault(app => app.AppId == appId && app.UserId == userId); //use userId here
+ 
+                if (fileEntity == null)
                 {
-                    var fileEntity = this.context.AppDownloads.FirstOrDefault(app => app.AppId == appId && app.UserId == userId); //use userId here
-
-                    if (fileEntity == null)
+                    var entity = new AppDownloads
                     {
-                        var entity = new AppDownloads
-                        {
-                            AppId = appId,
-                            UserId = userId,
-                            DownloadedDate = DateTime.Today,
-                        };
-                        this.context.AppDownloads.Add(entity);
-                        await this.context.SaveChangesAsync();
-                        return response.AppData;
-
-                    }
-                    throw new InvalidRequestBodyException();
+                        AppId = appId,
+                        UserId = userId,
+                        DownloadedDate = DateTime.Today,
+                    };
+                    this.context.AppDownloads.Add(entity);
+                    await this.context.SaveChangesAsync();
+                    logger.Information(Dataconstant.AppDataFetchedInfo+Dataconstant.Singlespace+appId);
+                    return response.AppData;
+                    
                 }
-
-                throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
+                logger.Information(Dataconstant.BadRequest);
+                throw new InvalidRequestBodyException();
             }
-            catch (Exception exception)
-            {
-                throw new Exception($"{exception}");
-            }
+            var message = Dataconstant.NoAppFound;
+            logger.Information(message);
+            throw new EntityNotFoundException(message);
         }
         public async Task<object> GetValue(Guid id)
         {
@@ -60,20 +62,20 @@ namespace Playstore.Infrastructure.Data.Repositories
             {
                 var response = await context.AppInfo.FirstOrDefaultAsync(appId => appId.UserId == id);
 
-                if (response != null)
-                {
-                    return response;
-                }
-                return HttpStatusCode.NoContent;
+            if (response != null)
+            {
+                logger.Information(Dataconstant.AppFetchedId+Dataconstant.Singlespace+id);
+                return response;
+            }
+            logger.Information(Dataconstant.NoAppFetched+Dataconstant.Singlespace+id);
+            return HttpStatusCode.NoContent;
+                
             }
             catch(SqlException exception)
             {
                 throw new SqlException($"{exception}");
             }
-            catch (Exception exception)
-            {
-                throw new Exception($"{exception}");
-            }
+            
         }
         public async Task<object> ViewAllApps()
         {
@@ -105,10 +107,15 @@ namespace Playstore.Infrastructure.Data.Repositories
                              Status = appInfo.Status
                          };
                      }).ToList();
+                      logger.Information(Dataconstant.AppFetchedFromServer);
                     return myappDetails;
-
-                }
-                throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
+                  
+               
+                
+            }
+            var message = Dataconstant.NoAppFound;
+            logger.Information(message);
+            throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
             }
             catch (Exception exception)
             {

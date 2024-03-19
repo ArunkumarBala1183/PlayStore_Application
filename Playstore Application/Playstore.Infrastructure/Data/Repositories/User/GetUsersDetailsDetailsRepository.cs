@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
@@ -10,15 +11,20 @@ using Playstore.Migrations;
 using SqlException = Playstore.Core.Exceptions.SqlException;
 using SpecificException = Playstore.Core.Exceptions.SqlException;
 
+using Serilog;
+using Playstore.Contracts.Data.Utility;
 
 namespace Playstore.Infrastructure.Data.Repositories
 {
     public class GetUsersDetailsRepository : Repository<UsersDetailsDTO>, IUserDetailsRepository
     {
         private readonly DatabaseContext databaseContext;
-        public GetUsersDetailsRepository(DatabaseContext context) : base(context)
+        private readonly ILogger logger;
+        public GetUsersDetailsRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
-            databaseContext = context;
+            databaseContext=context;
+            logger = Log.ForContext(Dataconstant.UserId, httpContext.HttpContext?.Items[Dataconstant.UserId])
+                        .ForContext(Dataconstant.Location, typeof(GetUsersDetailsRepository).Name);
         }
         public async Task<object> GetUsersDetails(Guid userId)
         {
@@ -39,19 +45,21 @@ namespace Playstore.Infrastructure.Data.Repositories
                         roles.Add(role.Role.RoleCode);
                     }
 
-                    var UserData = new UsersDetailsDTO
-                    {
-                        Name = userDetails.Name,
-                        Email = userDetails.EmailId,
-                        PhoneNumber = userDetails.MobileNumber,
-                        Role = roles
-                    };
-
-                    return UserData;
-                }
-
-                return HttpStatusCode.NotFound;
+                var UserData = new UsersDetailsDTO
+                {
+                    Name = userDetails.Name,
+                    Email = userDetails.EmailId,
+                    PhoneNumber = userDetails.MobileNumber,
+                    Role = roles
+                };
+                logger.Information(Dataconstant.UserdetailsFetched+Dataconstant.Singlespace+userId);
+                return UserData;
             }
+            logger.Information(Dataconstant.NoUserFoundForId+Dataconstant.Singlespace+userId);
+            return HttpStatusCode.NotFound;
+        }
+
+       
             catch(SqlException exception)
             {
                 throw new SqlException($"{exception}");

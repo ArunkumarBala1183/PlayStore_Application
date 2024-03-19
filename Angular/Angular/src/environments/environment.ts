@@ -7,12 +7,12 @@ export const environment = {
   apiBaseAddress:'https://localhost:5001/',
   homeRoute : 'home',
   downloadsRoute : 'downloads',
-  aboutUsRoute : 'aboutUs',
-  myAppsRoute : 'myApps',
-  newAppRoute : 'newApp',
-  userProfileRoute : 'userProfile',
-  specificAppRoute : 'specificApp/:appId',
-  resetPasswordRoute : 'resetPassword'
+  aboutUsRoute : 'about-us',
+  myAppsRoute : 'my-apps',
+  newAppRoute : 'new-app',
+  userProfileRoute : 'user-profile',
+  specificAppRoute : 'specific-app',
+  resetPasswordRoute : 'reset-password'
 };
 
 /*

@@ -68,8 +68,8 @@ export class LoginService {
     );
   }
   public logout(): boolean {
-    localStorage.removeItem('accessToken');
-    const token = localStorage.getItem('accessToken');
+    sessionStorage.removeItem('accessToken');
+    const token = sessionStorage.getItem('accessToken');
     if (token == null) {
       return true;
     }
@@ -81,10 +81,10 @@ export class LoginService {
     return !!token && !this.jwtHelper.isTokenExpired(token);
   }
   public getToken(): string | null {
-    return localStorage.getItem('accessToken');
+    return sessionStorage.getItem('accessToken');
   }
   public getUserRole(): string | null {
-    const token = localStorage.getItem('accessToken');
+    const token = sessionStorage.getItem('accessToken');
     // console.log('.........Arun.........'+ token);
     if (token) {
       // console.log('..................'+ token);
@@ -97,7 +97,7 @@ export class LoginService {
     return null;
   }
   public getUserId() {
-    const token = localStorage.getItem('accessToken');
+    const token = sessionStorage.getItem('accessToken');
 
     if (token) {
      

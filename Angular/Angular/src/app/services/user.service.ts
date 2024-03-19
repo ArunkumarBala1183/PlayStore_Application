@@ -11,7 +11,8 @@ import { Guid } from 'guid-typescript';
 })
 export class UserService {
 
-  baseUrl : string = environment.apiBaseAddress
+  baseUrl : string = environment.apiBaseAddress;
+  appId!:Guid;
   
   constructor(private http : HttpClient) 
   { }
@@ -90,10 +91,10 @@ export class UserService {
 
   getPassword(userId : Guid , password : string) 
   {
-    {
+    
       console.log(password)
       return this.http.get<boolean>(`${this.baseUrl}Login/checkPassword?UserId=${userId}&password=${password}`);
-    }
+    
   }
 
   patchPassword(userId : Guid , newPassword : string) 
@@ -101,6 +102,21 @@ export class UserService {
     const url = (`${this.baseUrl}Login/changePassword`);
     const data = {userId:userId ,password:newPassword}
     return this.http.patch(url , data);
+  }
+  sendAppId(data:any)
+  {
+    if(data)
+    {
+      
+      sessionStorage.setItem('appId',data);
+      this.appId=data;
+      
+    }
+  }
+  getAppId():any
+  {
+    const appId=sessionStorage.getItem('appId');
+    return appId;
   }
 }
 

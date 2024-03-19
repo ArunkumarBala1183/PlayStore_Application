@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Playstore.ActionFilters;
 using Playstore.Contracts.DTO.Category;
 using Playstore.Core.Exceptions;
 using Playstore.Providers.Handlers.Commands;
@@ -11,8 +13,10 @@ using Playstore.Providers.Handlers.Queries.Admin;
 
 namespace Playstore.Controllers.Admin
 {
+    [ServiceFilter(typeof(ControllerFilter))]
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -37,7 +41,7 @@ namespace Playstore.Controllers.Admin
             }
             catch (ApiResponseException error)
             {
-                return NotFound(error.Message);
+                return NotFound(new {message = error.Message});
             }
         }
 
@@ -54,7 +58,7 @@ namespace Playstore.Controllers.Admin
             }
             catch (ApiResponseException error)
             {
-                return NotFound(error.Message);
+                return NotFound(new {message = error.Message});
             }
         }
 
@@ -71,7 +75,7 @@ namespace Playstore.Controllers.Admin
             }
             catch (ApiResponseException error)
             {
-                return NotFound(error.Message);
+                return NotFound(new {message = error.Message});
             }
         }
 
@@ -88,7 +92,7 @@ namespace Playstore.Controllers.Admin
             }
             catch (ApiResponseException error)
             {
-                return NotFound(error.Message);
+                return NotFound(new {message = error.Message});
             }
 
         }
@@ -104,7 +108,7 @@ namespace Playstore.Controllers.Admin
             }
             catch (ApiResponseException error)
             {
-                return NotFound(error.Message);
+                return NotFound(new {message = error.Message});
             }
         }
     }
