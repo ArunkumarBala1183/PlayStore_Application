@@ -64,11 +64,11 @@
 
 <!-- App Images -->
 <div class="">
-    <div class=" underline ml-[29%] mt-5 "> <h2 class="flex items-center ">App Images</h2></div>
+    <div class=" underline ml-[48%] mt-5 "> <h2 class="flex items-center ">App Images</h2></div>
 
 <div class="mt-4  flex justify-evenly space-x-5 w-fit ">
-    <div *ngFor="let request of requestDetails[0].appImages" class="hover:scale-105">
-        <img src="data:image/png;base64,{{request.image}}" alt="logo" class=" mr-2 mb-2 h-60 w25">
+    <div *ngFor="let request of requestDetails[0].appImages" class="hover:scale-105 md:ml-80">
+        <img src="data:image/png;base64,{{request.image}}" alt="logo" class=" mr-2 mb-2 h-60 ">
     </div>
 </div>
 </div>

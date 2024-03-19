@@ -94,13 +94,13 @@ export class DashboardComponent implements OnInit {
           label: 'No of apps downloaded in a day',
           data: this.count,
           backgroundColor: [
-            'rgba(153, 102, 255, 1)', // Purple // Red
-            'rgba(153, 102, 255, 1)', // Purple // Blue
-            'rgba(153, 102, 255, 1)', // Purple // Yellow
-            'rgba(153, 102, 255, 1)', // Purple // Green
-            'rgba(153, 102, 255, 1)', // Purple
-            'rgba(153, 102, 255, 1)',
-            'rgba(153, 102, 255, 1)', // Purple // Orange
+            'rgba(0, 0, 0, 1)', 
+            'rgba(0, 0, 0, 1)', 
+            'rgba(0, 0, 0, 1)', 
+            'rgba(0, 0, 0, 1)', 
+            'rgba(0, 0, 0, 1)', 
+            'rgba(0, 0, 0, 1)',
+            'rgba(0, 0, 0, 1)', 
           ],
           
           borderColor: [
