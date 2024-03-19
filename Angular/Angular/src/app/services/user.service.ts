@@ -91,10 +91,10 @@ export class UserService {
 
   getPassword(userId : Guid , password : string) 
   {
-    {
+    
       console.log(password)
       return this.http.get<boolean>(`${this.baseUrl}Login/checkPassword?UserId=${userId}&password=${password}`);
-    }
+    
   }
 
   patchPassword(userId : Guid , newPassword : string) 

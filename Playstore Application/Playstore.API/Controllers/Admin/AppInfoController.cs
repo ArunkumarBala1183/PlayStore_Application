@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Playstore.ActionFilters;
 using Playstore.Contracts.DTO.AppDownloads;
@@ -18,6 +19,7 @@ namespace Playstore.Controllers.Admin
     [ServiceFilter(typeof(ControllerFilter))]
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "Admin")]
     public class AppInfoController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -25,6 +27,7 @@ namespace Playstore.Controllers.Admin
         {
             this._mediator = mediator;
         }
+
 
         [HttpPost("GetAllApp")]
         [ProducesResponseType(typeof(IEnumerable<ListAppInfoDto>), (int)HttpStatusCode.OK)]

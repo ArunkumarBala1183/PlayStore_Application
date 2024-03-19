@@ -15,11 +15,12 @@ namespace Playstore.Contracts.Middleware
     public class JwtAuthenticationMiddleware : IMiddleware
     {
         private readonly IConfiguration configuration;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         public JwtAuthenticationMiddleware(IConfiguration configuration)
         {
             this.configuration = configuration;
+            logger = Log.ForContext("Location" , typeof(JwtAuthenticationMiddleware).Name);
         }
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {

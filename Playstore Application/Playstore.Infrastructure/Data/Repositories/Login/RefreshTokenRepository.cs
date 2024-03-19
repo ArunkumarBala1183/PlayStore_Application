@@ -12,14 +12,13 @@ namespace Playstore.Core.Data.Repositories
     {
         private readonly DatabaseContext _context;
         private readonly ILogger logger;
-        public RefreshTokenRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
+        public RefreshTokenRepository(DatabaseContext context ) : base(context)
         {
             _context = context;
-            logger = Log//.ForContext("userId", httpContext.HttpContext?.Items["userId"])
-                        .ForContext("Location", typeof(RefreshTokenRepository).Name);
+            logger = Log.ForContext("Location", typeof(RefreshTokenRepository).Name);
         }
 
-        public async Task StoreRefreshTokenAsync(Guid userId, string refreshToken)
+        public async Task StoreRefreshToken(Guid userId, string refreshToken)
         {
             var refreshTokenEntity = await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
 
@@ -42,7 +41,7 @@ namespace Playstore.Core.Data.Repositories
             logger.Information("Refresh Token saved to server");
         }
 
-        public async Task<RefreshToken?> GetRefreshTokenAsync(Guid userId)
+        public async Task<RefreshToken?> GetRefreshToken(Guid userId)
         {
             var response = await _context.RefreshTokens.FirstOrDefaultAsync(id => id.UserId == userId);
             logger.Information("Refresh Token Fetched");

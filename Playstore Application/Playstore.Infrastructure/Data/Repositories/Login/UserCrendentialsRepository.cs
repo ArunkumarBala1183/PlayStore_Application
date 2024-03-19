@@ -62,11 +62,5 @@ namespace Playstore.Core.Data.Repositories
             logger.Information($"No User found for userid {UserId}");
             return false;
         }
-
-        public async Task<bool> checkPassword(Guid UserId , string hashedPassword)
-        {
-             bool isPasswordExist = _context.UserCredentials.Any(userId => userId.UserId == UserId&& userId.Password==hashedPassword);
-             return isPasswordExist;
-        }
     }
 }

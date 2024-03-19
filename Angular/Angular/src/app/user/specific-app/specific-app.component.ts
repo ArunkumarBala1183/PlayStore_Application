@@ -4,7 +4,7 @@ import { UserService } from 'src/app/services/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Guid } from 'guid-typescript';
 import {
-  AllAppsInfo,
+ 
   AppReviewsInfo,
   SpecificAppInfo,
 } from 'src/app/interface/user';
@@ -18,7 +18,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./specific-app.component.scss'],
 })
 export class SpecificAppComponent implements OnInit {
- 
+isLoading: boolean=false
+
   constructor(
     private route: ActivatedRoute,
     private service: UserService,
@@ -45,6 +46,7 @@ initForm(){
 }
   getSpecificApp(appId : Guid , userId : Guid)
   {
+    this.isLoading=true;
     this.service.getAppsById(appId,userId).subscribe({
       next: (responses) => {
         this.appDetail = responses;
@@ -57,9 +59,13 @@ initForm(){
           {app.publishedDate=this.convertDateFormat(app.publishedDate);
           });
         },
+        
       error: (error) => {
         console.log(error);
       },
+      complete : () => {
+        this.isLoading = false;
+      }
     });
     
     this.service.getReviews(appId).subscribe({
@@ -114,7 +120,7 @@ initForm(){
           console.error('Error Occurred :', error);
           if (error instanceof HttpErrorResponse) {
             if (error.status === 400) {
-              const errorMessage = error.error instanceof Blob ? 'Already Downloaded' : error.error;
+              const errorMessage = error.error instanceof Blob ? 'Bad Request' : error.error;
               console.error(errorMessage);
             }
           }
@@ -133,7 +139,8 @@ initForm(){
       formData.userId = userId;
       formData.additionalValue = this.service.postReview(formData).subscribe({
         next: (response) => {
-          console.log('Form Submitted', response);
+          console.log(response);
+          this.toastr.success('Review Submitted');
           this.getSpecificApp(appId,userId);
         },
         error: (error) => {
@@ -144,7 +151,6 @@ initForm(){
         this.reviewForm.reset();
       }
       });
-      this.toastr.success('Review Submitted');
     } 
     else {
       this.toastr.error('Enter Valid Details');

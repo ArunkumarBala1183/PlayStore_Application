@@ -4,7 +4,7 @@ namespace Playstore.Contracts.Data.Repositories
 {
     public interface IEmailService 
     {
-        Task SendOtpAsync(string email, string otp);
-        Task SendUserCredentialsAsync(string email, string name, string mobileNumber,DateOnly dateOfBirth);
+        Task SendOtp(string email, string otp);
+        Task SendUserCredentials(string email, string name, string mobileNumber,DateOnly dateOfBirth);
     }
 }

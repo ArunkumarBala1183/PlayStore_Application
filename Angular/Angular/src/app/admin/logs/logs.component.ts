@@ -18,6 +18,7 @@ export class LogsComponent implements OnInit {
   itemsPerPage = 5;
   filteredLogs: AppLogs[] = [];
   maxDate: string | undefined;
+  minDate!: string
 
 
 

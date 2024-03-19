@@ -1,6 +1,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Playstore.ActionFilters;
 using Playstore.Contracts.DTO.UserInfo;
@@ -12,6 +13,7 @@ namespace Playstore.Controllers.Admin
     [ServiceFilter(typeof(ControllerFilter))]
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "Admin")]
     public class UsersController : ControllerBase
     {
         private readonly IMediator mediator;

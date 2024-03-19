@@ -1,5 +1,8 @@
+<div *ngIf="isLoading" class="loader"></div>
 <div class=" underline md:ml-[48%] "> <h2 class="flex items-center ">App Details</h2></div>
 <div class="flex md:w-[70%]">
+
+  
     
     <div class="md:ml-64 ml-28 hidden"><button (click)="downloadAppData(requestDetails[0].appId)"
             class="bg-black text-white px-2 py-2 rounded-md hover:bg-blue-600 ml-5">Download</button></div>

@@ -12,17 +12,14 @@ namespace Playstore.Core.Data.Repositories
     public class RoleRepository : Repository<Role>, IRoleRepository
     {
         private readonly DatabaseContext _context;
-        private readonly IConfiguration _configuration;
         private readonly ILogger logger;
-        public RoleRepository(DatabaseContext context, IConfiguration configuration , IHttpContextAccessor httpContext) : base(context)
+        public RoleRepository(DatabaseContext context) : base(context)
         {
             _context = context;
-            _configuration = configuration;
-            logger = Log//.ForContext("userId", httpContext.HttpContext?.Items["userId"])
-                        .ForContext("Location", typeof(RoleRepository).Name);
+            logger = Log.ForContext("Location", typeof(RoleRepository).Name);
         }
     
-        public async Task<List<UserRole>> GetUserRolesAsync(Guid userId)
+        public async Task<List<UserRole>> GetUserRoles(Guid userId)
         {
             var response = await _context.UserRole
                 .Include(role => role.Role)
@@ -39,17 +36,6 @@ namespace Playstore.Core.Data.Repositories
         }
 
 
-        public async Task<Role?> GetByRoleCode(string roleCode)
-        {
-            var response = await _context.Roles.FirstOrDefaultAsync(role => role.RoleCode == roleCode);
-            logger.Information("Role fetched from Server");
-            return response;
-        }
-        public async Task<Role?> GetByRoleId(Guid roleId)
-        {
-            var response =  await _context.Roles.FirstOrDefaultAsync(role => role.RoleId == roleId);
-            logger.Information("Role fetched from the Server");
-            return response;
-        }
+        
     }
 }

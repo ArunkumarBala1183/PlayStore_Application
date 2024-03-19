@@ -44,8 +44,6 @@ namespace Playstore.Infrastructure
             .AddTransient<IRoleRepository, RoleRepository>()
             .AddTransient<IUserRoleRepository, UserRoleRepository>()
             .AddTransient<IDeveloperRole , DeveloperRoleRepository>()
-            .AddTransient<IValidator<PasswordResetDTO>, PasswordResetDTOValidator>()
-            .AddValidatorsFromAssemblyContaining<PasswordResetDTOValidator>()
             .AddScoped<IUserCredentialsRepository, UserCredentialsRepository>()
             .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
             .AddTransient<IApplicationLogsRepository , ApplicationLogsRepository>();

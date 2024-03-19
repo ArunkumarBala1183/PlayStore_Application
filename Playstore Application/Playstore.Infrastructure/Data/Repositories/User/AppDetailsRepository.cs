@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Playstore.Contracts.Data.Entities;
 using Playstore.Contracts.Data.Repositories;
+using Playstore.Contracts.Data.Utility;
 using Playstore.Contracts.DTO;
 using Playstore.Core.Exceptions;
 using Playstore.Infrastructure.Data.Repositories.Generic;
@@ -17,12 +18,13 @@ namespace Playstore.Infrastructure.Data.Repositories
         public AppDetailsRepository(DatabaseContext context , IHttpContextAccessor httpContext) : base(context)
         {
             this.databaseContext=context;
-            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"])
-                        .ForContext("Location", typeof(AppDetailsRepository).Name);
+            logger = Log.ForContext(Dataconstant.UserId, httpContext.HttpContext?.Items[Dataconstant.UserId])
+                        .ForContext(Dataconstant.Location, typeof(AppDetailsRepository).Name);
         }
 
         public async Task<object> GetAppDetails(Guid id,Guid userId)
         {
+            try{
             var response = await this.databaseContext.AppInfo.Include(obj=>obj.Category).Include(obj=>obj.AppImages).Where(obj=>obj.AppId==id).ToListAsync();
             var appImages = await this.databaseContext.AppImages.Where(obj => obj.AppId== id).ToListAsync();
             var AppRating=await this.databaseContext.AppReviews.Where(obj=>obj.AppId==id).ToListAsync();
@@ -44,7 +46,7 @@ namespace Playstore.Infrastructure.Data.Repositories
                     Logo=response.Logo,
                     UserId=response.UserId,
                     Apps=Totalvalue,
-                    Rating=AppRating.Any()? AppRating.Average(review=>review.Rating):0,
+                    Rating=AppRating.Any()? AppRating.Average(review=>review.Rating):Dataconstant.NullRating,
                     Commands = AppRating.Select(review => review.Comment).ToList(),
                     CategoryId=response.Category.CategoryId,
                     CategoryName=response.Category.CategoryName,
@@ -53,13 +55,23 @@ namespace Playstore.Infrastructure.Data.Repositories
                     PublisherName = response.PublisherName,
                     PublishedDate = response.PublishedDate                    
                 });
-                logger.Information($"AppDetails fetched for id {id}");
+                logger.Information(Dataconstant.AppDetailsFetched+Dataconstant.Singlespace+id);
                 return appinfoDetails;
             }
 
-            var message = $"No AppInfo found for Id {id}";
+            var message = Dataconstant.NoAppFetched+Dataconstant.Singlespace+id;
             logger.Information(message);
             throw new EntityNotFoundException(message); 
+             throw new EntityNotFoundException(Dataconstant.EntityNotFoundException); 
+            }
+             catch(SqlException exception)
+            {
+                throw new SqlException($"{exception}");
+            }
+            catch(Exception exception)
+            {
+                throw new Exception($"{exception}");
+            }
             
             
         }

@@ -4,6 +4,7 @@ using Playstore.Contracts.Data.Entities;
 using Playstore.Core.Exceptions;
 using AutoMapper;
 using Playstore.Contracts.Data;
+using Playstore.Contracts.Data.Utility;
 
 
 namespace Playstore.Providers.Handlers.Queries.UserData
@@ -27,6 +28,11 @@ namespace Playstore.Providers.Handlers.Queries.UserData
         public async Task<AppImages> Handle(GetAllDownloadfile request, CancellationToken cancellationToken)
         {
             var entities = await Task.FromResult(_repository.AppValue.GetAll());
+            
+            if(entities==null)
+            {
+                 throw new EntityNotFoundException(Dataconstant.EntityNotFoundException);
+            }
             return _mapper.Map<AppImages>(entities);
         }
 
