@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   forgotPasswordRedirect = redirect.forgotPasswordRedirect;
 
 
-  constructor(public router: Router, public formbuilder: FormBuilder, private route: ActivatedRoute, public datepipe: DatePipe, private loginService: LoginService, private toastr: ToastrService) {
+  constructor(public router: Router, public formbuilder: FormBuilder, private route: ActivatedRoute,private loginService: LoginService, private toastr: ToastrService) {
 
   }
 
@@ -69,10 +69,9 @@ export class LoginComponent implements OnInit {
       this.loginService.verifyLogin(this.loginData.value).subscribe(
         {
           next: (response: any) => {
-            // console.log(response);
-            // console.log(response.accessToken);
+           
             const accessToken = response.accessToken;
-            // console.log(accessToken);
+            
             sessionStorage.setItem('accessToken', accessToken);
             this.toastr.success('Login Successful');
             const role = this.getRole();
@@ -89,20 +88,21 @@ export class LoginComponent implements OnInit {
               }
             }
             else {
-              console.log("else part")
+              
               this.toastr.info('Unable to fetch role .Please Login')
               return;
             }
           },
           error: error => {
             this.toastr.error('Incorrect Email or Password')
-            // console.log(error);
+           
             return;
           }
         }
       )
 
     }
+    
 
 
   }
@@ -115,9 +115,7 @@ export class LoginComponent implements OnInit {
       return null;
     }
   }
- public login() {
-    this.router.navigate(['app']);
-  }
+
 }
 
 

@@ -63,6 +63,7 @@ namespace Playstore.Controllers
 
                 HttpContext.Session.SetString("ResetPasswordOTP", otp);
                 _sharedDataService.ResetPasswordOTP = HttpContext.Session.GetString("ResetPasswordOTP");
+                Console.WriteLine(_sharedDataService.ResetPasswordOTP);
 
                 return Ok(new { Message = "OTP sent successfully." });
             }

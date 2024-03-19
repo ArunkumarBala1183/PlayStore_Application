@@ -81,7 +81,7 @@
       *ngIf="register.get('dateOfBirth').hasError('required') &&  register.get('dateOfBirth').touched">
       {{ validationMessages.dateOfBirth.required }}
     </span>
-    <span *ngIf="validdateOfBirth" class="mt-1 text-center text-red-400">Date of Birth must be greater than 18 years</span>
+    <span *ngIf="validdateOfBirth" class="mt-1 text-center text-red-400">Age must be greater than 18</span>
 
 
     <div class="mt-6 md:mt-10 " [ngClass]="{'mt-14 md:mt-6 ':register.valid}" >

@@ -31,13 +31,13 @@ export class AuthGuard implements CanActivate {
             {
               const accessToken=refreshToken.accessToken;
               sessionStorage.setItem('accessToken',accessToken)
-              console.log(accessToken + 'Token Refreshed...................................');
+             
               return true;
             }),
             catchError(
             (error:any)=>
             {
-              console.log(error)
+             
               this.toastr.info('Session expired . Please Login')
               this.router.navigate(['login']);
 
@@ -59,7 +59,7 @@ export class AuthGuard implements CanActivate {
         const userRole=this.authService.getUserRole();
         if(requiredRole && requiredRole.includes(userRole))
         {
-          console.log(userRole +'..............................')
+          
           return of(true);
         }
         else{
