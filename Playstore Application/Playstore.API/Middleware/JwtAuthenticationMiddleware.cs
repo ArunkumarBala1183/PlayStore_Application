@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -77,7 +78,13 @@ namespace Playstore.Contracts.Middleware
             }
             catch (Exception error)
             {
-                logger.Error(error, error.Message);
+                StackTrace trace = new(error , true);
+                logger.Error(error, trace.GetFrame(0).GetFileLineNumber().ToString());
+                if (!(bool) context.Items["ExceptionHandled"])
+                {
+                    context.Response.StatusCode = StatusCodes.Status404NotFound;
+                    await context.Response.WriteAsJsonAsync(new { message = error.Message});
+                }
             }
         }
 

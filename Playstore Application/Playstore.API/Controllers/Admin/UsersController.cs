@@ -11,6 +11,7 @@ using Playstore.Providers.Handlers.Queries.Admin;
 namespace Playstore.Controllers.Admin
 {
     [ServiceFilter(typeof(ControllerFilter))]
+    [ServiceFilter(typeof(ExceptionHandlerFilter))]
     [ApiController]
     [Route("[controller]")]
     [Authorize(Roles = "Admin")]
@@ -27,16 +28,11 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetAllUsers()
         {
-            try
-            {
-                var response = await mediator.Send(new GetAllUsersInfoQuery());
 
-                return Ok(response);
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new {message = error.Message});
-            }
+            var response = await mediator.Send(new GetAllUsersInfoQuery());
+
+            return Ok(response);
+
         }
 
         [HttpPost("SearchUserDetails")]
@@ -44,16 +40,9 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> SearchUserDetails([FromBody] GetUserDetailsQuery searchDetails)
         {
-            try
-            {
-                var response = await mediator.Send(searchDetails);
+            var response = await mediator.Send(searchDetails);
 
-                return Ok(response);
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new {message = error.Message});
-            }
+            return Ok(response);
         }
     }
 }

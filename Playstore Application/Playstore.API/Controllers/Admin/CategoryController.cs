@@ -14,6 +14,7 @@ using Playstore.Providers.Handlers.Queries.Admin;
 namespace Playstore.Controllers.Admin
 {
     [ServiceFilter(typeof(ControllerFilter))]
+    [ServiceFilter(typeof(ExceptionHandlerFilter))]
     [ApiController]
     [Route("[controller]")]
     [Authorize(Roles = "Admin")]
@@ -28,21 +29,14 @@ namespace Playstore.Controllers.Admin
         [HttpPost("AddCategory")]
         public async Task<IActionResult> AddCategory([FromBody] CategoryDto category)
         {
-            try
-            {
-                var response = await this._mediator.Send(new AddCategoryCommand(category));
+            var response = await this._mediator.Send(new AddCategoryCommand(category));
 
-                if (response == HttpStatusCode.AlreadyReported)
-                {
-                    return StatusCode((int)response, new {message = "Category Already Exists"});
-                }
-
-                return StatusCode((int)response, new {message = "Category Added"});
-            }
-            catch (ApiResponseException error)
+            if (response == HttpStatusCode.AlreadyReported)
             {
-                return NotFound(new {message = error.Message});
+                return StatusCode((int)response, new { message = "Category Already Exists" });
             }
+
+            return StatusCode((int)response, new { message = "Category Added" });
         }
 
         [HttpGet("GetAllCategories")]
@@ -50,16 +44,10 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetAllCategories()
         {
-            try
-            {
-                var response = await this._mediator.Send(new GetAllCategoryQuery());
 
-                return Ok(response);
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new {message = error.Message});
-            }
+            var response = await this._mediator.Send(new GetAllCategoryQuery());
+
+            return Ok(response);
         }
 
         [HttpPost("SearchCategory")]
@@ -67,16 +55,9 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> SearchCategory([FromBody] CategoryDto category)
         {
-            try
-            {
-                var response = await this._mediator.Send(new SearchCategoryQuery(category));
+            var response = await this._mediator.Send(new SearchCategoryQuery(category));
 
-                return Ok(response);
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new {message = error.Message});
-            }
+            return Ok(response);
         }
 
         [HttpGet("GetCategory/{id}")]
@@ -84,32 +65,18 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetCategory(Guid id)
         {
-            try
-            {
-                var response = await this._mediator.Send(new GetCategoryQuery(id));
+            var response = await this._mediator.Send(new GetCategoryQuery(id));
 
-                return Ok(response);
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new {message = error.Message});
-            }
+            return Ok(response);
 
         }
 
         [HttpPatch("UpdateCategory")]
         public async Task<IActionResult> UpdateCategory(CategoryUpdateDto category)
         {
-            try
-            {
-                var response = await this._mediator.Send(new UpdateCategoryCommand(category));
+            var response = await this._mediator.Send(new UpdateCategoryCommand(category));
 
-                return StatusCode((int)response, new { message = "Updated Successfully" });
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new {message = error.Message});
-            }
+            return StatusCode((int)response, new { message = "Updated Successfully" });
         }
     }
 }

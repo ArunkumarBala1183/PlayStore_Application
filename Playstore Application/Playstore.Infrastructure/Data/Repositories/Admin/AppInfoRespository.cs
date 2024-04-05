@@ -17,12 +17,12 @@ namespace Playstore.Core.Data.Repositories
         private readonly IMapper _mapper;
         private readonly ILogger logger;
 
-        public AppInfoRespository(DatabaseContext database , IMapper mapper , IHttpContextAccessor httpContext)
+        public AppInfoRespository(DatabaseContext database, IMapper mapper, IHttpContextAccessor httpContext)
         {
             this._database = database;
             this._mapper = mapper;
-            logger = Log.ForContext("userId" , httpContext.HttpContext?.Items["userId"]?.ToString())
-                        .ForContext("Location" , typeof(AppInfoRespository).Name);
+            logger = Log.ForContext("userId", httpContext.HttpContext?.Items["userId"]?.ToString())
+                        .ForContext("Location", typeof(AppInfoRespository).Name);
         }
 
         public async Task<HttpStatusCode> RemoveApp(Guid id)
@@ -30,13 +30,13 @@ namespace Playstore.Core.Data.Repositories
             try
             {
                 var existedData = await this._database.AppInfo.FindAsync(id);
-    
+
                 if (existedData != null)
                 {
                     this._database.AppInfo.Remove(existedData);
-    
+
                     await this._database.SaveChangesAsync();
-                    
+
                     logger.Information($"{existedData.Name} Deleted App Successfully in Database");
 
                     return HttpStatusCode.NoContent;
@@ -47,78 +47,66 @@ namespace Playstore.Core.Data.Repositories
             }
             catch (SqlException error)
             {
-                logger.Error(error , error.Message);
+                logger.Error(error, error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
             catch (Exception error)
             {
-                logger.Error(error , error.Message);
+                logger.Error(error, error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
 
-        public async Task<object> ViewAllApps(Guid userId)
+        public object ViewAllApps(Guid userId)
         {
-            try
-            {
-                var appDetails = await this._database.AppInfo
-                .Include(category => category.Category)
-                .Include(review => review.AppReview)
-                .Include(downloads => downloads.AppDownloads)
-                .Where(status => status.Status == RequestStatus.Approved)
-                .AsSplitQuery()
-                .ToListAsync();
-    
-                if (appDetails != null && appDetails.Count > 0)
-                {
-    
-                    var appDetailsDto = this._mapper.Map<List<ListAppInfoDto>>(appDetails);
-    
-                    int appsCount = Math.Min(appDetails.Count , appDetailsDto.Count);
-    
-                    for(int i = 0; i < appsCount ; i++)
-                    {
-                        AppInfo appInfo = appDetails[i];
-                        ListAppInfoDto appInfoDto = appDetailsDto[i];
-    
-                        appInfoDto.Rating = this.CalculateAverageRatings((List<AppReview>)appInfo.AppReview);
-                        appInfoDto.Downloads = appInfo.AppDownloads.Count;
+            var appDetails = this._database.AppInfo
+            .Include(category => category.Category)
+            .Include(review => review.AppReview)
+            .Include(downloads => downloads.AppDownloads)
+            .Where(status => status.Status == RequestStatus.Approved)
+            .AsSplitQuery()
+            .ToList();
 
-                        if(appInfo.AppDownloads.Any(id => id.UserId == userId))
-                        {
-                            appInfoDto.UserDownloaded = true;
-                        }
-                        else
-                        {
-                            appInfoDto.UserDownloaded = false;
-                        }
-    
-                        appDetailsDto[i] = appInfoDto;
+            if (appDetails != null && appDetails.Count > 0)
+            {
+
+                var appDetailsDto = this._mapper.Map<List<ListAppInfoDto>>(appDetails);
+
+                int appsCount = Math.Min(appDetails.Count, appDetailsDto.Count);
+
+                for (int i = 0; i < appsCount; i++)
+                {
+                    AppInfo appInfo = appDetails[i];
+                    ListAppInfoDto appInfoDto = appDetailsDto[i];
+
+                    appInfoDto.Rating = this.CalculateAverageRatings((List<AppReview>)appInfo.AppReview);
+                    appInfoDto.Downloads = appInfo.AppDownloads.Count;
+
+                    if (appInfo.AppDownloads.Any(id => id.UserId == userId))
+                    {
+                        appInfoDto.UserDownloaded = true;
+                    }
+                    else
+                    {
+                        appInfoDto.UserDownloaded = false;
                     }
 
-                    logger.Information("Apps Fetched from Database");
-                
-                    return appDetailsDto;
+                    appDetailsDto[i] = appInfoDto;
                 }
-                else
-                {
-                    logger.Information("No Apps Found in Database");
-                    return HttpStatusCode.NotFound;
-                }
+
+                logger.Information("Apps Fetched from Database");
+
+                return appDetailsDto;
             }
-            catch (SqlException error)
+            else
             {
-                logger.Error(error , error.Message);
-                return HttpStatusCode.ServiceUnavailable;
+                logger.Information("No Apps Found in Database");
+                return HttpStatusCode.NotFound;
             }
-            catch (Exception error)
-            {
-                logger.Error(error , error.Message);
-                return HttpStatusCode.InternalServerError;
-            }
+
         }
 
-        public async Task<HttpStatusCode> GetUserDownloadedOrNot(Guid userId , Guid appId)
+        public async Task<HttpStatusCode> GetUserDownloadedOrNot(Guid userId, Guid appId)
         {
             try
             {
@@ -126,7 +114,7 @@ namespace Playstore.Core.Data.Repositories
                 .Include(downloads => downloads.AppDownloads)
                 .Where(downloads => downloads.AppDownloads.Any(user => user.UserId == userId && user.AppId == appId))
                 .FirstOrDefaultAsync();
-    
+
                 if (appDetails != null)
                 {
                     logger.Information($"Apps Downloaded by UserId - {userId} had Fetched");
@@ -140,28 +128,29 @@ namespace Playstore.Core.Data.Repositories
             }
             catch (SqlException error)
             {
-                logger.Error(error , error.Message);
+                logger.Error(error, error.Message);
                 return HttpStatusCode.ServiceUnavailable;
             }
             catch (Exception error)
             {
-                logger.Error(error , error.Message);
+                logger.Error(error, error.Message);
                 return HttpStatusCode.InternalServerError;
             }
         }
 
         private int CalculateAverageRatings(List<AppReview> appReviews)
         {
-            if(appReviews != null && appReviews.Count > 0)
+            if (appReviews != null && appReviews.Count > 0)
             {
                 int totalRatings = 0;
                 int totalCount = appReviews.Count;
 
-                appReviews.ForEach(review => {
+                appReviews.ForEach(review =>
+                {
                     totalRatings += review.Rating;
                 });
 
-                return totalRatings/totalCount;
+                return totalRatings / totalCount;
             }
 
             return 0;

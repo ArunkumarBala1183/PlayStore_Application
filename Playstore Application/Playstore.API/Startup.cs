@@ -32,7 +32,8 @@ namespace Playstore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<JwtAuthenticationMiddleware>();//Custom MiddleWare
-            services.AddScoped<ControllerFilter>(); //Adding ActionFilter for Logging Controller-Action Flow
+            services.AddScoped<ControllerFilter>();
+            services.AddScoped<ExceptionHandlerFilter>(); //Adding ActionFilter for Logging Controller-Action Flow
             services.AddSession(options => // Session Configuration
             {
                 options.IdleTimeout = TimeSpan.FromSeconds(60);

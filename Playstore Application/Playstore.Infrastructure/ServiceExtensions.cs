@@ -20,6 +20,7 @@ using Playstore.Contracts.Data.Repositories.Admin;
 using Playstore.Infrastructure.Data.Repositories;
 using Playstore.Infrastructure.Data;
 using Playstore.Migrations.Scaffold;
+using Playstore.Core.Exceptions;
 
 namespace Playstore.Infrastructure
 {

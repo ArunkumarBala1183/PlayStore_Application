@@ -17,6 +17,7 @@ using Serilog;
 namespace Playstore.Controllers.Admin
 {
     [ServiceFilter(typeof(ControllerFilter))]
+    [ServiceFilter(typeof(ExceptionHandlerFilter))]
     [ApiController]
     [Route("[controller]")]
     [Authorize(Roles = "Admin")]
@@ -32,17 +33,11 @@ namespace Playstore.Controllers.Admin
         [HttpPost("GetAllApp")]
         [ProducesResponseType(typeof(IEnumerable<ListAppInfoDto>), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(ApiResponseException))]
+
         public async Task<IActionResult> GetAllApps(GetAllAppsInfoQuery allApps)
         {
-            try
-            {
-                var response = await this._mediator.Send(allApps);
-                return Ok(response);
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new {message = error.Message});
-            }
+            var response = await this._mediator.Send(allApps);
+            return Ok(response);
         }
 
         [HttpDelete("RemoveApp/{id}")]
@@ -50,16 +45,10 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> RemoveApp(Guid id)
         {
-            try
-            {
-                var response = await this._mediator.Send(new RemoveAppInfoCommand(id));
 
-                return StatusCode((int)response);
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new {message = error.Message});
-            }
+            var response = await this._mediator.Send(new RemoveAppInfoCommand(id));
+
+            return StatusCode((int)response);
         }
 
         [HttpPost("GetAppLogs")]
@@ -67,16 +56,9 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetAppLogs(AppLogsDto appLogsDto)
         {
-            try
-            {
-                var response = await this._mediator.Send(new GetAppLogsQuery(appLogsDto));
+            var response = await this._mediator.Send(new GetAppLogsQuery(appLogsDto));
 
-                return Ok(response);
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new {message = error.Message});                
-            }
+            return Ok(response);
         }
 
         [HttpGet("GetTotalDownloads")]
@@ -84,17 +66,9 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetTotalDownloads()
         {
-            try
-            {
-                var response = await this._mediator.Send(new GetTotalDownloadsQuery());
+            var response = await this._mediator.Send(new GetTotalDownloadsQuery());
 
-                return Ok(response);
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new { message = error.Message });
-            }
-
+            return Ok(response);
         }
     }
 

@@ -12,6 +12,7 @@ using Playstore.Providers.Handlers.Queries.Admin;
 namespace Playstore.Controllers.Admin
 {
     [ServiceFilter(typeof(ControllerFilter))]
+    [ServiceFilter(typeof(ExceptionHandlerFilter))]
     [ApiController]
     [Route("[controller]")]
     [Authorize(Roles = "Admin")]
@@ -28,15 +29,9 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetApplicationLogs()
         {
-            try
-            {
-                var response = await mediator.Send(new GetAllApplicationLogsQuery());
-                return Ok(response);
-            }
-            catch (ApiResponseException error)
-            {
-                return NotFound(new {message = error.Message});
-            }
+
+            var response = await mediator.Send(new GetAllApplicationLogsQuery());
+            return Ok(response);
         }
 
 

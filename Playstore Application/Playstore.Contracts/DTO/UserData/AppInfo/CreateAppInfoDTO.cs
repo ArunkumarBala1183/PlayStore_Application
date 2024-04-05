@@ -1,5 +1,7 @@
 using Playstore.Contracts.Data.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Text.Json.Serialization;
 namespace Playstore.Contracts.DTO;
 public class CreateAppInfoDTO{
    

@@ -15,6 +15,7 @@ using Playstore.Providers.Handlers.Queries.Admin;
 namespace Playstore.Controllers.Admin
 {
     [ServiceFilter(typeof(ControllerFilter))]
+    [ServiceFilter(typeof(ExceptionHandlerFilter))]
     [ApiController]
     [Route("[controller]")]
     [Authorize(Roles = "Admin")]
@@ -27,36 +28,22 @@ namespace Playstore.Controllers.Admin
         }
 
         [HttpGet("AppRequests")]
-        [ProducesResponseType(typeof(IEnumerable<RequestAppInfoDto>) , (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<RequestAppInfoDto>), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> AppRequests()
         {
-            try
-            {
-                var response = await mediator.Send(new GetAllAppRequestsQuery());
-                return Ok(response);
-            }
-            catch (ApiResponseException error)
-            {
-                return StatusCode((int) HttpStatusCode.NotFound , error.Message);
-            }
+            var response = await mediator.Send(new GetAllAppRequestsQuery());
+            return Ok(response);
         }
 
         [HttpGet("GetRequestedAppDetails/{appId}")]
-        [ProducesResponseType(typeof(RequestAppInfoDto) , (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(RequestAppInfoDto), (int)HttpStatusCode.OK)]
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> GetRequestedAppDetails(Guid appId)
         {
-            try
-            {
-                var appDetails = await mediator.Send(new GetRequestedAppDetailsQuery(appId));
+            var appDetails = await mediator.Send(new GetRequestedAppDetailsQuery(appId));
 
-                return Ok(appDetails);
-            }
-            catch (ApiResponseException error)
-            {
-                return StatusCode((int)HttpStatusCode.NotFound, new {message = error.Message});
-            }
+            return Ok(appDetails);
         }
 
         [HttpPost("PublishApp")]
@@ -65,21 +52,14 @@ namespace Playstore.Controllers.Admin
         [ProducesErrorResponseType(typeof(ApiResponseException))]
         public async Task<IActionResult> PublishApp(AppPublishDto publishDto)
         {
-            try
-            {
-                var response = await mediator.Send(new AppApprovalCommand(publishDto));
-    
-                if (response == HttpStatusCode.Created)
-                {
-                    return StatusCode((int) response , new {message = "Request Executed Successfully"});
-                }
+            var response = await mediator.Send(new AppApprovalCommand(publishDto));
 
-                return NoContent();
-            }
-            catch (ApiResponseException error)
+            if (response == HttpStatusCode.Created)
             {
-                return NotFound(new {message = error.Message});
+                return StatusCode((int)response, new { message = "Request Executed Successfully" });
             }
+
+            return NoContent();
         }
     }
 }

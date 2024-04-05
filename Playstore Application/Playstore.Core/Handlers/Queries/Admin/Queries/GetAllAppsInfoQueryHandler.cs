@@ -21,11 +21,18 @@ namespace Playstore.Providers.Handlers.Queries.Admin
         }
         public async Task<IEnumerable<ListAppInfoDto>> Handle(GetAllAppsInfoQuery request, CancellationToken cancellationToken)
         {
-            var response = await this._repository.ViewAllApps(request.UserId);
+            var exceptionHandler = new GlobalExceptionHandler<IAppInfoRepository>(_repository , httpContext);
+            
+            var response = await exceptionHandler.ManageException(repo => repo.ViewAllApps(request.UserId));
 
+            Log.Information("{@response}" , response.GetType());
+            
+            //var response = await this._repository.ViewAllApps(request.UserId);
+            
             if (response is HttpStatusCode code)
             {
                 statusCodeHandler.HandleStatusCode(code);
+
             }
 
             return (IEnumerable<ListAppInfoDto>)response;
